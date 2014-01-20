@@ -5,7 +5,6 @@
 */logs/*
 */cache/*
 web/uploads/*
-web/bundles/*
 bin
 
 # Configuration files
