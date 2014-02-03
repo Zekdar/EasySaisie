@@ -1,0 +1,7 @@
+parameters:
+#    easy_saisie_main.example.class: EasySaisie\MainBundle\Example
+
+services:
+#    easy_saisie_main.example:
+#        class: %easy_saisie_main.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

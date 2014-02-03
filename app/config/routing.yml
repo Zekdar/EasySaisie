@@ -1,0 +1,4 @@
+easy_saisie_main:
+    resource: "@EasySaisieMainBundle/Resources/config/routing.yml"
+    prefix:   /
+
