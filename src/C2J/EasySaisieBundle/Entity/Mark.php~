@@ -1,0 +1,40 @@
+<?php
+// src/EasySaisieBundle/Mark.php
+
+namespace C2J\EasySaisieBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="C2J\EasySaisieBundle\Entity\MarkRepository")
+ */
+class Mark
+{
+  /**
+   * @var integer $id
+   *
+   * @ORM\Column(name="id", type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
+  /**
+   * @var decimal $value
+   *
+   * @ORM\Column(name="value", type="decimal")
+   */
+  private $value;
+  
+  /**
+   * @ORM\ManyToOne(targetEntity="EasySaisieBundle\Entity\TeachingUnitSubject")
+   */
+  private $tuSubject;
+  
+  /**
+   * @ORM\ManyToOne(targetEntity="EasySaisieBundle\Entity\StudentPromotion")
+   */
+  private $studentPromotion;
+  
+}

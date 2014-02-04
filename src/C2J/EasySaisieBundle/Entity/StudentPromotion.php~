@@ -1,0 +1,32 @@
+<?php
+// src/EasySaisieBundle/StudentPromotion.php
+
+namespace C2J\EasySaisieBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="C2J\EasySaisieBundle\Entity\StudentPromotionRepository")
+ */
+class StudentPromotion
+{
+  /**
+   * @var string $year
+   *
+   * @ORM\Column(name="year", type="string", length=4)
+   */
+  private $year;
+  
+  /**
+   * @ORM\Id
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Student")
+   */
+  private $student;
+  
+  /**
+   * @ORM\Id
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
+   */
+  private $promotion;
+}
