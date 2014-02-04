@@ -1,3 +1,0 @@
-easy_saisie_main_homepage:
-    pattern:  /main/
-    defaults: { _controller: EasySaisieMainBundle:Container:index }
