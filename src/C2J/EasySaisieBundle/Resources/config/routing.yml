@@ -1,3 +1,35 @@
-c2_j_easy_saisie_homepage:
-    pattern:  /hello/{name}
+c2j_easy_saisie_homepage:
+    pattern:  /
     defaults: { _controller: C2JEasySaisieBundle:Default:index }
+
+container:
+    resource: "@C2JEasySaisieBundle/Controller/ContainerController.php"
+    type: annotation
+
+formation:
+    resource: "@C2JEasySaisieBundle/Controller/FormationController.php"
+    type: annotation
+
+mark:
+    resource: "@C2JEasySaisieBundle/Controller/MarkController.php"
+    type: annotation
+
+promotion:
+    resource: "@C2JEasySaisieBundle/Controller/PromotionController.php"
+    type: annotation
+
+rule:
+    resource: "@C2JEasySaisieBundle/Controller/RuleController.php"
+    type: annotation
+
+student:
+    resource: "@C2JEasySaisieBundle/Controller/StudentController.php"
+    type: annotation
+
+subject:
+    resource: "@C2JEasySaisieBundle/Controller/SubjectController.php"
+    type: annotation
+
+teachingUnit:
+    resource: "@C2JEasySaisieBundle/Controller/TeachingUnitController.php"
+    type: annotation
