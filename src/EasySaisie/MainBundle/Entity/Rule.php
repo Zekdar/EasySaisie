@@ -1,13 +1,13 @@
 <?php
-// src/.../Rule.php
+// src/EasySaisieBundle/Rule.php
 
-namespace Sdz\BlogBundle\Entity;
+namespace EasySaisie\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="...\Entity\RuleRepository")
+ * @ORM\Entity(repositoryClass="EasySaisie\MainBundle\Entity\RuleRepository")
  */
 class Rule
 {

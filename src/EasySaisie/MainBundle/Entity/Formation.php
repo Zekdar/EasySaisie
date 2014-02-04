@@ -1,13 +1,13 @@
 <?php
-// src/.../Formation.php
+// src/EasySaisieBundle/Formation.php
 
-namespace Sdz\BlogBundle\Entity;
+namespace EasySaisie\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="...\Entity\FormationRepository")
+ * @ORM\Entity(repositoryClass="EasySaisie\MainBundle\Entity\FormationRepository")
  */
 class Formation
 {

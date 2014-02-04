@@ -1,13 +1,13 @@
 <?php
-// src/.../Container.php
+// src/EasySaisieBundle/Container.php
 
-namespace Sdz\BlogBundle\Entity;
+namespace EasySaisie\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="...\Entity\ContainerRepository")
+ * @ORM\Entity(repositoryClass="EasySaisie\MainBundle\Entity\ContainerRepository")
  */
 class Container
 {
@@ -28,7 +28,7 @@ class Container
   private $name;
   
    /**
-   * @ORM\ManyToOne(targetEntity="...\Entity\Promotion")
+   * @ORM\ManyToOne(targetEntity="EasySaisie\MainBundle\Entity\Promotion")
    */
   private $promotion;
 }

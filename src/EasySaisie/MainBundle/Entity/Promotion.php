@@ -1,13 +1,14 @@
 <?php
-// src/.../Promotion.php
 
-namespace Sdz\BlogBundle\Entity;
+// src/EasySaisie/MainBundle/Promotion.php
+
+namespace EasySaisie\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="...\Entity\PromotionRepository")
+ * @ORM\Entity(repositoryClass="EasySaisie\MainBundle\Entity\PromotionRepository")
  */
 class Promotion
 {
@@ -21,8 +22,7 @@ class Promotion
   private $id;
 
   /**
-   * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="...\Entity\Formation")
+   * @ORM\ManyToOne(targetEntity="EasySaisie\MainBundle\Entity\Formation")
    */
   private $formation;
 }

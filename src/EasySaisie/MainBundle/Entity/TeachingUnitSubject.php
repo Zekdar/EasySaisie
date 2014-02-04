@@ -1,17 +1,16 @@
 <?php
-// src/.../TeachingUnitSubject.php
+// src/EasySaisieBundle/TeachingUnitSubject.php
 
-namespace Sdz\BlogBundle\Entity;
+namespace EasySaisie\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="...\Entity\TeachingUnitSubjectRepository")
+ * @ORM\Entity(repositoryClass="EasySaisie\MainBundle\Entity\TeachingUnitSubjectRepository")
  */
 class TeachingUnitSubject
-{
-  
+{  
   /**
    * @var smallint $coeff
    *
@@ -21,13 +20,13 @@ class TeachingUnitSubject
   
   /**
    * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="...\Entity\TeachingUnit")
+   * @ORM\ManyToOne(targetEntity="EasySaisie\MainBundle\Entity\TeachingUnit")
    */
   private $teachingUnit;
   
   /**
    * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="...\Entity\Subject")
+   * @ORM\ManyToOne(targetEntity="EasySaisie\MainBundle\Entity\Subject")
    */
   private $subject;
 }

@@ -1,13 +1,13 @@
 <?php
-// src/.../Subject.php
+// src/EasySaisieBundle/Subject.php
 
-namespace Sdz\BlogBundle\Entity;
+namespace EasySaisie\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="...\Entity\SubjectRepository")
+ * @ORM\Entity(repositoryClass="EasySaisieBundle\Entity\SubjectRepository")
  */
 class Subject
 {

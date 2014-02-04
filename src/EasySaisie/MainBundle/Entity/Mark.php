@@ -1,13 +1,13 @@
 <?php
-// src/.../Mark.php
+// src/EasySaisieBundle/Mark.php
 
-namespace Sdz\BlogBundle\Entity;
+namespace EasySaisie\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="...\Entity\MarkRepository")
+ * @ORM\Entity(repositoryClass="EasySaisie\MainBundle\Entity\MarkRepository")
  */
 class Mark
 {
@@ -28,12 +28,12 @@ class Mark
   private $value;
   
   /**
-   * @ORM\ManyToOne(targetEntity="...\Entity\TuSubject")
+   * @ORM\ManyToOne(targetEntity="EasySaisie\MainBundle\Entity\TeachingUnitSubject")
    */
   private $tuSubject;
   
   /**
-   * @ORM\ManyToOne(targetEntity="...\Entity\StudentPromotion")
+   * @ORM\ManyToOne(targetEntity="EasySaisie\MainBundle\Entity\StudentPromotion")
    */
   private $studentPromotion;
   
