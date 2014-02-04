@@ -11,6 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class StudentPromotion
 {
+/**
+   * @var integer $id
+   *
+   * @ORM\Column(name="id", type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
   /**
    * @var string $year
    *
@@ -19,13 +28,11 @@ class StudentPromotion
   private $year;
   
   /**
-   * @ORM\Id
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Student")
    */
   private $student;
   
   /**
-   * @ORM\Id
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
    */
   private $promotion;
@@ -97,5 +104,15 @@ class StudentPromotion
     public function getPromotion()
     {
         return $this->promotion;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

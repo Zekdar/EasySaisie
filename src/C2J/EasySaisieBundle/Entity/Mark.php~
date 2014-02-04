@@ -28,13 +28,92 @@ class Mark
   private $value;
   
   /**
-   * @ORM\ManyToOne(targetEntity="EasySaisieBundle\Entity\TeachingUnitSubject")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject")
    */
-  private $tuSubject;
+  private $teachingUnitSubject;
   
   /**
-   * @ORM\ManyToOne(targetEntity="EasySaisieBundle\Entity\StudentPromotion")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion")
    */
   private $studentPromotion;
   
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return Mark
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set teachingUnitSubject
+     *
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubject
+     * @return Mark
+     */
+    public function setTeachingUnitSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubject = null)
+    {
+        $this->teachingUnitSubject = $teachingUnitSubject;
+    
+        return $this;
+    }
+
+    /**
+     * Get teachingUnitSubject
+     *
+     * @return \C2J\EasySaisieBundle\Entity\TeachingUnitSubject 
+     */
+    public function getTeachingUnitSubject()
+    {
+        return $this->teachingUnitSubject;
+    }
+
+    /**
+     * Set studentPromotion
+     *
+     * @param \C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotion
+     * @return Mark
+     */
+    public function setStudentPromotion(\C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotion = null)
+    {
+        $this->studentPromotion = $studentPromotion;
+    
+        return $this;
+    }
+
+    /**
+     * Get studentPromotion
+     *
+     * @return \C2J\EasySaisieBundle\Entity\StudentPromotion 
+     */
+    public function getStudentPromotion()
+    {
+        return $this->studentPromotion;
+    }
 }

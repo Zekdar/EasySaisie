@@ -12,6 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
 class TeachingUnitSubject
 {  
   /**
+   * @var integer $id
+   *
+   * @ORM\Column(name="id", type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
+  /**
    * @var smallint $coeff
    *
    * @ORM\Column(name="coeff", type="smallint")
@@ -19,13 +28,11 @@ class TeachingUnitSubject
   private $coeff;
   
   /**
-   * @ORM\Id
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit")
    */
   private $teachingUnit;
   
   /**
-   * @ORM\Id
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Subject")
    */
   private $subject;
@@ -97,5 +104,15 @@ class TeachingUnitSubject
     public function getSubject()
     {
         return $this->subject;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

@@ -28,12 +28,12 @@ class Mark
   private $value;
   
   /**
-   * @ORM\ManyToOne(targetEntity="EasySaisieBundle\Entity\TeachingUnitSubject")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject")
    */
-  private $tuSubject;
+  private $teachingUnitSubject;
   
   /**
-   * @ORM\ManyToOne(targetEntity="EasySaisieBundle\Entity\StudentPromotion")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion")
    */
   private $studentPromotion;
   
@@ -72,35 +72,35 @@ class Mark
     }
 
     /**
-     * Set tuSubject
+     * Set teachingUnitSubject
      *
-     * @param \EasySaisieBundle\Entity\TeachingUnitSubject $tuSubject
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubject
      * @return Mark
      */
-    public function setTuSubject(\EasySaisieBundle\Entity\TeachingUnitSubject $tuSubject = null)
+    public function setTeachingUnitSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubject = null)
     {
-        $this->tuSubject = $tuSubject;
+        $this->teachingUnitSubject = $teachingUnitSubject;
     
         return $this;
     }
 
     /**
-     * Get tuSubject
+     * Get teachingUnitSubject
      *
-     * @return \EasySaisieBundle\Entity\TeachingUnitSubject 
+     * @return \C2J\EasySaisieBundle\Entity\TeachingUnitSubject 
      */
-    public function getTuSubject()
+    public function getTeachingUnitSubject()
     {
-        return $this->tuSubject;
+        return $this->teachingUnitSubject;
     }
 
     /**
      * Set studentPromotion
      *
-     * @param \EasySaisieBundle\Entity\StudentPromotion $studentPromotion
+     * @param \C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotion
      * @return Mark
      */
-    public function setStudentPromotion(\EasySaisieBundle\Entity\StudentPromotion $studentPromotion = null)
+    public function setStudentPromotion(\C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotion = null)
     {
         $this->studentPromotion = $studentPromotion;
     
@@ -110,7 +110,7 @@ class Mark
     /**
      * Get studentPromotion
      *
-     * @return \EasySaisieBundle\Entity\StudentPromotion 
+     * @return \C2J\EasySaisieBundle\Entity\StudentPromotion 
      */
     public function getStudentPromotion()
     {

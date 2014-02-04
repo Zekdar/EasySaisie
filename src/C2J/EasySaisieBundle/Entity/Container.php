@@ -28,7 +28,7 @@ class Container
   private $name;
   
    /**
-   * @ORM\ManyToOne(targetEntity="EasySaisieBundle\Entity\Promotion")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
    */
   private $promotion;
 
@@ -68,7 +68,7 @@ class Container
     /**
      * Set promotion
      *
-     * @param \EasySaisieBundle\Entity\Entity\Promotion $promotion
+     * @param \C2J\EasySaisieBundle\Entity\Promotion $promotion
      * @return Container
      */
     public function setPromotion(\EasySaisieBundle\Entity\Promotion $promotion = null)
@@ -81,7 +81,7 @@ class Container
     /**
      * Get promotion
      *
-     * @return \EasySaisieBundle\Entity\Promotion 
+     * @return \C2J\EasySaisieBundle\Entity\Promotion 
      */
     public function getPromotion()
     {
