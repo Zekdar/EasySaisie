@@ -1,3 +1,7 @@
+c2_j_easy_saisie:
+    resource: "@C2JEasySaisieBundle/Resources/config/routing.yml"
+    prefix:   /
+
 easy_saisie_main:
     resource: "@EasySaisieMainBundle/Resources/config/routing.yml"
     prefix:   /

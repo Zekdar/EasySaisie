@@ -1,0 +1,7 @@
+parameters:
+#    c2_j_easy_saisie.example.class: C2J\EasySaisieBundle\Example
+
+services:
+#    c2_j_easy_saisie.example:
+#        class: %c2_j_easy_saisie.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
