@@ -1,4 +1,4 @@
-c2j_easy_saisie_homepage:
+homepage:
     pattern:  /
     defaults: { _controller: C2JEasySaisieBundle:Default:index }
 
