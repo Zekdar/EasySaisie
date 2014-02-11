@@ -5,7 +5,7 @@
     <title>{% block title %}EasySaisie - Le logiciel qui vous simplifie la vie !{% endblock %}</title>
 
     {% block stylesheets %}
-    <link href="{{ asset('easysaisie/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/twbs/css/bootstrap.min.css') }}" rel="stylesheet" />
     {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
@@ -49,8 +49,8 @@
     </div>        
 
     {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('easysaisie/js/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('easysaisie/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/easysaisie/js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/easysaisie/js/bootstrap.min.js') }}"></script>
     {% endblock %}
 
 </body>
