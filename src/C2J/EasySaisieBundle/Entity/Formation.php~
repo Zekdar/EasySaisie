@@ -21,11 +21,11 @@ class Formation
   private $id;
  
   /**
-   * @var string $nom
+   * @var string $name
    *
-   * @ORM\Column(name="nom", type="string", length=255)
+   * @ORM\Column(name="name", type="string", length=255)
    */
-  private $nom;
+  private $name;
 
   /**
    * @var string $type
@@ -46,26 +46,26 @@ class Formation
     }
 
     /**
-     * Set nom
+     * Set name
      *
-     * @param string $nom
+     * @param string $name
      * @return Formation
      */
-    public function setNom($nom)
+    public function setName($name)
     {
-        $this->nom = $nom;
+        $this->name = $name;
     
         return $this;
     }
 
     /**
-     * Get nom
+     * Get name
      *
      * @return string 
      */
-    public function getNom()
+    public function getName()
     {
-        return $this->nom;
+        return $this->name;
     }
 
     /**
@@ -89,5 +89,10 @@ class Formation
     public function getType()
     {
         return $this->type;
+    }
+	
+	public function __toString()
+    {
+        return $this->name;
     }
 }
