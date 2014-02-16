@@ -19,9 +19,8 @@
 
 namespace Doctrine\ORM\Tools\Console\Helper;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Helper\Helper;
-
+use Doctrine\ORM\EntityManager;
 
 /**
  * Doctrine CLI Connection Helper.
@@ -36,18 +35,18 @@ use Symfony\Component\Console\Helper\Helper;
 class EntityManagerHelper extends Helper
 {
     /**
-     * Doctrine ORM EntityManagerInterface.
+     * Doctrine ORM EntityManager.
      *
-     * @var EntityManagerInterface
+     * @var EntityManager
      */
     protected $_em;
 
     /**
      * Constructor.
      *
-     * @param EntityManagerInterface $em
+     * @param \Doctrine\ORM\EntityManager $em
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManager $em)
     {
         $this->_em = $em;
     }
@@ -55,7 +54,7 @@ class EntityManagerHelper extends Helper
     /**
      * Retrieves Doctrine ORM EntityManager.
      *
-     * @return EntityManagerInterface
+     * @return EntityManager
      */
     public function getEntityManager()
     {

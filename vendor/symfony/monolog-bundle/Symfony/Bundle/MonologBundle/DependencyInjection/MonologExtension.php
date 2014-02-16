@@ -156,43 +156,13 @@ class MonologExtension extends Extension
                     $handler['publisher']['chunk_size'],
                 ));
 
-                $publisherId = uniqid('monolog.gelf.publisher.');
+                $publisherId = 'monolog.gelf.publisher';
                 $publisher->setPublic(false);
                 $container->setDefinition($publisherId, $publisher);
             }
 
             $definition->setArguments(array(
                 new Reference($publisherId),
-                $handler['level'],
-                $handler['bubble'],
-            ));
-            break;
-
-        case 'mongo':
-            if (isset($handler['mongo']['id'])) {
-                $clientId = $handler['mongo']['id'];
-            } else {
-                $server = 'mongodb://';
-
-                if(isset($handler['mongo']['user'])) {
-                    $server .= $handler['mongo']['user'] . ':' . $handler['mongo']['pass'] . '@';
-                }
-
-                $server .= $handler['mongo']['host'] . ':' . $handler['mongo']['port'];
-
-                $client = new Definition("%monolog.mongo.client.class%", array(
-                    $server
-                ));
-
-                $clientId = uniqid('monolog.mongo.client.');
-                $client->setPublic(false);
-                $container->setDefinition($clientId, $client);
-            }
-
-            $definition->setArguments(array(
-                new Reference($clientId),
-                $handler['mongo']['database'],
-                $handler['mongo']['collection'],
                 $handler['level'],
                 $handler['bubble'],
             ));
@@ -279,8 +249,7 @@ class MonologExtension extends Extension
         case 'swift_mailer':
             $oldHandler = false;
             // fallback for older symfony versions that don't have the new SwiftMailerHandler in the bridge
-            $newHandlerClass = $container->getParameterBag()->resolveValue($definition->getClass());
-            if (!class_exists($newHandlerClass)) {
+            if (!class_exists($definition->getClass())) {
                 $definition = new Definition('Monolog\Handler\SwiftMailerHandler');
                 $oldHandler = true;
             }
@@ -407,17 +376,6 @@ class MonologExtension extends Extension
                 $handler['level'],
                 $handler['bubble'],
             ));
-            break;
-
-        case 'loggly':
-            $definition->setArguments(array(
-                $handler['token'],
-                $handler['level'],
-                $handler['bubble'],
-            ));
-            if (!empty($handler['tags'])) {
-                $definition->addMethodCall('setTag', array(implode(',', $handler['tags'])));
-            }
             break;
 
         // Handlers using the constructor of AbstractHandler without adding their own arguments

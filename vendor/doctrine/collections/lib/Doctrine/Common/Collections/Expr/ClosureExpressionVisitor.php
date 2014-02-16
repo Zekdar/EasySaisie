@@ -42,10 +42,6 @@ class ClosureExpressionVisitor extends ExpressionVisitor
      */
     public static function getObjectFieldValue($object, $field)
     {
-        if (is_array($object)) {
-            return $object[$field];
-        }
-
         $accessors = array('get', 'is');
 
         foreach ($accessors as $accessor) {
@@ -65,7 +61,7 @@ class ClosureExpressionVisitor extends ExpressionVisitor
             return $object->$accessor();
         }
 
-        if ($object instanceof \ArrayAccess) {
+        if ($object instanceof \ArrayAccess || is_array($object)) {
             return $object[$field];
         }
 
@@ -111,6 +107,7 @@ class ClosureExpressionVisitor extends ExpressionVisitor
 
         switch ($comparison->getOperator()) {
             case Comparison::EQ:
+            case Comparison::IS:
                 return function ($object) use ($field, $value) {
                     return ClosureExpressionVisitor::getObjectFieldValue($object, $field) === $value;
                 };
