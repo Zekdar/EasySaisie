@@ -23,7 +23,7 @@ class Rule
   /**
    * @var integer $name
    *
-   * @ORM\Column(name="name", type="integer")
+   * @ORM\Column(name="name", type="string", length=255)
    */
   private $name;
 

@@ -26,10 +26,18 @@ student:
     resource: "@C2JEasySaisieBundle/Controller/StudentController.php"
     type: annotation
 
+studentPromotion:
+    resource: "@C2JEasySaisieBundle/Controller/StudentPromotionController.php"
+    type: annotation
+
 subject:
     resource: "@C2JEasySaisieBundle/Controller/SubjectController.php"
     type: annotation
 
 teachingUnit:
     resource: "@C2JEasySaisieBundle/Controller/TeachingUnitController.php"
+    type: annotation
+
+teachingUnitSubject:
+    resource: "@C2JEasySaisieBundle/Controller/TeachingUnitSubjectController.php"
     type: annotation

@@ -24,8 +24,15 @@ class Promotion
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Formation")
    */
+   
   private $formation;
-
+  
+  /**
+   * @var string $name
+   *
+   * @ORM\Column(name="name", type="string", length=255)
+   */
+  private $name;
     /**
      * Get id
      *

@@ -71,7 +71,7 @@ class Container
      * @param \C2J\EasySaisieBundle\Entity\Promotion $promotion
      * @return Container
      */
-    public function setPromotion(\EasySaisieBundle\Entity\Promotion $promotion = null)
+    public function setPromotion(\C2J\EasySaisieBundle\Entity\Promotion $promotion = null)
     {
         $this->promotion = $promotion;
     
@@ -86,5 +86,10 @@ class Container
     public function getPromotion()
     {
         return $this->promotion;
+    }
+	
+	public function __toString()
+    {
+        return $this->name;
     }
 }

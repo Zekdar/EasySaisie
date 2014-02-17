@@ -115,4 +115,9 @@ class StudentPromotion
     {
         return $this->id;
     }
+	
+	public function __toString()
+	{
+		return $this->getStudent()." ".$this->getYear()." ".$this->getPromotion();
+	}
 }

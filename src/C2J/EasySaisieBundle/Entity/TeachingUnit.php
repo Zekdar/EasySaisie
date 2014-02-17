@@ -119,4 +119,9 @@ class TeachingUnit
     {
         return $this->container;
     }
+	
+	public function __toString()
+    {
+        return $this->name;
+    }
 }
