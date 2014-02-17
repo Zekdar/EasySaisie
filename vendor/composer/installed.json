@@ -1587,5 +1587,123 @@
             "highlight",
             "sql"
         ]
+    },
+    {
+        "name": "mopa/composer-bridge",
+        "version": "v1.3.0",
+        "version_normalized": "1.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phiamo/MopaComposerBridge.git",
+            "reference": "4ce791bfeabc5261da11cf4a949745d60dae711f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phiamo/MopaComposerBridge/zipball/4ce791bfeabc5261da11cf4a949745d60dae711f",
+            "reference": "4ce791bfeabc5261da11cf4a949745d60dae711f",
+            "shasum": ""
+        },
+        "require": {
+            "symfony/console": "2.*"
+        },
+        "time": "2013-09-10 10:06:34",
+        "type": "symfony-bridge",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Mopa\\Bridge\\Composer": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Philipp A. Mohrenweiser",
+                "email": "phiamo@googlemail.com",
+                "homepage": "http://bootstrap.mohrenweiserpartner.de"
+            },
+            {
+                "name": "Community contributions",
+                "homepage": "https://github.com/phiamo/MopaComposerBridge/contributors"
+            }
+        ],
+        "description": "Symfony2 Composer Bridge",
+        "homepage": "http://bootstrap.mohrenweiserpartner.de",
+        "keywords": [
+            "Symfony2",
+            "composer"
+        ]
+    },
+    {
+        "name": "mopa/bootstrap-bundle",
+        "version": "v3.0.0-beta2",
+        "version_normalized": "3.0.0.0-beta2",
+        "target-dir": "Mopa/Bundle/BootstrapBundle",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
+            "reference": "4b4ec879de978fe40a792a359f0940362ef503ec"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/4b4ec879de978fe40a792a359f0940362ef503ec",
+            "reference": "4b4ec879de978fe40a792a359f0940362ef503ec",
+            "shasum": ""
+        },
+        "require": {
+            "mopa/composer-bridge": "1.3.*",
+            "symfony/symfony": "~2.3-dev"
+        },
+        "suggest": {
+            "craue/formflow-bundle": "dev-master",
+            "jlong/sass-twitter-bootstrap": "dev-master",
+            "knplabs/knp-menu-bundle": "2.0.*",
+            "knplabs/knp-paginator-bundle": "dev-master",
+            "mopa/bootstrap-sandbox-bundle": "~2.3",
+            "twbs/bootstrap": "2.*"
+        },
+        "time": "2013-10-14 22:38:11",
+        "type": "symfony-bundle",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Mopa\\Bundle\\BootstrapBundle": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Philipp A. Mohrenweiser",
+                "email": "phiamo@googlemail.com",
+                "homepage": "http://bootstrap.mohrenweiserpartner.de"
+            },
+            {
+                "name": "Community contributions",
+                "homepage": "https://github.com/phiamo/MopaBootstrapBundle/contributors"
+            }
+        ],
+        "description": "Easy integration of twitters bootstrap into symfony2",
+        "keywords": [
+            "bootstrap",
+            "bootstrap form",
+            "extra form",
+            "form",
+            "template"
+        ]
     }
 ]
