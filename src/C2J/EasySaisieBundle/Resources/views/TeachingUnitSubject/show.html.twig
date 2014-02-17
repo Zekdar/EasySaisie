@@ -1,28 +1,29 @@
-{% extends 'C2JEasySaisieBundle::base.html.twig' %}
+{% extends '::base.html.twig' %}
 
-
-{% block body %}
-    {{ parent() }}
-    <h1>Promotion</h1>
+{% block body -%}
+    <h1>TeachingUnitSubject</h1>
 
     <table class="record_properties">
         <tbody>
             <tr>
                 <th>Id</th>
                 <td>{{ entity.id }}</td>
-				<td>{{ entity.name }}</td>
+            </tr>
+            <tr>
+                <th>Coeff</th>
+                <td>{{ entity.coeff }}</td>
             </tr>
         </tbody>
     </table>
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('promotion') }}">
+        <a href="{{ path('teachingunitsubject') }}">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('promotion_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('teachingunitsubject_edit', { 'id': entity.id }) }}">
             Edit
         </a>
     </li>

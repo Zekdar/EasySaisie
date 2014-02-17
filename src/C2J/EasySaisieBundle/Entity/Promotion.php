@@ -24,8 +24,15 @@ class Promotion
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Formation")
    */
+   
   private $formation;
-
+  
+  /**
+   * @var string $name
+   *
+   * @ORM\Column(name="name", type="string", length=255)
+   */
+  private $name;
     /**
      * Get id
      *
@@ -57,5 +64,33 @@ class Promotion
     public function getFormation()
     {
         return $this->formation;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Promotion
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+	
+	public function __toString()
+    {
+        return $this->name." ".$this->getFormation();
     }
 }
