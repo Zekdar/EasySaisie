@@ -1,6 +1,8 @@
 {% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
-{% block body -%}
+
+{% block body %}
+    {{ parent() }}
     <h1>Container list</h1>
 
     <table class="records_list">
@@ -38,4 +40,4 @@
             </a>
         </li>
     </ul>
-    {% endblock %}
+{% endblock %}

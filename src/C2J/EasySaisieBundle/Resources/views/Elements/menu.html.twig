@@ -1,0 +1,26 @@
+<!-- menu -->
+<div class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home"></span> EasySaisie</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ path('mark') }}">Notes</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog icon-black"></i> Gérer <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('container') }}">Conteneurs d'UEs</a></li>
+                        <li><a href="{{ path('student') }}">Étudiants</a></li>
+                        <li><a href="{{ path('formation') }}">Formations</a></li>
+                        <li><a href="{{ path('subject') }}">Matières</a></li>
+                        <li><a href="{{ path('promotion') }}">Promotions</a></li>
+                        <li><a href="{{ path('rule') }}">Règles</a></li>
+                        <li><a href="{{ path('teachingunit') }}">UEs</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
+<!-- /menu -->
