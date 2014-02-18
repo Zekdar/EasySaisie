@@ -47,7 +47,7 @@ class PromotionController extends Controller
         $entity = new Promotion();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
+		
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -90,7 +90,17 @@ class PromotionController extends Controller
      */
     public function newAction()
     {
-        $entity = new Promotion();
+		$entity = new Promotion();
+		$request = Request::createFromGlobals();
+		$request->getPathInfo();
+		$id=$request->query->get('id');
+		
+		if($id != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->find($id);
+			$entity->setFormation($entity2);
+		}
+		
         $form   = $this->createCreateForm($entity);
 
         return array(

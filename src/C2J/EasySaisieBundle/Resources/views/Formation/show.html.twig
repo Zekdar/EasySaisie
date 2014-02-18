@@ -34,5 +34,9 @@
         </a>
     </li>
     <li>{{ form(delete_form) }}</li>
+	<li>
+		<a href="{{ path('promotion_new', { 'id': entity.id }) }}"><input type="button" value="Add a promotion">
+		</a>
+	</li>
 </ul>
 {% endblock %}

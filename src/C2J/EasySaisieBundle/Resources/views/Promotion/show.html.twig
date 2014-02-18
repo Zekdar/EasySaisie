@@ -11,6 +11,7 @@
                 <th>Id</th>
                 <td>{{ entity.id }}</td>
 				<td>{{ entity.name }}</td>
+				<td>{{ entity.formation.name }}</td>
             </tr>
         </tbody>
     </table>
@@ -27,5 +28,9 @@
         </a>
     </li>
     <li>{{ form(delete_form) }}</li>
+	<li>
+		<a href="{{ path('container_new', { 'id': entity.id }) }}"><input type="button" value="Add a container">
+		</a>
+	</li>
 </ul>
 {% endblock %}
