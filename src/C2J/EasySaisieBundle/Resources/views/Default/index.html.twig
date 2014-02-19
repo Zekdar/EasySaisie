@@ -1,6 +1,10 @@
 {% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
-
-{% block body %}
+{% block body_header %}
     {{ parent() }}
-{% enblock body %}
+
+    <div class="header">
+    	<h1>Bienvenue sur EasySaisie ! </h1>
+    	<h2>C’est gratuit (et ça le restera toujours)</h2>
+    </div>
+{% endblock body_header %}
