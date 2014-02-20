@@ -6,7 +6,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use C2J\EasySaisieBundle\Entity\Promotion;
 
-class LoadFormationsData implements FixtureInterface
+class LoadPromotionsData implements FixtureInterface
 {
     /**
      * {@inheritDoc}
