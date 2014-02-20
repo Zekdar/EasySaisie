@@ -7,6 +7,10 @@ body {
 	font-family: Calibri, "Sans Serif";
 }
 
+.center {
+	text-align: center;
+}
+
 .table {
 	width: auto;
 	margin: auto;
@@ -50,4 +54,9 @@ h1, h2 {
 	color: #fff;
 	background-color: #6f5499;
 	border-color: #563d7c;
+}
+
+.navbar-brand {
+	font-size: 20px;
+	padding-top: 11px;
 }

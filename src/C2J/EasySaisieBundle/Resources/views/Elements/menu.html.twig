@@ -1,5 +1,4 @@
-<!-- menu -->
-<div class="navbar navbar-default">
+<header class="navbar navbar-default ">
     <div class="container">
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -7,21 +6,23 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </button>
-            
+            </button>            
+            <a class="navbar-brand easysaisie" href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home purple"></span> EasySaisie</a>
         </div>
-        <div class="navbar-collapse collapse bs-navbar-collapse">
-            <ul class="nav navbar-nav"><li><a class="navbar-brand easysaisie" href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home purple"></span> EasySaisie</a></li>
-                <li><a href="{{ path('mark') }}"><span class="glyphicon glyphicon-list purple"></span> Notes</a></li>
+        <nav class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="{{ path('mark') }}"><span class="glyphicon glyphicon-list purple"></span> NOTES</a>
+                </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog purple"></span> Gérer <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog purple"></span> GÉRER <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ path('container') }}">Conteneurs d'UEs</a></li>
-                        <li><a href="{{ path('student') }}">Étudiants</a></li>
-                        <li><a href="{{ path('formation') }}">Formations</a></li>
-                        <li><a href="{{ path('subject') }}">Matières</a></li>
-                        <li><a href="{{ path('promotion') }}">Promotions</a></li>
-                        <li><a href="{{ path('rule') }}">Règles</a></li>
+                        <li><a href="{{ path('container') }}">CONTENEURS D'UEs</a></li>
+                        <li><a href="{{ path('student') }}">ÉTUDIANTS</a></li>
+                        <li><a href="{{ path('formation') }}">FORMATIONS</a></li>
+                        <li><a href="{{ path('subject') }}">MATIÈRES</a></li>
+                        <li><a href="{{ path('promotion') }}">PROMOTIONS</a></li>
+                        <li><a href="{{ path('rule') }}">RÈGLES</a></li>
                         <li><a href="{{ path('teachingunit') }}">UEs</a></li>
                     </ul>
                 </li>
@@ -35,7 +36,6 @@
                 </div>
                 <button type="submit" class="btn btn-purple">Se connecter</button>
             </form>
-        </div><!--/.nav-collapse -->
+        </nav>
     </div>
-</div>
-<!-- /menu -->
+</header>
