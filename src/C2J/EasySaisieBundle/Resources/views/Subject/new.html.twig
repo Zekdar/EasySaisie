@@ -3,15 +3,16 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Subject creation</h1>
+    <h1>Créer une matière</h1>
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('subject') }}">
-            Back to the list
-        </a>
-    </li>
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('subject') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+        </p>
+    </div>
 </ul>
 {% endblock %}

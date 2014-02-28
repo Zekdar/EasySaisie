@@ -19,7 +19,7 @@ class MarkController extends Controller
 {
 
     /**
-     * Lists all Mark entities.
+     * Lists all promotion by year.
      *
      * @Route("/", name="mark")
      * @Method("GET")
@@ -29,8 +29,8 @@ class MarkController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('C2JEasySaisieBundle:Mark')->findAll();
-
+        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array(), array('year' => 'asc'));
+        
         return array(
             'entities' => $entities,
         );

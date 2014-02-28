@@ -3,41 +3,22 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Mark list</h1>
-
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Value</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('mark_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.value }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('mark_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('mark_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
+    
+    <h1 class="page-header">Sélectionnez une promotion</h1>
+    
+    <table class="sortable">
+    	<thead>
+    		<th>Année</th>
+    		<th>Promotion</th>
+    	</thead>
+    	<tbody>
+			{% for entity in entities %}
+			<tr class="clickableRow" href="{{ path('homepage', { 'id': entity.id }) }}">
+				<td>{{ entity.year }}</td>
+				<td>{{ entity.promotion }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('mark_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+{% endblock %}
+    

@@ -3,15 +3,16 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Container creation</h1>
+    <h1>Créer un silot d'UEs</h1>
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('container') }}">
-            Back to the list
-        </a>
-    </li>
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('container') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+        </p>
+    </div>
 </ul>
 {% endblock %}
