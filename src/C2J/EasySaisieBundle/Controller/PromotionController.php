@@ -28,8 +28,8 @@ class PromotionController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAll();
+        
+        $entities = $em->getRepository('C2JEasySaisieBundle:Promotion')->findBy(array(), array('name' => 'asc'));
 
         return array(
             'entities' => $entities,

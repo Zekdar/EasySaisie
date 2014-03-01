@@ -3,17 +3,17 @@
 
 {% block body %}
     {{ parent() }}
-    
+        
     <h1 class="page-header">Sélectionnez une promotion</h1>
     
     <table class="sortable">
     	<thead>
-    		<th>Année</th>
-    		<th>Promotion</th>
+    		<th data-placeholder="Chercher ...">Année</th>
+    		<th data-placeholder="Chercher ...">Promotion</th>
     	</thead>
     	<tbody>
 			{% for entity in entities %}
-			<tr class="clickableRow" href="{{ path('homepage', { 'id': entity.id }) }}">
+			<tr class="clickableRow" href="{{ path('mark_list', { 'id': entity.id }) }}">
 				<td>{{ entity.year }}</td>
 				<td>{{ entity.promotion }}</td>
 			</tr>

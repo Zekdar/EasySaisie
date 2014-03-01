@@ -1,0 +1,53 @@
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
+
+{% block body %}
+    {{ parent() }}
+    
+    {% set studentPromotion = entities[0].studentPromotion %}
+    
+    {% if entities is not empty %}
+        <h1 class="page-header">Notes des étudiants de {{ studentPromotion.promotion }} {{ studentPromotion.year }}</h1>
+
+        <table class="table table-bordered table-bordered">
+            <thead>
+                {% for entity in entities %}
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th colspan="{{ entity.teachingUnitSubject | length}}">{{ entity.teachingUnitSubject.teachingUnit.container.name }}</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>{{ entity.teachingUnitSubject.teachingUnit.code }} {{ entity.teachingUnitSubject.teachingUnit.name }}</th>
+                    </tr>
+                    <tr>
+                        <th>Num. Etudiant</th>
+                        <th>Etudiant</th>
+                        <th>/x</th>
+                        <th>{{ entity.teachingUnitSubject.subject.name }}</th>
+                    </tr>
+                {% endfor %}
+            </thead>
+            <tbody>
+                {% for entity in entities %}{{ dump(entity) }}
+                <tr>
+                    <td>{{ entity.studentPromotion.student.number }}</td>
+                    <td><b>{{ entity.studentPromotion.student.lastName }}</b> {{ entity.studentPromotion.student.firstName }}</td>
+                </tr>   
+                {% endfor %}                
+            </tbody>
+        </table>
+    {% else %}
+        <p class="center no-reccords-to-display">Pas de notes pour cette promotion.</p>
+    {% endif %}
+
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('mark') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+        </p>
+    </div>
+{% endblock %}
+    

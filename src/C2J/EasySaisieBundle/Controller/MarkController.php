@@ -29,12 +29,30 @@ class MarkController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array(), array('year' => 'asc'));
+        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllPromotionsByYearDistinct();
         
         return array(
             'entities' => $entities,
         );
     }
+
+    /**
+     * Lists all marks for every students from a promotion for the specified year.
+     *
+     * @Route("/list/{id}", name="mark_list")
+     * @Method("GET")
+     * @Template()
+     */
+    public function listAction($id) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('C2JEasySaisieBundle:Mark')->findAllMarksByStudentsByPromotion($id);
+        
+        return array(
+            'entities' => $entities,
+        );
+    }
+
     /**
      * Creates a new Mark entity.
      *
