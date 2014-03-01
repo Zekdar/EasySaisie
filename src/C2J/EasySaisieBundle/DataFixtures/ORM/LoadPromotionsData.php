@@ -2,27 +2,39 @@
 
 namespace C2J\EasySaisieBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use C2J\EasySaisieBundle\Entity\Promotion;
 
-class LoadPromotionsData implements FixtureInterface
+class LoadPromotionsData extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
-        $promo1 = new Promotion();
-        $promo1->setName('L3I');
-        $M2A->setFormation(''); // TODO fixtures recherche partager objets
+        $promotion1 = new Promotion();
+        $promotion1->setName('L3');
+        $promotion1->setFormation($this->getReference('formation1')); // TODO fixtures recherche partager objets
 
-        $promo2 = new Formation();
-        $promo2->setName('M2A');
-        $masterMiage->setFormation('');
+        $promotion2 = new Promotion();
+        $promotion2->setName('M2');
+        $promotion2->setFormation($this->getReference('formation2'));
 
-        $manager->persist($licenceMiage);
-        $manager->persist($masterMiage);
+        $manager->persist($promotion1);
+        $manager->persist($promotion2);
         $manager->flush();
+		
+		$this->addReference('promotion1', $promotion1);
+		$this->addReference('promotion2', $promotion2);
+    }
+	
+	/**
+     * {@inheritDoc}
+     */
+    public function getOrder()
+    {
+        return 2; // l'ordre dans lequel les fichiers sont chargés
     }
 }

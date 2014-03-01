@@ -74,12 +74,12 @@ class Student
    *
    * @ORM\Column(name="email", type="string", length=255)
    */
-  private $email;
+  private $email; 
   
   /**
    * @var date $birthDate
    *
-   * @ORM\Column(name="birthDate", type="date")
+   * @ORM\Column(name="birthDate", type="string", length=10)
    */
   private $birthDate;
 
