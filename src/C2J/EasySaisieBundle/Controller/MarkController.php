@@ -39,15 +39,15 @@ class MarkController extends Controller
     /**
      * Lists all marks for every students from a promotion for the specified year.
      *
-     * @Route("/list/{id}", name="mark_list")
+     * @Route("/list/{year}/{promotion_id}", name="mark_list")
      * @Method("GET")
      * @Template()
      */
-    public function listAction($id) 
+    public function listAction($year, $promotion_id) 
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('C2JEasySaisieBundle:Mark')->findAllMarksByStudentsByPromotion($id);
-        
+        $entities = $em->getRepository('C2JEasySaisieBundle:Student')->findAllMarksByStudentsByPromotion($promotion_id, $year);
+        Doctrine\Common\Util\Debug\dump($entities);exit;
         return array(
             'entities' => $entities,
         );

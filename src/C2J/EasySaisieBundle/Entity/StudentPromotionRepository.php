@@ -33,4 +33,30 @@ class StudentPromotionRepository extends EntityRepository
 		return $qb 	->getQuery()
 					->getResult();
 	}
+
+	public function findAllMarksByStudentsByPromotion($promotion_id, $year) 
+	{
+		return $this->createQueryBuilder('s')
+					->join('sp.student', 's')
+						->addSelect('s')
+					->join('m.teachingUnitSubject', 'tus')
+						->addSelect('tus')
+					->join('tus.subject', 'sub')
+						->addSelect('sub')
+					->join('tus.teachingUnit', 'tu')
+						->addSelect('tu')
+					->join('tu.container', 'c')
+						->addSelect('c')
+					->join('m.studentPromotion', 'sp')
+						->addSelect('sp')					
+					->join('sp.promotion', 'p')
+						->addSelect('p')
+
+					->where('sp.promotion = :promotion_id')
+						->setParameter('promotion_id', $promotion_id)
+					->andWhere('sp.year = :year')
+						->setParameter('year', $year)
+					->getQuery()
+					->getResult();
+	}
 }

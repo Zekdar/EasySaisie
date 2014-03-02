@@ -2,10 +2,11 @@
 
 {% block body %}
     {{ parent() }}
-    
-    {% set studentPromotion = entities[0].studentPromotion %}
-    
+    {{ dump(entities)}}
     {% if entities is not empty %}
+
+        {% set studentPromotion = entities[0].studentPromotion %}
+
         <h1 class="page-header">Notes des étudiants de {{ studentPromotion.promotion }} {{ studentPromotion.year }}</h1>
 
         <table class="table table-bordered table-bordered">
