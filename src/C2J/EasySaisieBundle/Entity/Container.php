@@ -31,6 +31,27 @@ class Container
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
    */
   private $promotion;
+  
+  /**
+   * @var boolean  $areTeachingUnitsCompensable
+   *
+   * @ORM\Column(name="areTeachingUnitsCompensable", type="boolean")
+   */
+  private $areTeachingUnitsCompensable;
+  
+  /**
+   * @var float  $minMark
+   *
+   * @ORM\Column(name="minMark", type="float")
+   */
+  private $minMark;
+  
+  /**
+   * @var float  $minAverage
+   *
+   * @ORM\Column(name="minAverage", type="float")
+   */
+  private $minAverage;
 
     /**
      * Get id
@@ -91,5 +112,74 @@ class Container
 	public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * Set areTeachingUnitsCompensable
+     *
+     * @param boolean $areTeachingUnitsCompensable
+     * @return Container
+     */
+    public function setAreTeachingUnitsCompensable($areTeachingUnitsCompensable)
+    {
+        $this->areTeachingUnitsCompensable = $areTeachingUnitsCompensable;
+    
+        return $this;
+    }
+
+    /**
+     * Get areTeachingUnitsCompensable
+     *
+     * @return boolean 
+     */
+    public function getAreTeachingUnitsCompensable()
+    {
+        return $this->areTeachingUnitsCompensable;
+    }
+
+    /**
+     * Set minMark
+     *
+     * @param float $minMark
+     * @return Container
+     */
+    public function setMinMark($minMark)
+    {
+        $this->minMark = $minMark;
+    
+        return $this;
+    }
+
+    /**
+     * Get minMark
+     *
+     * @return float 
+     */
+    public function getMinMark()
+    {
+        return $this->minMark;
+    }
+
+    /**
+     * Set minAverage
+     *
+     * @param float $minAverage
+     * @return Container
+     */
+    public function setMinAverage($minAverage)
+    {
+        $this->minAverage = $minAverage;
+    
+        return $this;
+    }
+
+    /**
+     * Get minAverage
+     *
+     * @return float 
+     */
+    public function getMinAverage()
+    {
+        return $this->minAverage;
     }
 }

@@ -36,6 +36,11 @@ class StudentPromotion
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
    */
   private $promotion;
+  
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\Mark", mappedBy="studentPromotion")
+   */
+  private $marks;
 
     /**
      * Set year
