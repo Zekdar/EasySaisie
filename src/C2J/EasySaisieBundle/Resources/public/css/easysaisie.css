@@ -60,3 +60,7 @@ h1, h2 {
 	font-size: 20px;
 	padding-top: 11px;
 }
+
+.clickableRow {
+	cursor: pointer;
+}

@@ -34,6 +34,13 @@ class TeachingUnit
    * @ORM\Column(name="code", type="string", length=255)
    */
   private $code;
+  
+  /**
+   * @var boolean $isCompensable
+   *
+   * @ORM\Column(name="isCompensable", type="boolean")
+   */
+  private $isCompensable;
     
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Container")
@@ -123,5 +130,28 @@ class TeachingUnit
 	public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * Set isCompensable
+     *
+     * @param boolean $isCompensable
+     * @return TeachingUnit
+     */
+    public function setIsCompensable($isCompensable)
+    {
+        $this->isCompensable = $isCompensable;
+    
+        return $this;
+    }
+
+    /**
+     * Get isCompensable
+     *
+     * @return boolean 
+     */
+    public function getIsCompensable()
+    {
+        return $this->isCompensable;
     }
 }

@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use C2J\EasySaisieBundle\Entity\Mark;
 use C2J\EasySaisieBundle\Form\MarkType;
+use Doctrine\Common\Util\Debug;
 
 /**
  * Mark controller.
@@ -46,8 +47,9 @@ class MarkController extends Controller
     public function listAction($year, $promotion_id) 
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('C2JEasySaisieBundle:Student')->findAllMarksByStudentsByPromotion($promotion_id, $year);
-        Doctrine\Common\Util\Debug\dump($entities);exit;
+        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllMarksByStudentsByPromotion($promotion_id, $year);
+        
+        Debug::dump($entities);
         return array(
             'entities' => $entities,
         );

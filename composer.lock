@@ -526,7 +526,7 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier2",
+                    "name": "Fabien Potencier",
                     "email": "fabien@symfony.com",
                     "homepage": "http://fabien.potencier.org",
                     "role": "Lead Developer"

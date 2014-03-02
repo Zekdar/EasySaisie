@@ -12,29 +12,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class MarkRepository extends EntityRepository
 {
-	public function findAllMarksByStudentsByPromotion($promotion_id, $year) 
-	{
-		return $this->createQueryBuilder('m')
-					->leftJoin('m.teachingUnitSubject', 'tus')
-						->addSelect('tus')
-					->leftJoin('tus.subject', 'sub')
-						->addSelect('sub')
-					->leftJoin('tus.teachingUnit', 'tu')
-						->addSelect('tu')
-					->leftJoin('tu.container', 'c')
-						->addSelect('c')
-					->leftJoin('m.studentPromotion', 'sp')
-						->addSelect('sp')
-					->leftJoin('sp.student', 's')
-						->addSelect('s')
-					->leftJoin('sp.promotion', 'p')
-						->addSelect('p')
 
-					->where('sp.promotion = :promotion_id')
-						->setParameter('promotion_id', $promotion_id)
-					->andWhere('sp.year = :year')
-						->setParameter('year', $year)
-					->getQuery()
-					->getResult();
-	}
 }

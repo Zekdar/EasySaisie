@@ -36,6 +36,13 @@ class TeachingUnitSubject
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Subject")
    */
   private $subject;
+  
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\Mark", mappedBy="teachingUnitSubject")
+   */
+  private $marks;
+  
+  
 
     /**
      * Set coeff
