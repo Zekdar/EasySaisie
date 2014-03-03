@@ -47,11 +47,10 @@ class MarkController extends Controller
     public function listAction($year, $promotion_id) 
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllMarksByStudentsByPromotion($promotion_id, $year);
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
         
-        Debug::dump($entities);
         return array(
-            'entities' => $entities,
+            'studentPromotions' => $studentPromotions,
         );
     }
 

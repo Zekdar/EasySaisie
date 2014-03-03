@@ -2,39 +2,39 @@
 
 {% block body %}
     {{ parent() }}
-    {{ dump(entities)}}
-    {% if entities is not empty %}
+    {#{dump(studentPromotions)}#}
+    
+    {% if studentPromotions is not empty %}
+        {#% set studentPromotion = entities[0].studentPromotion %#}
 
-        {% set studentPromotion = entities[0].studentPromotion %}
-
-        <h1 class="page-header">Notes des étudiants de {{ studentPromotion.promotion }} {{ studentPromotion.year }}</h1>
+        <h1 class="page-header">Notes des étudiants de {#{ studentPromotion.promotion }#} {#{ studentPromotion.year }#}</h1>
 
         <table class="table table-bordered table-bordered">
             <thead>
-                {% for entity in entities %}
+                {#% for entity in entities %#}
                     <tr>
                         <th></th>
                         <th></th>
-                        <th colspan="{{ entity.teachingUnitSubject | length}}">{{ entity.teachingUnitSubject.teachingUnit.container.name }}</th>
+                        <th colspan="{#{ entity.teachingUnitSubject | length}#}">{#{ entity.teachingUnitSubject.teachingUnit.container.name }#}</th>
                     </tr>
                     <tr>
                         <th></th>
                         <th></th>
-                        <th>{{ entity.teachingUnitSubject.teachingUnit.code }} {{ entity.teachingUnitSubject.teachingUnit.name }}</th>
+                        <th>{#{ entity.teachingUnitSubject.teachingUnit.code }#} {#{ entity.teachingUnitSubject.teachingUnit.name }#}</th>
                     </tr>
                     <tr>
                         <th>Num. Etudiant</th>
                         <th>Etudiant</th>
                         <th>/x</th>
-                        <th>{{ entity.teachingUnitSubject.subject.name }}</th>
+                        <th>{#{ entity.teachingUnitSubject.subject.name }#}</th>
                     </tr>
-                {% endfor %}
+                {#% endfor %#}
             </thead>
             <tbody>
-                {% for entity in entities %}{{ dump(entity) }}
+                {% for sp in studentPromotions %}{
                 <tr>
-                    <td>{{ entity.studentPromotion.student.number }}</td>
-                    <td><b>{{ entity.studentPromotion.student.lastName }}</b> {{ entity.studentPromotion.student.firstName }}</td>
+                    <td>{{ sp.student.number }}</td>
+                    <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                 </tr>   
                 {% endfor %}                
             </tbody>

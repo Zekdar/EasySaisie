@@ -34,7 +34,23 @@ class StudentPromotionRepository extends EntityRepository
 					->getResult();
 	}
 
-	public function findAllMarksByStudentsByPromotion($promotion_id, $year) 
+	public function findAllStudentsInPromotionByYear($promotion_id, $year) 
+	{
+		return $this->createQueryBuilder('sp')
+					->join('sp.student', 's')
+						->addSelect('s')
+					// ->join('sp.promotion', 'p')
+					// 	->addSelect('p')
+					->where('sp.promotion = :promotion_id')
+						->setParameter('promotion_id', $promotion_id)
+					->andWhere('sp.year = :year')
+						->setParameter('year', $year)
+					->addOrderBy('s.lastName', 'ASC')
+					->getQuery()
+					->getResult();
+	}
+
+	public function findAllStudentsInPromotion($promotion_id, $year) 
 	{
 		// return $this->createQueryBuilder('sp')
 		// 			->join('sp.student', 's')

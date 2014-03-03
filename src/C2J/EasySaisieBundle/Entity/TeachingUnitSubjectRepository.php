@@ -12,4 +12,21 @@ use Doctrine\ORM\EntityRepository;
  */
 class TeachingUnitSubjectRepository extends EntityRepository
 {
+	public function findAllSubjectsByTusByContainer() 
+	{
+		return $this->createQueryBuilder('tus')
+					->join('tus.subject', 's')
+						->addSelect('s')
+					->join('tus.teachingunit', 'tu')
+						->addSelect('tu')
+					->join('tu.container', 'c')
+						->addSelect('c')
+					// ->where('sp.promotion = :promotion_id')
+					// 	->setParameter('promotion_id', $promotion_id)
+					// ->andWhere('sp.year = :year')
+					// 	->setParameter('year', $year)
+					->addOrderBy('tu.code', 'ASC')
+					->getQuery()
+					->getResult();
+	}
 }
