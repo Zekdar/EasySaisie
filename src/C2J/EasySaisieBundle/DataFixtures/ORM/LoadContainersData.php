@@ -16,18 +16,30 @@ class LoadContainersData extends AbstractFixture implements OrderedFixtureInterf
     {
         $container1 = new Container();
         $container1->setName('Semestre 1');
+        $container1->setAreTeachingUnitsCompensable(true);
+        $container1->setMinMark('10');
+        $container1->setMinAverage('10');
         $container1->setPromotion($this->getReference('promotion1')); // TODO fixtures recherche partager objets
 
         $container2 = new Container();
         $container2->setName('Semestre 2');
+        $container2->setAreTeachingUnitsCompensable(true);
+        $container2->setMinMark('10');
+        $container2->setMinAverage('10');
         $container2->setPromotion($this->getReference('promotion1'));
 		
 		$container3 = new Container();
         $container3->setName('Semestre 1');
+        $container3->setAreTeachingUnitsCompensable(true);
+        $container3->setMinMark('10');
+        $container3->setMinAverage('10');
         $container3->setPromotion($this->getReference('promotion2'));
 		
 		$container4 = new Container();
         $container4->setName('Semestre 2');
+        $container4->setAreTeachingUnitsCompensable(true);
+        $container4->setMinMark('10');
+        $container4->setMinAverage('10');
         $container4->setPromotion($this->getReference('promotion2'));
 
         $manager->persist($container1);

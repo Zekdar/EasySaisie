@@ -77,9 +77,9 @@ class Student
   private $email;
   
   /**
-   * @var date $birthDate
+   * @var string $birthDate
    *
-   * @ORM\Column(name="birthDate", type="date")
+   * @ORM\Column(name="birthDate", type="string")
    */
   private $birthDate;
 
