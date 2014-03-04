@@ -34,6 +34,13 @@ class TeachingUnit
    * @ORM\Column(name="code", type="string", length=255)
    */
   private $code;
+  
+  /**
+   * @var boolean $isCompensable
+   *
+   * @ORM\Column(name="isCompensable", type="boolean")
+   */
+  private $isCompensable;
     
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Container")
@@ -118,5 +125,10 @@ class TeachingUnit
     public function getContainer()
     {
         return $this->container;
+    }
+	
+	public function __toString()
+    {
+        return $this->name;
     }
 }

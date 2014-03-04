@@ -31,6 +31,27 @@ class Container
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
    */
   private $promotion;
+  
+  /**
+   * @var boolean  $areTeachingUnitsCompensable
+   *
+   * @ORM\Column(name="areTeachingUnitsCompensable", type="boolean")
+   */
+  private $areTeachingUnitsCompensable;
+  
+  /**
+   * @var float  $minMark
+   *
+   * @ORM\Column(name="minMark", type="float")
+   */
+  private $minMark;
+  
+  /**
+   * @var float  $minAverage
+   *
+   * @ORM\Column(name="minAverage", type="float")
+   */
+  private $minAverage;
 
     /**
      * Get id
@@ -71,7 +92,7 @@ class Container
      * @param \C2J\EasySaisieBundle\Entity\Promotion $promotion
      * @return Container
      */
-    public function setPromotion(\EasySaisieBundle\Entity\Promotion $promotion = null)
+    public function setPromotion(\C2J\EasySaisieBundle\Entity\Promotion $promotion = null)
     {
         $this->promotion = $promotion;
     
@@ -86,5 +107,33 @@ class Container
     public function getPromotion()
     {
         return $this->promotion;
+    }
+	
+	public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set areTeachingUnitsCompensable
+     *
+     * @param boolean $areTeachingUnitsCompensable
+     * @return Container
+     */
+    public function setAreTeachingUnitsCompensable($areTeachingUnitsCompensable)
+    {
+        $this->areTeachingUnitsCompensable = $areTeachingUnitsCompensable;
+    
+        return $this;
+    }
+
+    /**
+     * Get areTeachingUnitsCompensable
+     *
+     * @return boolean 
+     */
+    public function getAreTeachingUnitsCompensable()
+    {
+        return $this->areTeachingUnitsCompensable;
     }
 }

@@ -33,6 +33,14 @@ class Promotion
    * @ORM\Column(name="name", type="string", length=255)
    */
   private $name;
+  
+  /**
+   * @var decimal $minAverageToValidate
+   *
+   * @ORM\Column(name="minAverageToValidate", type="float")
+   */
+  private $minAverageToValidate;
+  
     /**
      * Get id
      *
@@ -92,5 +100,28 @@ class Promotion
 	public function __toString()
     {
         return $this->name." ".$this->getFormation();
+    }
+
+    /**
+     * Set minAverageToValidate
+     *
+     * @param float $minAverageToValidate
+     * @return Promotion
+     */
+    public function setMinAverageToValidate($minAverageToValidate)
+    {
+        $this->minAverageToValidate = $minAverageToValidate;
+    
+        return $this;
+    }
+
+    /**
+     * Get minAverageToValidate
+     *
+     * @return float 
+     */
+    public function getMinAverageToValidate()
+    {
+        return $this->minAverageToValidate;
     }
 }

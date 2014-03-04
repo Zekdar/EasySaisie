@@ -21,19 +21,19 @@ class Mark
   private $id;
 
   /**
-   * @var decimal $value
+   * @var float $value
    *
-   * @ORM\Column(name="value", type="decimal")
+   * @ORM\Column(name="value", type="float")
    */
   private $value;
   
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject", inversedBy="marks")
    */
   private $teachingUnitSubject;
   
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion", inversedBy="marks")
    */
   private $studentPromotion;
   
@@ -46,29 +46,6 @@ class Mark
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set value
-     *
-     * @param string $value
-     * @return Mark
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-    
-        return $this;
-    }
-
-    /**
-     * Get value
-     *
-     * @return string 
-     */
-    public function getValue()
-    {
-        return $this->value;
     }
 
     /**
@@ -115,5 +92,28 @@ class Mark
     public function getStudentPromotion()
     {
         return $this->studentPromotion;
+    }
+
+    /**
+     * Set value
+     *
+     * @param float $value
+     * @return Mark
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return float 
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 }
