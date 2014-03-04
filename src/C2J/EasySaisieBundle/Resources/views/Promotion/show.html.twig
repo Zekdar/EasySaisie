@@ -10,8 +10,14 @@
             <tr>
                 <th>Id</th>
                 <td>{{ entity.id }}</td>
-				<td>{{ entity.name }}</td>
+            </tr>
+			<tr>
+                <th>Formation</th>
 				<td>{{ entity.formation.name }}</td>
+            </tr>
+			<tr>
+                <th>Promotion</th>
+				<td>{{ entity.name }}</td>
             </tr>
         </tbody>
     </table>
@@ -30,6 +36,13 @@
     <li>{{ form(delete_form) }}</li>
 	<li>
 		<a href="{{ path('container_new', { 'id': entity.id }) }}"><input type="button" value="Add a container">
+		</a>
+	</li>
+	<li>
+		<a href="{{ path('studentpromotion_new', { 'promotionId': entity.id }) }}"><input type="button" value="Add an existing student">
+		</a>
+		or
+		<a href="{{ path('student_new', { 'id': entity.id }) }}"><input type="button" value="Create new student">
 		</a>
 	</li>
 </ul>
