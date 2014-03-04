@@ -77,9 +77,9 @@ class Student
   private $email;
   
   /**
-   * @var date $birthDate
+   * @var string $birthDate
    *
-   * @ORM\Column(name="birthDate", type="date")
+   * @ORM\Column(name="birthDate", type="string")
    */
   private $birthDate;
 
@@ -298,5 +298,10 @@ class Student
     public function getBirthDate()
     {
         return $this->birthDate;
+    }
+	
+	public function __toString()
+    {
+        return $this->getLastName()." ".$this->getFirstName();
     }
 }

@@ -34,11 +34,23 @@ class TeachingUnit
    * @ORM\Column(name="code", type="string", length=255)
    */
   private $code;
+  
+  /**
+   * @var boolean $isCompensable
+   *
+   * @ORM\Column(name="isCompensable", type="boolean")
+   */
+  private $isCompensable;
     
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Container")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Container", inversedBy="teachingUnits")
    */
   private $container;
+
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject", mappedBy="teachingUnit")
+   */
+  private $teachingUnitSubjects;
   
 
     /**
@@ -118,5 +130,73 @@ class TeachingUnit
     public function getContainer()
     {
         return $this->container;
+    }
+	
+	public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set isCompensable
+     *
+     * @param boolean $isCompensable
+     * @return TeachingUnit
+     */
+    public function setIsCompensable($isCompensable)
+    {
+        $this->isCompensable = $isCompensable;
+    
+        return $this;
+    }
+
+    /**
+     * Get isCompensable
+     *
+     * @return boolean 
+     */
+    public function getIsCompensable()
+    {
+        return $this->isCompensable;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->teachingUnitSubjects = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add teachingUnitSubjects
+     *
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects
+     * @return TeachingUnit
+     */
+    public function addTeachingUnitSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects)
+    {
+        $this->teachingUnitSubjects[] = $teachingUnitSubjects;
+
+        return $this;
+    }
+
+    /**
+     * Remove teachingUnitSubjects
+     *
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects
+     */
+    public function removeTeachingUnitSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects)
+    {
+        $this->teachingUnitSubjects->removeElement($teachingUnitSubjects);
+    }
+
+    /**
+     * Get teachingUnitSubjects
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTeachingUnitSubjects()
+    {
+        return $this->teachingUnitSubjects;
     }
 }

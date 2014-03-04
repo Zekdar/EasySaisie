@@ -28,7 +28,7 @@ class TeachingUnitSubject
   private $coeff;
   
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit", inversedBy="teachingUnitSubjects")
    */
   private $teachingUnit;
   
@@ -126,5 +126,45 @@ class TeachingUnitSubject
 	public function __toString()
     {
         return $this->getSubject()."";
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->marks = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add marks
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Mark $marks
+     * @return TeachingUnitSubject
+     */
+    public function addMark(\C2J\EasySaisieBundle\Entity\Mark $marks)
+    {
+        $this->marks[] = $marks;
+
+        return $this;
+    }
+
+    /**
+     * Remove marks
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Mark $marks
+     */
+    public function removeMark(\C2J\EasySaisieBundle\Entity\Mark $marks)
+    {
+        $this->marks->removeElement($marks);
+    }
+
+    /**
+     * Get marks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMarks()
+    {
+        return $this->marks;
     }
 }

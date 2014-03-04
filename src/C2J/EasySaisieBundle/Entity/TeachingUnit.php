@@ -43,9 +43,14 @@ class TeachingUnit
   private $isCompensable;
     
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Container")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Container", inversedBy="teachingUnits")
    */
   private $container;
+
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject", mappedBy="teachingUnit")
+   */
+  private $teachingUnitSubjects;
   
 
     /**
@@ -153,5 +158,45 @@ class TeachingUnit
     public function getIsCompensable()
     {
         return $this->isCompensable;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->teachingUnitSubjects = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add teachingUnitSubjects
+     *
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects
+     * @return TeachingUnit
+     */
+    public function addTeachingUnitSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects)
+    {
+        $this->teachingUnitSubjects[] = $teachingUnitSubjects;
+
+        return $this;
+    }
+
+    /**
+     * Remove teachingUnitSubjects
+     *
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects
+     */
+    public function removeTeachingUnitSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubjects)
+    {
+        $this->teachingUnitSubjects->removeElement($teachingUnitSubjects);
+    }
+
+    /**
+     * Get teachingUnitSubjects
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTeachingUnitSubjects()
+    {
+        return $this->teachingUnitSubjects;
     }
 }

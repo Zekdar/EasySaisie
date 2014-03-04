@@ -2,10 +2,10 @@
 
 {% block body %}
     {{ parent() }}
-    {{dump(entities)}}
+    {# {{dump(containers[0].teachingUnits)}} #}
     
     {% if studentPromotions is not empty %}
-        {#% set studentPromotion = entities[0].studentPromotion %#}
+        
 
         <h1 class="page-header">Notes des étudiants de {#{ studentPromotion.promotion }#} {#{ studentPromotion.year }#}</h1>
 
@@ -14,28 +14,33 @@
                 <tr>
                     <th></th>
                     <th></th>
-
-                    {% set containerName = entities[0].teachingUnit.container.name %}
-                    {% for entity in entities %}
-                        {% if entity.teachingUnit.container.name != containerName %}
-                            <th colspan="">{{ entity.teachingUnit.container.name }}</th>
-                        {% endif %}
+                    {% for container in containers %}
+                        <th colspan="{{ container.teachingUnits | length }}">{{ container.name }}</th>
                     {% endfor %}
                 </tr>
                 <tr>
                     <th></th>
                     <th></th>
-                    <th>{#{ entity.teachingUnitSubject.teachingUnit.code }#} {#{ entity.teachingUnitSubject.teachingUnit.name }#}</th>
+                    {% for container in containers %}
+                        {% for tu in container.teachingUnits %}
+                            <th colspan="{{ tu.teachingUnitSubjects | length }}">{{ tu.code }} {{ tu.name }}</th>
+                        {% endfor %}
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th>Num. Etudiant</th>
                     <th>Etudiant</th>
-                    <th>/x</th>
-                    <th>{#{ entity.teachingUnitSubject.subject.name }#}</th>
+                    {% for container in containers %}
+                        {% for tu in container.teachingUnits %}
+                            {% for tus in tu.teachingUnitSubjects %}
+                                <th>{{ tus.subject.name }}</th>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                {% for sp in studentPromotions %}{
+                {% for sp in studentPromotions %}
                 <tr>
                     <td>{{ sp.student.number }}</td>
                     <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>

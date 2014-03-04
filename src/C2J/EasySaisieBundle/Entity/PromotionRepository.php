@@ -12,5 +12,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class PromotionRepository extends EntityRepository
 {
-
+	public function findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year) 
+	{
+		return $this->createQueryBuilder('p')
+					->join('p.containers', 'c')
+						->addSelect('c')
+					->join('p.studentPromotions', 'sp')
+						->addSelect('sp')
+					->join('c.teachingUnits', 'tu')
+						->addSelect('tu')
+					->join('tu.teachingUnitSubjects', 'tus')
+						->addSelect('tus')
+					->where('p.id = :promotion_id')
+						->setParameter('promotion_id', $promotion_id)
+					->andWhere('sp.year = :year')
+						->setParameter('year', $year)
+					->addOrderBy('tu.code', 'ASC')
+					->getQuery()
+					->getResult();
+	}
 }

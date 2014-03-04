@@ -16,7 +16,7 @@ class StudentPromotionRepository extends EntityRepository
 	{
 		$qb = $this ->createQueryBuilder('sp')
 					->join('sp.promotion', 'p')
-					->addSelect('p')
+						->addSelect('p')
 					->groupBy('p.name')
 					->orderBy('sp.year', 'DESC')
 					->addOrderBy('p.name', 'ASC');

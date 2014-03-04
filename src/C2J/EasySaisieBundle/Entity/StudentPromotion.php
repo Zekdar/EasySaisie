@@ -33,7 +33,7 @@ class StudentPromotion
   private $student;
   
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion", inversedBy="promotions")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion", inversedBy="studentPromotions")
    */
   private $promotion;
   
