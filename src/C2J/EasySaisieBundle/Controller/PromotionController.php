@@ -112,6 +112,8 @@ class PromotionController extends Controller
 
         $entity = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($id);
 
+        $containers = $em->getRepository('C2JEasySaisieBundle:Container')->findByPromotion($entity);
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Promotion entity.');
         }
@@ -120,6 +122,7 @@ class PromotionController extends Controller
 
         return array(
             'entity'      => $entity,
+            'containers'  => $containers,
             'delete_form' => $deleteForm->createView(),
         );
     }

@@ -2,7 +2,11 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}EasySaisie - Le logiciel qui vous simplifie la vie !{% endblock %}</title>
+        <title>{% block title %}EasySaisie - Le logiciel qui vous simplifie la vie !
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        Connecté en tant que {{ app.user.firstname }}
+        {% endif %}
+        {% endblock %}</title>
         {% block stylesheets %}
             <link href="{{ asset('bundles/c2jeasysaisie/css/bootstrap.min.css') }}" type="text/css" rel="stylesheet" media="screen" />
         {% endblock %}

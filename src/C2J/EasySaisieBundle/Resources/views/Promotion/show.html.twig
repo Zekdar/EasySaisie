@@ -1,3 +1,4 @@
+{# Promotion #}
 {% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
 
@@ -8,24 +9,39 @@
     <table class="record_properties">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>Id :</th>
                 <td>{{ entity.id }}</td>
-				<td>{{ entity.name }}</td>
+                <td>{{ entity.name }}</td>
             </tr>
         </tbody>
     </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('promotion') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('promotion_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+<p>{{ containers|length }}</p>
+    {% if containers|length >0  %}
+    <table class="record_properties">
+        <tbody>
+            <tr><th>Containers</th></tr>
+            {% for container in containers %}
+            <tr>
+                <td><a href="{{ path('container_show', { 'id': container.id }) }}">{{ container.id }}</a></td>
+                <td><a href="{{ path('container_show', { 'id': container.id }) }}">{{ container.name }}</a></td>
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('promotion') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('promotion_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>{{ form(delete_form) }}</li>
+    </ul>
 {% endblock %}
