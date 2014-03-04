@@ -40,6 +40,11 @@ class Promotion
    * @ORM\Column(name="minAverageToValidate", type="float")
    */
   private $minAverageToValidate;
+
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion", mappedBy="promotion")
+   */
+  private $studentPromotions;
   
     /**
      * Get id
@@ -123,5 +128,12 @@ class Promotion
     public function getMinAverageToValidate()
     {
         return $this->minAverageToValidate;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->marks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

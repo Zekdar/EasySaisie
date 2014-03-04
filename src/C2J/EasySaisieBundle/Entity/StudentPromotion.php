@@ -33,7 +33,7 @@ class StudentPromotion
   private $student;
   
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion", inversedBy="promotions")
    */
   private $promotion;
   
@@ -125,4 +125,44 @@ class StudentPromotion
 	{
 		return $this->getStudent()." ".$this->getYear()." ".$this->getPromotion();
 	}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->marks = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add marks
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Mark $marks
+     * @return StudentPromotion
+     */
+    public function addMark(\C2J\EasySaisieBundle\Entity\Mark $marks)
+    {
+        $this->marks[] = $marks;
+
+        return $this;
+    }
+
+    /**
+     * Remove marks
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Mark $marks
+     */
+    public function removeMark(\C2J\EasySaisieBundle\Entity\Mark $marks)
+    {
+        $this->marks->removeElement($marks);
+    }
+
+    /**
+     * Get marks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMarks()
+    {
+        return $this->marks;
+    }
 }

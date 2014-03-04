@@ -33,6 +33,19 @@ class Promotion
    * @ORM\Column(name="name", type="string", length=255)
    */
   private $name;
+  
+  /**
+   * @var decimal $minAverageToValidate
+   *
+   * @ORM\Column(name="minAverageToValidate", type="float")
+   */
+  private $minAverageToValidate;
+
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotions", mappedBy="promotion")
+   */
+  private $StudentPromotions;
+  
     /**
      * Get id
      *
@@ -64,5 +77,63 @@ class Promotion
     public function getFormation()
     {
         return $this->formation;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Promotion
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+	
+	public function __toString()
+    {
+        return $this->name." ".$this->getFormation();
+    }
+
+    /**
+     * Set minAverageToValidate
+     *
+     * @param float $minAverageToValidate
+     * @return Promotion
+     */
+    public function setMinAverageToValidate($minAverageToValidate)
+    {
+        $this->minAverageToValidate = $minAverageToValidate;
+    
+        return $this;
+    }
+
+    /**
+     * Get minAverageToValidate
+     *
+     * @return float 
+     */
+    public function getMinAverageToValidate()
+    {
+        return $this->minAverageToValidate;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->marks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }
