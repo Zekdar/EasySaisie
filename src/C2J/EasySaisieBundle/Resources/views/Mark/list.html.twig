@@ -2,7 +2,7 @@
 
 {% block body %}
     {{ parent() }}
-    {#{dump(studentPromotions)}#}
+    {{dump(entities)}}
     
     {% if studentPromotions is not empty %}
         {#% set studentPromotion = entities[0].studentPromotion %#}
@@ -11,24 +11,28 @@
 
         <table class="table table-bordered table-bordered">
             <thead>
-                {#% for entity in entities %#}
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th colspan="{#{ entity.teachingUnitSubject | length}#}">{#{ entity.teachingUnitSubject.teachingUnit.container.name }#}</th>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>{#{ entity.teachingUnitSubject.teachingUnit.code }#} {#{ entity.teachingUnitSubject.teachingUnit.name }#}</th>
-                    </tr>
-                    <tr>
-                        <th>Num. Etudiant</th>
-                        <th>Etudiant</th>
-                        <th>/x</th>
-                        <th>{#{ entity.teachingUnitSubject.subject.name }#}</th>
-                    </tr>
-                {#% endfor %#}
+                <tr>
+                    <th></th>
+                    <th></th>
+
+                    {% set containerName = entities[0].teachingUnit.container.name %}
+                    {% for entity in entities %}
+                        {% if entity.teachingUnit.container.name != containerName %}
+                            <th colspan="">{{ entity.teachingUnit.container.name }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>{#{ entity.teachingUnitSubject.teachingUnit.code }#} {#{ entity.teachingUnitSubject.teachingUnit.name }#}</th>
+                </tr>
+                <tr>
+                    <th>Num. Etudiant</th>
+                    <th>Etudiant</th>
+                    <th>/x</th>
+                    <th>{#{ entity.teachingUnitSubject.subject.name }#}</th>
+                </tr>
             </thead>
             <tbody>
                 {% for sp in studentPromotions %}{

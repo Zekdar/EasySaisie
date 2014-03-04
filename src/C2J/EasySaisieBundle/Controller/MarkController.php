@@ -30,8 +30,8 @@ class MarkController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllPromotionsByYearDistinct();
-        
+        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllPromotionsByYearDistinct();        
+
         return array(
             'entities' => $entities,
         );
@@ -48,9 +48,11 @@ class MarkController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
-        
+        $entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
+        // var_dump($entities);
         return array(
             'studentPromotions' => $studentPromotions,
+            'entities' => $entities
         );
     }
 
