@@ -1,11 +1,11 @@
+
 {% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
 {% block body %}
     {{ parent() }}
-    {# {{dump(containers[0].teachingUnits)}} #}
+    {{dump(studentPromotions[0].marks[0].teachingUnitSubject.teachingUnit.id)}}
     
     {% if studentPromotions is not empty %}
-        
 
         <h1 class="page-header">Notes des étudiants de {#{ studentPromotion.promotion }#} {#{ studentPromotion.year }#}</h1>
 
@@ -44,6 +44,21 @@
                 <tr>
                     <td>{{ sp.student.number }}</td>
                     <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                    {% for container in containers %}
+                        {% for tu in container.teachingUnits %}
+                            {% for tus in tu.teachingUnitSubjects %}
+                                {% for mark in sp.marks %}
+                                    {% if mark is not empty %}
+                                        {% if tus.subject.id == mark.teachingUnitSubject.teachingUnit.id %}
+                                            <td>{{ mark.value }}</td>
+                                        {% else %}
+                                            <td>null</td>
+                                        {% endif %}                                    
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
                 </tr>   
                 {% endfor %}                
             </tbody>

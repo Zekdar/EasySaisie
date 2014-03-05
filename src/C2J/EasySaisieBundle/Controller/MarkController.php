@@ -49,7 +49,9 @@ class MarkController extends Controller
         $em = $this->getDoctrine()->getManager();
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
+        
         // var_dump($entities);
+
         return array(
             'studentPromotions' => $studentPromotions,
             'containers' => $promotions[0]->getContainers()

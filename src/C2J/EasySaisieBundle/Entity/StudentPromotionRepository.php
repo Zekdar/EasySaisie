@@ -39,6 +39,8 @@ class StudentPromotionRepository extends EntityRepository
 		return $this->createQueryBuilder('sp')
 					->join('sp.student', 's')
 						->addSelect('s')
+					->leftJoin('sp.marks', 'm')
+						->addSelect('m')
 					// ->join('sp.promotion', 'p')
 					// 	->addSelect('p')
 					->where('sp.promotion = :promotion_id')
