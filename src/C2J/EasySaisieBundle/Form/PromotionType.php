@@ -17,6 +17,7 @@ class PromotionType extends AbstractType
         $builder
             ->add('formation')
 			->add('name')
+			->add('minAverageToValidate')
         ;
     }
     

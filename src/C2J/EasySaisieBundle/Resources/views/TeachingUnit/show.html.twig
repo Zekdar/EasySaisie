@@ -43,10 +43,7 @@
     </li>
     <li>{{ form(delete_form) }}</li>
 	<li>
-		<a href="{{ path('teachingunitsubject_new', { 'teachingUnitId': entity.id }) }}"><input type="button" value="Add an existing subject">
-		</a>
-		or
-		<a href="{{ path('subject_new', { 'id': entity.id }) }}"><input type="button" value="Create new subject">
+		<a href="{{ path('teachingunitsubject_new', { 'teachingUnitId': entity.id }) }}"><input type="button" value="Add a subject in this teaching unit">
 		</a>
 	</li>
 </ul>

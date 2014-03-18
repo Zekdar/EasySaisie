@@ -17,6 +17,10 @@ class ContainerType extends AbstractType
         $builder
             ->add('name')
             ->add('promotion')
+			->add('areTeachingUnitsCompensable', 'checkbox', array(
+				'required'  => false))
+			->add('minMark')
+			->add('minAverage')
         ;
     }
     

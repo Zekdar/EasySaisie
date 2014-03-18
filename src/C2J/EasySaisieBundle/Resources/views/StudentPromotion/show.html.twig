@@ -33,11 +33,8 @@
     </li>
     <li>{{ form(delete_form) }}</li>
 	<li>
-		<a href="{{ path('teachingunit_new', { 'promotionId': entity.promotion.id }) }}">
-			<input type="button" value="Add an existing teaching unit for this formation">
-		</a>
-		or
-		<a href="{{ path('teachingunit_new', { 'id': entity.id }) }}"><input type="button" value="Create new teaching unit">
+		<a href="#">
+			<input type="button" value="Add marks for this promotion">
 		</a>
 	</li>
 </ul>

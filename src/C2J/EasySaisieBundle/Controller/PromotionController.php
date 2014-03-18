@@ -93,11 +93,11 @@ class PromotionController extends Controller
 		$entity = new Promotion();
 		$request = Request::createFromGlobals();
 		$request->getPathInfo();
-		$id=$request->query->get('id');
+		$formationId=$request->query->get('formationId');
 		
-		if($id != null) {  
+		if($formationId != null) {  
 			$em = $this->getDoctrine()->getManager();
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->find($id);
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->find($formationId);
 			$entity->setFormation($entity2);
 		}
 		

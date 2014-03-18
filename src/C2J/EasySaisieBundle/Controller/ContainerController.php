@@ -93,11 +93,11 @@ class ContainerController extends Controller
         $entity = new Container();
 		$request = Request::createFromGlobals();
 		$request->getPathInfo();
-		$id=$request->query->get('id');
+		$promotionId=$request->query->get('promotionId');
 		
-		if($id != null) {  
+		if($promotionId != null) {  
 			$em = $this->getDoctrine()->getManager();
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($id);
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
 			$entity->setPromotion($entity2);
 		}
 		

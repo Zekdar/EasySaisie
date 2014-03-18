@@ -18,6 +18,8 @@ class TeachingUnitType extends AbstractType
             ->add('name')
             ->add('code')
             ->add('container')
+			->add('isCompensable', 'checkbox', array(
+				'required'  => false))
         ;
     }
     
