@@ -50,11 +50,31 @@ class MarkController extends Controller
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
         
-        // var_dump($entities);
+        $colspans = [];
+        foreach ($promotions[0]->getContainers() as $container) {
+            $containersColspan = 0;
+            foreach ($container->getTeachingUnits() as $tu) {
+                foreach ($tu->getTeachingUnitSubjects() as $subject) {
+                    $containersColspan++;
+                }
+            }
+            $colspans[] = $containersColspan;
+        }        
+
+        $subjectsIds = [];
+        foreach ($promotions[0]->getContainers() as $container) {
+            foreach ($container->getTeachingUnits() as $tu) {
+                foreach ($tu->getTeachingUnitSubjects() as $tus) {
+                    $subjectsIds[] = $tus->getSubject()->getId();                    
+                }
+            }
+        }
 
         return array(
             'studentPromotions' => $studentPromotions,
-            'containers' => $promotions[0]->getContainers()
+            'containers' => $promotions[0]->getContainers(),
+            'containersColspan' => $colspans,
+            'subjectsIds' => $subjectsIds
         );
     }
 
@@ -209,21 +229,26 @@ class MarkController extends Controller
             throw $this->createNotFoundException('Unable to find Mark entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
+        if($request->isXmlHttpRequest()) {
             $em->flush();
-
-            return $this->redirect($this->generateUrl('mark_edit', array('id' => $id)));
         }
+        else {
+            $deleteForm = $this->createDeleteForm($id);
+            $editForm = $this->createEditForm($entity);
+            $editForm->handleRequest($request);
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+            if ($editForm->isValid()) {
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('mark_edit', array('id' => $id)));
+            }
+
+            return array(
+                'entity'      => $entity,
+                'edit_form'   => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            );
+        }
     }
     /**
      * Deletes a Mark entity.

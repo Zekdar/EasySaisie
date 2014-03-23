@@ -63,4 +63,12 @@ $(document).ready(function() {
 			// ,uitheme : "bootstrap"
 		}
 	})
+	
+	$('.editable').editable({
+		"title" : "Entrez une note (entre 0-20)",
+		ajaxOptions: {
+		    type: 'put',
+		    dataType: 'json'
+		}
+	});
 });
