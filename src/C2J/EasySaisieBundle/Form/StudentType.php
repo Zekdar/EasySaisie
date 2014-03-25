@@ -15,15 +15,15 @@ class StudentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('number')
-            ->add('lastName')
-            ->add('firstName')
-            ->add('address')
-            ->add('zipCode')
-            ->add('city')
-            ->add('phone')
-            ->add('email')
-            ->add('birthDate')
+            ->add('number', 'text', array('label' => 'Numéro étudiant'))
+            ->add('lastName', 'text', array('label' => 'Nom'))
+            ->add('firstName', 'text', array('label' => 'Prénom'))
+            ->add('address', 'text', array('label' => 'Adresse'))
+            ->add('zipCode', 'text', array('label' => 'Code postal'))
+            ->add('city', 'text', array('label' => 'Ville'))
+            ->add('phone', 'text', array('label' => 'Téléphone'))
+            ->add('email', 'text', array('label' => 'E-mail'))
+            ->add('birthDate', 'date', array('label' => 'Date de naissance'))
         ;
     }
     

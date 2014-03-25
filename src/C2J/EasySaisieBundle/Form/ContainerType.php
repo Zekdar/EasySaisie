@@ -15,12 +15,13 @@ class ContainerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('name', 'text', array('label' => 'Nom du bloc'))
             ->add('promotion')
 			->add('areTeachingUnitsCompensable', 'checkbox', array(
-				'required'  => false))
-			->add('minMark')
-			->add('minAverage')
+				'required'  => false,
+				'label' => 'Est-ce que les UEs sont compensables ?'))
+			->add('minMark', 'text', array('label' => 'Note minimale'))
+			->add('minAverage', 'text', array('label' => 'Moyenne minimale'))
         ;
     }
     
