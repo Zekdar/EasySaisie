@@ -41,6 +41,7 @@
             </thead>
             <tbody>
                 {% for sp in studentPromotions %}
+                    {% set spId = sp.id %} {# declared here to use it after the for loop #}                                    
                     <tr>
                         <td>{{ sp.student.number }}</td>
                         <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>                    
@@ -49,6 +50,17 @@
                             {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                             {% set displayMark = '' %} 
                             {% set markId = '' %} {# declared here to use it after the for loop #}
+                            {% set tusId = '' %} {# declared here to use it after the for loop #}
+
+                            {% for container in containers %}
+                                {% for tu in container.teachingUnits %}
+                                    {% for tus in tu.teachingUnitSubjects %}
+                                        {% if sid == tus.subject.id %}
+                                            {% set tusId = tus.id %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
 
                             {% for mark in sp.marks if continue %}
                                 {% if mark.teachingUnitSubject.subject.id == sid %} 
@@ -58,19 +70,18 @@
                                 {% endif %}
                             {% endfor %}
 
-                            {% if displayMark is not empty %}
-                                <td>
-                                    <a 
+                            <td>
+                                <a 
                                     href="" 
-                                    class="editable" 
-                                    data-pk="{{ markId }}" 
+                                    class="mark" 
+                                    data-pk="{{ markId }}"
+                                    data-spid="{{ spId }}"
+                                    data-tusid="{{ tusId }}" 
                                     data-type="text" 
-                                    data-url="/"
-                                    >{{ displayMark }}</a>
-                                </td>
-                            {% else %}
-                                <td><a href="" class="editable">{{ displayMark }}</a></td>
-                            {% endif %}
+                                    data-url="{{ path('mark_persist_ajax') }}">
+                                    {{ displayMark }}
+                                </a>
+                            </td>
                         {% endfor %}
                     </tr> 
                 {% endfor %} 

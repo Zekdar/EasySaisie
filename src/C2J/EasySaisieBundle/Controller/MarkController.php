@@ -3,6 +3,7 @@
 namespace C2J\EasySaisieBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -229,7 +230,10 @@ class MarkController extends Controller
             throw $this->createNotFoundException('Unable to find Mark entity.');
         }
 
-        if($request->isXmlHttpRequest()) {
+        if($request->isXmlHttpRequest()) {var_dump($this->Request);exit;
+            $entity->setId($id);
+            $entity->setValue();
+            $em->persist($entity);
             $em->flush();
         }
         else {
@@ -291,5 +295,48 @@ class MarkController extends Controller
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
+    }
+
+    /**
+     * AJAX - Updates or Inserts a Mark in DB.
+     *
+     * @Route("/", name="mark_persist_ajax")
+     * @Method("PUT")
+     */    
+    public function persistMarkAjax() 
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+            
+            // If mark exists ==> update
+            $id = $request->request->get('pk');
+            if (!empty($id)) {
+                $mark = $em->getRepository('C2JEasySaisieBundle:Mark')->find($id);
+
+                if (!$mark) {
+                    throw $this->createNotFoundException('Unable to find Mark entity.');
+                }
+            } 
+            // Else ==> insert
+            else {
+                $tus = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->find($request->request->get('tusid'));
+                $sp = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->find($request->request->get('spid'));
+
+                if (!$tus) {
+                    throw $this->createNotFoundException('Unable to find TeachingUnitSubject entity.');
+                }
+                if (!$sp) {
+                    throw $this->createNotFoundException('Unable to find StudentPromotion entity.');
+                }
+                $mark = new Mark();
+                $mark   -> setTeachingUnitSubject($tus)
+                        -> setStudentPromotion($sp);
+            }
+            $mark->setValue($request->request->get('value'));
+            $em->persist($mark);
+            $em->flush();
+        }
+        return new Response();
     }
 }

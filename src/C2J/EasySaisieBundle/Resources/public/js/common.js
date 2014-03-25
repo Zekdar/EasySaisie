@@ -64,11 +64,36 @@ $(document).ready(function() {
 		}
 	})
 	
-	$('.editable').editable({
+	var pattern = new RegExp("^[0-9]{1,2}\.?[0-9]{0,2}$");
+	$('.mark').editable({
 		"title" : "Entrez une note (entre 0-20)",
+		validate: function(value) {
+			value = $.trim(value);
+
+			if(value && (!pattern.test(value) || value < 0 || value > 20)) {
+				return 'La note doit être comprise entre 0-20';
+			}
+		},
 		ajaxOptions: {
 		    type: 'put',
 		    dataType: 'json'
+		},
+		params: function(params) {
+		    params.spid = $(this).data('spid');
+		    params.tusid = $(this).data('tusid');
+		    return params;
+		},
+		success: function(response, newValue) {
+	        if(response.status == 'error') alert(response.msg);
+	    },
+	    error: function(errors) {
+			var msg = '';
+			if(errors && errors.responseText) { //ajax error, errors = xhr object
+		   		msg = errors.responseText;
+			} else { //validation error (client-side or server-side)
+		   		$.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+			} 
+			$('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
 		}
 	});
 });
