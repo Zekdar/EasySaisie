@@ -46,7 +46,7 @@
                         <td>{{ sp.student.number }}</td>
                         <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>                    
 
-                        {% for sid in subjectsIds %}                            
+                        {% for sid in subjectsIds %}                   
                             {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                             {% set displayMark = '' %} 
                             {% set markId = '' %} {# declared here to use it after the for loop #}

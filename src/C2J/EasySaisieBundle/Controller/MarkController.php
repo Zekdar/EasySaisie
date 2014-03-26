@@ -66,10 +66,11 @@ class MarkController extends Controller
         foreach ($promotions[0]->getContainers() as $container) {
             foreach ($container->getTeachingUnits() as $tu) {
                 foreach ($tu->getTeachingUnitSubjects() as $tus) {
-                    $subjectsIds[] = $tus->getSubject()->getId();                    
+                    $subjectsIds[] = $tus->getSubject()->getId();                   
                 }
             }
         }
+        asort($subjectsIds); // Sort is necessary to display marks in the correct order in the view
 
         return array(
             'studentPromotions' => $studentPromotions,
@@ -229,30 +230,22 @@ class MarkController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Mark entity.');
         }
+        
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
 
-        if($request->isXmlHttpRequest()) {var_dump($this->Request);exit;
-            $entity->setId($id);
-            $entity->setValue();
-            $em->persist($entity);
+        if ($editForm->isValid()) {
             $em->flush();
+
+            return $this->redirect($this->generateUrl('mark_edit', array('id' => $id)));
         }
-        else {
-            $deleteForm = $this->createDeleteForm($id);
-            $editForm = $this->createEditForm($entity);
-            $editForm->handleRequest($request);
 
-            if ($editForm->isValid()) {
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('mark_edit', array('id' => $id)));
-            }
-
-            return array(
-                'entity'      => $entity,
-                'edit_form'   => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-            );
-        }
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
     }
     /**
      * Deletes a Mark entity.
@@ -333,10 +326,26 @@ class MarkController extends Controller
                 $mark   -> setTeachingUnitSubject($tus)
                         -> setStudentPromotion($sp);
             }
-            $mark->setValue($request->request->get('value'));
-            $em->persist($mark);
+
+            // If the new value is not empty : set the mark value
+            $value = $request->request->get('value');
+            if($value != '') {
+                $mark->setValue($value);
+                $em->persist($mark);
+            } 
+            // Otherwise the mark needs to be deleted from the DB : delete
+            else { 
+                $em->remove($mark);
+            }
+
             $em->flush();
+
+            $response = new Response(json_encode(array('markId' => $mark->getId())));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        } 
+        else {
+            throw new HttpException(403, "Forbidden");
         }
-        return new Response();
     }
 }

@@ -64,6 +64,9 @@ $(document).ready(function() {
 		}
 	})
 	
+	/**
+	*	Handle X-Editable plugin
+	**/
 	var pattern = new RegExp("^[0-9]{1,2}\.?[0-9]{0,2}$");
 	$('.mark').editable({
 		"title" : "Entrez une note (entre 0-20)",
@@ -75,25 +78,22 @@ $(document).ready(function() {
 			}
 		},
 		ajaxOptions: {
-		    type: 'put',
-		    dataType: 'json'
+		    type: 'put'
 		},
 		params: function(params) {
 		    params.spid = $(this).data('spid');
 		    params.tusid = $(this).data('tusid');
+		    params.pk = $(this).data('pk');
 		    return params;
 		},
 		success: function(response, newValue) {
-	        if(response.status == 'error') alert(response.msg);
+	        if(response.status == 'error') 
+	        	console.log(response.msg);
+
+	        $(this).data('pk', response.markId);
 	    },
-	    error: function(errors) {
-			var msg = '';
-			if(errors && errors.responseText) { //ajax error, errors = xhr object
-		   		msg = errors.responseText;
-			} else { //validation error (client-side or server-side)
-		   		$.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
-			} 
-			$('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+		error: function(response, newValue) {
+	        console.log(response.responseText);	
 		}
 	});
 });
