@@ -97,3 +97,10 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function displayLoadingWheel(enable) {
+	if(enable)
+		$('#loadingWheel').show();
+	else 
+		$('#loadingWheel').fadeOut();
+}

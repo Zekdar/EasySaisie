@@ -64,3 +64,12 @@ h1, h2 {
 .clickableRow {
 	cursor: pointer;
 }
+
+#loadingWheel {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background-color: #DADADA;
+	z-index: 100;
+}

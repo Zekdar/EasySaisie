@@ -12,6 +12,9 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        <div id="loadingWheel" style="display:none;">
+            <img src="{{ asset('bundles/c2jeasysaisie/img/loading_wheel.gif') }}">
+        </div>
         {% include 'C2JEasySaisieBundle:Elements:menu.html.twig' %}
 
         {% block body_header %}{% endblock %}

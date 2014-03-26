@@ -9,7 +9,7 @@
 
         <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].year}}</h1>
 
-        <table class="table table-bordered table-bordered">
+        <table class="table table-bordered table-bordered" id="marksTable">
             <thead>
                 <tr>
                     <th></th>
@@ -33,7 +33,7 @@
                     {% for container in containers %}
                         {% for tu in container.teachingUnits %}
                             {% for tus in tu.teachingUnitSubjects %}
-                                <th>{{ tus.subject.name }}</th>
+                                <th class="subject">{{ tus.subject.name }}</th>
                             {% endfor %}
                         {% endfor %}
                     {% endfor %}
@@ -87,6 +87,20 @@
                 {% endfor %} 
             </tbody>
         </table>
+
+        <table class="table table-bordered table-bordered" id="avgTable">
+            <tbody>
+                <td></td> 
+                <td></td> 
+                {% for container in containers %}
+                    {% for tu in container.teachingUnits %}
+                        {% for tus in tu.teachingUnitSubjects %}
+                            <td class="subjectAvg"></td>         
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}                
+            </tbody>
+        </table>
     {% else %}
         <p class="center no-reccords-to-display">Il n'y a pas de notes à afficher pour cette promotion.</p>
     {% endif %}
@@ -99,4 +113,8 @@
         </p>
     </div>
 {% endblock %}
-    
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/c2jeasysaisie/js/marks.js') }}"></script>
+{% endblock %}
