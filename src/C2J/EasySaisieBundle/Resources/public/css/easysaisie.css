@@ -73,3 +73,9 @@ h1, h2 {
 	background-color: #DADADA;
 	z-index: 100;
 }
+
+#loadingWheel img {
+	display: inline-block;
+	height: 50%;
+	vertical-align: middle;
+}

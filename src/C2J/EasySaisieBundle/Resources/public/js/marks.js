@@ -36,7 +36,7 @@ function refreshAvg() {
 	var avg;
 	for(var i = 0; i < subjects.length; i++) {
 		avg = getSubjectsAvg($(subjects[i]).text());
-		$(avgCells[i]).text(avg);
+		$(avgCells[i]).text(avg);console.log(avg);
 	}
 
 	displayLoadingWheel(false);

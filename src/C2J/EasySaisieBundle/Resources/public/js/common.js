@@ -91,6 +91,8 @@ $(document).ready(function() {
 	        	console.log(response.msg);
 
 	        $(this).data('pk', response.markId);
+
+	        refreshAvg();
 	    },
 		error: function(response, newValue) {
 	        console.log(response.responseText);	
