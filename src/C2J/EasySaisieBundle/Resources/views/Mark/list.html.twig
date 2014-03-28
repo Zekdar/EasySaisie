@@ -33,7 +33,7 @@
                     {% for container in containers %}
                         {% for tu in container.teachingUnits %}
                             {% for tus in tu.teachingUnitSubjects %}
-                                <th class="subject">{{ tus.subject.name }}</th>
+                                <th class="subject">{{ tus.subject.abbreviation }}</th>
                             {% endfor %}
                         {% endfor %}
                     {% endfor %}
@@ -88,19 +88,37 @@
             </tbody>
         </table>
 
-        <table class="table table-bordered table-bordered" id="avgTable">
+        <hr />
+
+        <table class="table table-bordered table-bordered table-striped" id="avgTable">
             <tbody>
-                <td></td> 
-                <td></td> 
-                {% for container in containers %}
-                    {% for tu in container.teachingUnits %}
-                        {% for tus in tu.teachingUnitSubjects %}
-                            <td class="subjectAvg"></td>         
+                <tr>
+                    <td><b>Moyenne</b></td> 
+                    {% set countTUS = 0 %} {# Used to avoid these loops for the nexts <tr> #}
+                    {% for container in containers %}
+                        {% for tu in container.teachingUnits %}
+                            {% for tus in tu.teachingUnitSubjects %}
+                                {% set countTUS = countTUS + 1 %}
+                                <td class="subjectAvg"></td>         
+                            {% endfor %}
                         {% endfor %}
+                    {% endfor %}                
+                </tr>
+                <tr>
+                    <td><b>Note Min</b></td> 
+                    {% for i in 0..countTUS-1 %}
+                        <td class="minSubjectAvg"></td>
                     {% endfor %}
-                {% endfor %}                
+                </tr>
+                <tr>
+                    <td><b>Note Max</b></td> 
+                    {% for i in 0..countTUS-1 %}
+                        <td class="maxSubjectAvg"></td>
+                    {% endfor %}
+                </tr>
             </tbody>
-        </table>
+        </table>                   
+                                
     {% else %}
         <p class="center no-reccords-to-display">Il n'y a pas de notes à afficher pour cette promotion.</p>
     {% endif %}

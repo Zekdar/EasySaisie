@@ -69,12 +69,12 @@ $(document).ready(function() {
 	**/
 	var pattern = new RegExp("^[0-9]{1,2}\.?[0-9]{0,2}$");
 	$('.mark').editable({
-		"title" : "Entrez une note (entre 0-20)",
+		title : "Entrez une note (entre 0.00 - 20.00)",
 		validate: function(value) {
 			value = $.trim(value);
 
 			if(value && (!pattern.test(value) || value < 0 || value > 20)) {
-				return 'La note doit être comprise entre 0-20';
+				return 'La note doit être comprise entre 0.00 - 20.00';
 			}
 		},
 		ajaxOptions: {
@@ -91,8 +91,8 @@ $(document).ready(function() {
 	        	console.log(response.msg);
 
 	        $(this).data('pk', response.markId);
-
-	        refreshAvg();
+	        $(this).editable('setValue', newValue); // Needed to update the value in html before calling refreshAvg(), otherwise the update is done last
+	        refreshAvg(true);
 	    },
 		error: function(response, newValue) {
 	        console.log(response.responseText);	
