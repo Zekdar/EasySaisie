@@ -47,7 +47,7 @@ function refreshAvg(toggleLoader) {
 
 		if(marks.length > 0) {
 			for(var j in marks) 
-				marks[j] = marks[j].toFixed(2); // Rounds every marks at 10^-2 decimals
+				marks[j] = parseFloat(marks[j].toFixed(2)); // Rounds every marks at 10^-2 decimals
 
 			avg = getSubjectsAvg(marks);
 			minAvg = getMinAvg(marks);

@@ -3,12 +3,11 @@
 
 {% block body %}
     {{ parent() }}
-    {# {{dump(studentPromotions)}} #}
     
     {% if studentPromotions is not empty %}
-
         <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].year}}</h1>
 
+        <!-- MARKS TABLE -->
         <table class="table table-bordered table-bordered" id="marksTable">
             <thead>
                 <tr>
@@ -22,8 +21,9 @@
                     <th></th>
                     <th></th>
                     {% for container in containers %}
-                        {% for tu in container.teachingUnits %}
-                            <th colspan="{{ tu.teachingUnitSubjects | length }}">{{ tu.code }} {{ tu.name }}</th>
+                        {% for tu in container.teachingUnits %} 
+                            {# +1 to take in account the avg column #}
+                            <th colspan="{{ tu.teachingUnitSubjects | length + 1}}">{{ tu.code }} {{ tu.name }}</th>
                         {% endfor %}
                     {% endfor %}
                 </tr>
@@ -32,6 +32,7 @@
                     <th>Etudiant</th>
                     {% for container in containers %}
                         {% for tu in container.teachingUnits %}
+                            <th class="tuAvg"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /></th>
                             {% for tus in tu.teachingUnitSubjects %}
                                 <th class="subject">{{ tus.subject.abbreviation }}</th>
                             {% endfor %}
@@ -41,47 +42,48 @@
             </thead>
             <tbody>
                 {% for sp in studentPromotions %}
-                    {% set spId = sp.id %} {# declared here to use it after the for loop #}                                    
+                    {% set spId = sp.id %} {# declared here to use it after the for loop #}
                     <tr>
                         <td>{{ sp.student.number }}</td>
-                        <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>                    
+                        <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
 
-                        {% for sid in subjectsIds %}                   
+                        {% for tu in subjectsByTu %}
+                            <td class="tuAvg"></td>
+
                             {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
-                            {% set displayMark = '' %} 
                             {% set markId = '' %} {# declared here to use it after the for loop #}
-                            {% set tusId = '' %} {# declared here to use it after the for loop #}
+                            {% set tusid = '' %} {# declared here to use it after the for loop #}
 
+                            {# {% set continue = true %}
                             {% for container in containers %}
                                 {% for tu in container.teachingUnits %}
                                     {% for tus in tu.teachingUnitSubjects %}
-                                        {% if sid == tus.subject.id %}
-                                            {% set tusId = tus.id %}
+                                        {% if subject == tus.subject.id %}
+                                            {% set tusid = tus.id %}
                                         {% endif %}
                                     {% endfor %}
                                 {% endfor %}
+                            {% endfor %} #}
+
+                            {% for sid, subject in tu %}
+                                {% for mark in sp.marks if continue %}
+                                    {% if mark.teachingUnitSubject.subject.id == sid %}                                         
+                                        <td>
+                                            <a 
+                                                href="" 
+                                                class="mark" 
+                                                data-pk="{{ markId }}"
+                                                data-spid="{{ spId }}"
+                                                data-tusid="{{ tusId }}" 
+                                                data-type="text" 
+                                                data-url="{{ path('mark_persist_ajax') }}">
+                                                {{ mark.value }}
+                                            </a>
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}                                
                             {% endfor %}
 
-                            {% for mark in sp.marks if continue %}
-                                {% if mark.teachingUnitSubject.subject.id == sid %} 
-                                    {% set displayMark = mark.value %}
-                                    {% set markId = mark.id %}
-                                    {% set continue = false %} {# if match : break loop #}
-                                {% endif %}
-                            {% endfor %}
-
-                            <td>
-                                <a 
-                                    href="" 
-                                    class="mark" 
-                                    data-pk="{{ markId }}"
-                                    data-spid="{{ spId }}"
-                                    data-tusid="{{ tusId }}" 
-                                    data-type="text" 
-                                    data-url="{{ path('mark_persist_ajax') }}">
-                                    {{ displayMark }}
-                                </a>
-                            </td>
                         {% endfor %}
                     </tr> 
                 {% endfor %} 
@@ -90,6 +92,7 @@
 
         <hr />
 
+        <!-- AVG TABLE -->
         <table class="table table-bordered table-bordered table-striped" id="avgTable">
             <tbody>
                 <tr>

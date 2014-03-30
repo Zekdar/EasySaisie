@@ -16,6 +16,10 @@ body {
 	margin: auto;
 }
 
+.table th {
+	text-align: center;
+}
+
 .purple, h1 {
 	color: #6f5499;
 }

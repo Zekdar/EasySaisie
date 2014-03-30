@@ -53,30 +53,34 @@ class MarkController extends Controller
         
         $colspans = [];
         foreach ($promotions[0]->getContainers() as $container) {
-            $containersColspan = 0;
+            $containersColspan = 0; 
             foreach ($container->getTeachingUnits() as $tu) {
+                $containersColspan++; // +1 for the average column
                 foreach ($tu->getTeachingUnitSubjects() as $subject) {
                     $containersColspan++;
                 }
             }
-            $colspans[] = $containersColspan;
+            $colspans[] = $containersColspan; 
         }        
 
-        $subjectsIds = [];
+        $subjectsByTu = array();
         foreach ($promotions[0]->getContainers() as $container) {
             foreach ($container->getTeachingUnits() as $tu) {
                 foreach ($tu->getTeachingUnitSubjects() as $tus) {
-                    $subjectsIds[] = $tus->getSubject()->getId();                   
+                    $subjectsByTu[$tu->getCode()][] = array(
+                        'tusId' => $tus->getId(),
+                        $tus->getSubject()->getId() => $tus->getSubject()->getName()
+                    );
                 }
             }
         }
-        asort($subjectsIds); // Sort is necessary to display marks in the correct order in the view
-
+        // asort($subjectsByTu); // Sort is necessary to display marks in the correct order in the view
+        var_dump($subjectsByTu);
         return array(
             'studentPromotions' => $studentPromotions,
             'containers' => $promotions[0]->getContainers(),
             'containersColspan' => $colspans,
-            'subjectsIds' => $subjectsIds
+            'subjectsByTu' => $subjectsByTu
         );
     }
 
