@@ -46,44 +46,36 @@
                     <tr>
                         <td>{{ sp.student.number }}</td>
                         <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
-
+                        
                         {% for tu in subjectsByTu %}
                             <td class="tuAvg"></td>
 
-                            {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                             {% set markId = '' %} {# declared here to use it after the for loop #}
-                            {% set tusid = '' %} {# declared here to use it after the for loop #}
+                            {% set tusId = '' %} {# declared here to use it after the for loop #}
+                            {% set markValue = '' %}
 
-                            {# {% set continue = true %}
-                            {% for container in containers %}
-                                {% for tu in container.teachingUnits %}
-                                    {% for tus in tu.teachingUnitSubjects %}
-                                        {% if subject == tus.subject.id %}
-                                            {% set tusid = tus.id %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %}
-                            {% endfor %} #}
-
-                            {% for sid, subject in tu %}
+                            {% for tuId in tu %}
+                                {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                 {% for mark in sp.marks if continue %}
-                                    {% if mark.teachingUnitSubject.subject.id == sid %}                                         
-                                        <td>
-                                            <a 
-                                                href="" 
-                                                class="mark" 
-                                                data-pk="{{ markId }}"
-                                                data-spid="{{ spId }}"
-                                                data-tusid="{{ tusId }}" 
-                                                data-type="text" 
-                                                data-url="{{ path('mark_persist_ajax') }}">
-                                                {{ mark.value }}
-                                            </a>
-                                        </td>
+                                    {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
+                                        {% set markValue = mark.value %}
+                                        {% set markId = mark.id %}
+                                        {% set continue = false %}
                                     {% endif %}
-                                {% endfor %}                                
+                                {% endfor %}
+                                <td>
+                                    <a 
+                                        href="" 
+                                        class="mark" 
+                                        data-pk="{{ markId }}"
+                                        data-spid="{{ spId }}"
+                                        data-tusid="{{ tuId.tusId }}" 
+                                        data-type="text" 
+                                        data-url="{{ path('mark_persist_ajax') }}">
+                                        {{ markValue }}
+                                    </a>
+                                </td>
                             {% endfor %}
-
                         {% endfor %}
                     </tr> 
                 {% endfor %} 
