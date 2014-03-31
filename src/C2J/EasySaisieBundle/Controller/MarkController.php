@@ -71,7 +71,8 @@ class MarkController extends Controller
                         'tusId' => $tus->getId(),
                         'subject' => array(
                             'id' => $tus->getSubject()->getId(),
-                            'name' => $tus->getSubject()->getName()
+                            'name' => $tus->getSubject()->getName(),
+                            'abbreviation' => $tus->getSubject()->getAbbreviation()
                         )
                     );
                 }
