@@ -6,9 +6,14 @@ function getMaxAvg(marks) {
 	return marks[marks.length-1];
 }
 
-function getMarks(subject) {
+function getMarks(subject, index) {
 	var marks = [];
-	var subjectIndex = $('#marksTable thead th:contains("' + subject + '")').index();
+	var subjectIndex;
+
+	if(subject)
+		subjectIndex = $('#marksTable thead th:contains("' + subject + '")').index();
+	else 
+		subjectIndex = index;
 
 	if(subjectIndex == -1)
 		throw 'La matière est inconnue.';
@@ -61,7 +66,6 @@ function refreshAvg(toggleLoader) {
 			$(minSubjectAvgCells[i]).html('');
 			$(maxSubjectAvgCells[i]).html('');
 		}
-
 	}
 
 	if(toggleLoader)
@@ -80,12 +84,38 @@ function refreshAvgTableWidth() {
 		$(avgWidths[i-1]).width($(markWidths[i]).width());
 }
 
+function createAvgTable() {
+	var avgAndSubjectsTh = $($('#marksTable thead tr')[2]).find('th');
+	var row = '<tr><td><b>Moyenne</b></td>';
+		$(avgAndSubjectsTh).each(function() {
+			if($(this).hasClass('tuAvg')) {
+				row += '<td class="tuAvg"></td>';
+			}
+			if($(this).hasClass('subject')) {
+				row += '<td class="subjectAvg"></td>';	
+			}
+		});
+	row += '</tr>';
+	row += '<tr>';
+		$(avgAndSubjectsTh).each(function() {
+			if($(this).hasClass('tuAvg')) {
+
+				row += '<td class="tuAvg"></td>';
+			}
+			if($(this).hasClass('subject')) {
+				row += '<td class="subjectAvg"></td>';	
+			}
+		});
+	row += '</tr>';
+	$('#avgTable').append(row);
+}
+
 /***** WINDOW INIT *****/
 $(document).ready(function() {
 	try {
 		displayLoadingWheel(true);
-
-		refreshAvg();
+		createAvgTable();
+		// refreshAvg();
 		refreshAvgTableWidth();
 
 		displayLoadingWheel(false);
