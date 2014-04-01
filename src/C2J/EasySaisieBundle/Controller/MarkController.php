@@ -69,17 +69,18 @@ class MarkController extends Controller
                 foreach ($tu->getTeachingUnitSubjects() as $tus) {
                     $subjectsByTu[$tu->getCode()][] = array(
                         'tusId' => $tus->getId(),
-                        'subject' => array(
-                            'id' => $tus->getSubject()->getId(),
-                            'name' => $tus->getSubject()->getName(),
-                            'abbreviation' => $tus->getSubject()->getAbbreviation()
+                        'subject'           => array(
+                            'id'            => $tus->getSubject()->getId(),
+                            'name'          => $tus->getSubject()->getName(),
+                            'abbreviation'  => $tus->getSubject()->getAbbreviation(),
+                            'coeff'          => $tus->getCoeff()
                         )
                     );
                 }
             }
         }
         // asort($subjectsByTu); // Sort is necessary to display marks in the correct order in the view
-        // var_dump($subjectsByTu);
+        // var_dump($subjectsByTu['72m']);
         return array(
             'studentPromotions' => $studentPromotions,
             'containers' => $promotions[0]->getContainers(),
