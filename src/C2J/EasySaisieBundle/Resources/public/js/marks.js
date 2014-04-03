@@ -27,7 +27,7 @@ function getMaxAvg(marks) {
 // }
 
 function getMarksByIndex(index) {
-	var marks = [];
+	var marks = new Array;
 
 	$('#marksTable tbody tr td:nth-child(' + (index + 2) + ') a').each(function() {
 		if($(this).text() != 'Empty')
@@ -37,6 +37,29 @@ function getMarksByIndex(index) {
 	return  marks.sort(function(a,b) {return a - b}); // Sort asc
 }
 
+function getMarksByStudent(student) {
+	var marksCells = new Array();
+	var marks = new Array();
+
+	marksCells = $('#marksTable tbody tr:contains(' + student + ') td');
+	marksCells.splice(0, 2);
+
+	$(marksCells).each(function() {
+		marks.push($(this).text().trim());
+	});
+
+	return marks;	
+}
+
+function getStudentsName() {
+	var names = new Array();
+
+	$('#marksTable tbody td:nth-child(2)').each(function() {
+		names.push($(this).text().trim());
+	});
+
+	return names;
+}
 
 function refreshAvg(toggleLoader) {
 	if(toggleLoader)
@@ -83,8 +106,31 @@ function refreshAvg(toggleLoader) {
 
 	// Calculates each teaching unit avg
 	var index;
+	var tu = $('#marksTable thead tr:nth-child(2) th');
+	var subjects = $('#marksTable thead tr:nth-child(3) th');
+	subjects.splice(0, 2); // removes the 2 first cells (Num. Etudiant + Etudiant)
+	tu.splice(0, 2); // removes the 2 first cells (Num. Etudiant + Etudiant)
+
+	var sum = 0;
+	for(var i = 0; i < tu.length; i++) {
+		for(var j = 0; j < $(tu).attr('colspan'); j++) {
+			sum += subjects[j];
+		}
+	}
+
+	var students = getStudentsName();
+	var studentMarks =  new Array();
+	for(var i = 0; i < students.length; i++) {
+		studentMarks = getMarksByStudent(students[i]);
+
+		for(var j = 0; j < studentMarks.length; j++) {
+			
+		}
+	}
+
 	$('#marksTable thead tr:nth-child(3) th.tuAvg').each(function() {
-		index = $(this).index();
+		index = $(this).index();		
+
 		$('#marksTable tbody tr td:nth-child(' + (index + 1) + ')').each(function() {
 			// $(this).html();
 		})
