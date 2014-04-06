@@ -3,12 +3,14 @@
 namespace C2J\EasySaisieBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use C2J\EasySaisieBundle\Entity\Mark;
 use C2J\EasySaisieBundle\Form\MarkType;
+use Doctrine\Common\Util\Debug;
 
 /**
  * Mark controller.
@@ -19,7 +21,7 @@ class MarkController extends Controller
 {
 
     /**
-     * Lists all Mark entities.
+     * Lists all promotion by year.
      *
      * @Route("/", name="mark")
      * @Method("GET")
@@ -29,12 +31,55 @@ class MarkController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('C2JEasySaisieBundle:Mark')->findAll();
+        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllPromotionsByYearDistinct();        
 
         return array(
             'entities' => $entities,
         );
     }
+
+    /**
+     * Lists all marks for every students from a promotion for the specified year.
+     *
+     * @Route("/list/{year}/{promotion_id}", name="mark_list")
+     * @Method("GET")
+     * @Template()
+     */
+    public function listAction($year, $promotion_id) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
+        $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
+        
+        $colspans = [];
+        foreach ($promotions[0]->getContainers() as $container) {
+            $containersColspan = 0;
+            foreach ($container->getTeachingUnits() as $tu) {
+                foreach ($tu->getTeachingUnitSubjects() as $subject) {
+                    $containersColspan++;
+                }
+            }
+            $colspans[] = $containersColspan;
+        }        
+
+        $subjectsIds = [];
+        foreach ($promotions[0]->getContainers() as $container) {
+            foreach ($container->getTeachingUnits() as $tu) {
+                foreach ($tu->getTeachingUnitSubjects() as $tus) {
+                    $subjectsIds[] = $tus->getSubject()->getId();                   
+                }
+            }
+        }
+        asort($subjectsIds); // Sort is necessary to display marks in the correct order in the view
+
+        return array(
+            'studentPromotions' => $studentPromotions,
+            'containers' => $promotions[0]->getContainers(),
+            'containersColspan' => $colspans,
+            'subjectsIds' => $subjectsIds
+        );
+    }
+
     /**
      * Creates a new Mark entity.
      *
@@ -185,7 +230,7 @@ class MarkController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Mark entity.');
         }
-
+        
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
@@ -243,5 +288,64 @@ class MarkController extends Controller
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
+    }
+
+    /**
+     * AJAX - Updates or Inserts a Mark in DB.
+     *
+     * @Route("/", name="mark_persist_ajax")
+     * @Method("PUT")
+     */    
+    public function persistMarkAjax() 
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+            
+            // If mark exists ==> update
+            $id = $request->request->get('pk');
+            if (!empty($id)) {
+                $mark = $em->getRepository('C2JEasySaisieBundle:Mark')->find($id);
+
+                if (!$mark) {
+                    throw $this->createNotFoundException('Unable to find Mark entity.');
+                }
+            } 
+            // Else ==> insert
+            else {
+                $tus = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->find($request->request->get('tusid'));
+                $sp = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->find($request->request->get('spid'));
+
+                if (!$tus) {
+                    throw $this->createNotFoundException('Unable to find TeachingUnitSubject entity.');
+                }
+                if (!$sp) {
+                    throw $this->createNotFoundException('Unable to find StudentPromotion entity.');
+                }
+                $mark = new Mark();
+                $mark   -> setTeachingUnitSubject($tus)
+                        -> setStudentPromotion($sp);
+            }
+
+            // If the new value is not empty : set the mark value
+            $value = $request->request->get('value');
+            if($value != '') {
+                $mark->setValue($value);
+                $em->persist($mark);
+            } 
+            // Otherwise the mark needs to be deleted from the DB : delete
+            else { 
+                $em->remove($mark);
+            }
+
+            $em->flush();
+
+            $response = new Response(json_encode(array('markId' => $mark->getId())));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        } 
+        else {
+            throw new HttpException(403, "Forbidden");
+        }
     }
 }

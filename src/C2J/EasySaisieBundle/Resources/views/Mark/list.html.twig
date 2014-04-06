@@ -1,0 +1,102 @@
+
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
+
+{% block body %}
+    {{ parent() }}
+    {# {{dump(studentPromotions)}} #}
+    
+    {% if studentPromotions is not empty %}
+
+        <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].year}}</h1>
+
+        <table class="table table-bordered table-bordered">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    {% for container in containers %}
+                        <th colspan="{{ containersColspan[loop.index - 1] }}">{{ container.name }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    {% for container in containers %}
+                        {% for tu in container.teachingUnits %}
+                            <th colspan="{{ tu.teachingUnitSubjects | length }}">{{ tu.code }} {{ tu.name }}</th>
+                        {% endfor %}
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <th>Num. Etudiant</th>
+                    <th>Etudiant</th>
+                    {% for container in containers %}
+                        {% for tu in container.teachingUnits %}
+                            {% for tus in tu.teachingUnitSubjects %}
+                                <th>{{ tus.subject.name }}</th>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for sp in studentPromotions %}
+                    {% set spId = sp.id %} {# declared here to use it after the for loop #}                                    
+                    <tr>
+                        <td>{{ sp.student.number }}</td>
+                        <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>                    
+
+                        {% for sid in subjectsIds %}                   
+                            {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
+                            {% set displayMark = '' %} 
+                            {% set markId = '' %} {# declared here to use it after the for loop #}
+                            {% set tusId = '' %} {# declared here to use it after the for loop #}
+
+                            {% for container in containers %}
+                                {% for tu in container.teachingUnits %}
+                                    {% for tus in tu.teachingUnitSubjects %}
+                                        {% if sid == tus.subject.id %}
+                                            {% set tusId = tus.id %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+
+                            {% for mark in sp.marks if continue %}
+                                {% if mark.teachingUnitSubject.subject.id == sid %} 
+                                    {% set displayMark = mark.value %}
+                                    {% set markId = mark.id %}
+                                    {% set continue = false %} {# if match : break loop #}
+                                {% endif %}
+                            {% endfor %}
+
+                            <td>
+                                <a 
+                                    href="" 
+                                    class="mark" 
+                                    data-pk="{{ markId }}"
+                                    data-spid="{{ spId }}"
+                                    data-tusid="{{ tusId }}" 
+                                    data-type="text" 
+                                    data-url="{{ path('mark_persist_ajax') }}">
+                                    {{ displayMark }}
+                                </a>
+                            </td>
+                        {% endfor %}
+                    </tr> 
+                {% endfor %} 
+            </tbody>
+        </table>
+    {% else %}
+        <p class="center no-reccords-to-display">Il n'y a pas de notes à afficher pour cette promotion.</p>
+    {% endif %}
+
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('mark') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+        </p>
+    </div>
+{% endblock %}
+    

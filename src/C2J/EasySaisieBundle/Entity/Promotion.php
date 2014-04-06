@@ -40,66 +40,151 @@ class Promotion
    * @ORM\Column(name="minAverageToValidate", type="float")
    */
   private $minAverageToValidate;
+
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion", mappedBy="promotion")
+   */
+  private $studentPromotions;
+
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\Container", mappedBy="promotion")
+   */
+  private $containers;
   
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+  /**
+   * Get id
+   *
+   * @return integer 
+   */
+  public function getId()
+  {
+      return $this->id;
+  }
 
-    /**
-     * Set formation
-     *
-     * @param \C2J\EasySaisieBundle\Entity\Formation $formation
-     * @return Promotion
-     */
-    public function setFormation(\C2J\EasySaisieBundle\Entity\Formation $formation = null)
-    {
-        $this->formation = $formation;
-    
-        return $this;
-    }
+  /**
+   * Set formation
+   *
+   * @param \C2J\EasySaisieBundle\Entity\Formation $formation
+   * @return Promotion
+   */
+  public function setFormation(\C2J\EasySaisieBundle\Entity\Formation $formation = null)
+  {
+      $this->formation = $formation;
+  
+      return $this;
+  }
 
-    /**
-     * Get formation
-     *
-     * @return \C2J\EasySaisieBundle\Entity\Formation 
-     */
-    public function getFormation()
-    {
-        return $this->formation;
-    }
+  /**
+   * Get formation
+   *
+   * @return \C2J\EasySaisieBundle\Entity\Formation 
+   */
+  public function getFormation()
+  {
+      return $this->formation;
+  }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Promotion
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
+  /**
+   * Set name
+   *
+   * @param string $name
+   * @return Promotion
+   */
+  public function setName($name)
+  {
+      $this->name = $name;
+  
+      return $this;
+  }
 
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-	
+  /**
+   * Get name
+   *
+   * @return string 
+   */
+  public function getName()
+  {
+      return $this->name;
+  }
+
 	public function __toString()
+	{
+		return $this->name." ".$this->getFormation();
+	}
+
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        return $this->name." ".$this->getFormation();
+        $this->studentPromotions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->containers = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add studentPromotions
+     *
+     * @param \C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotions
+     * @return Promotion
+     */
+    public function addStudentPromotion(\C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotions)
+    {
+        $this->studentPromotions[] = $studentPromotions;
+
+        return $this;
+    }
+
+    /**
+     * Remove studentPromotions
+     *
+     * @param \C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotions
+     */
+    public function removeStudentPromotion(\C2J\EasySaisieBundle\Entity\StudentPromotion $studentPromotions)
+    {
+        $this->studentPromotions->removeElement($studentPromotions);
+    }
+
+    /**
+     * Get studentPromotions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStudentPromotions()
+    {
+        return $this->studentPromotions;
+    }
+
+    /**
+     * Add containers
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Container $containers
+     * @return Promotion
+     */
+    public function addContainer(\C2J\EasySaisieBundle\Entity\Container $containers)
+    {
+        $this->containers[] = $containers;
+
+        return $this;
+    }
+
+    /**
+     * Remove containers
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Container $containers
+     */
+    public function removeContainer(\C2J\EasySaisieBundle\Entity\Container $containers)
+    {
+        $this->containers->removeElement($containers);
+    }
+
+    /**
+     * Get containers
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContainers()
+    {
+        return $this->containers;
     }
 
     /**

@@ -1,15 +1,18 @@
-{% extends '::base.html.twig' %}
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
-{% block body -%}
-    <h1>StudentPromotion creation</h1>
+
+{% block body %}
+    {{ parent() }}
+    <h1>Rule creation</h1>
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('studentpromotion') }}">
-            Back to the list
-        </a>
-    </li>
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+        </p>
+    </div>
 </ul>
 {% endblock %}

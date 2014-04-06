@@ -7,11 +7,12 @@
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('rule') }}">
-            Back to the list
-        </a>
-    </li>
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+        </p>
+    </div>
 </ul>
 {% endblock %}

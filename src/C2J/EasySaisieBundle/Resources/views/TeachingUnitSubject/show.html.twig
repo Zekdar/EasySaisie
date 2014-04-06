@@ -1,56 +1,44 @@
-{% extends '::base.html.twig' %}
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
-{% block body -%}
-    <h1>TeachingUnitSubject</h1>
+{% block body %}
+    {{ parent() }}
+    
+    <h1 class="page-header">Règle {{ entity.id }}</h1>
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-			<tr>
-                <th>TeachingUnit</th>
-                <td>{{ entity.teachingUnit }}</td>
-            </tr>
-			<tr>
-                <th>Subject</th>
-                <td>{{ entity.subject }}</td>
-            </tr>
-			<tr>
-                <th>Coeff</th>
-                <td>{{ entity.coeff }}</td>
-            </tr>
-			<tr>
-                <th>Formation</th>
-                <td>{{ entity.teachingUnit.container.promotion }}</td>
-            </tr>   
-			<tr>
-                <th>Container</th>
-                <td>{{ entity.teachingUnit.container }}</td>
-            </tr>            
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover ">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ entity.teachingUnit }} {{ entity.subject }} {{ entity.coeff }} {{ entity.teachingUnit.container.promotion }} {{ entity.teachingUnit.container }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ path('rule_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+                            <a href="{{ path('rule_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('teachingunitsubject') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('teachingunitsubject_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-	<li>
-		<a href="{{ path('studentpromotion_new', { 'promotionId': entity.teachingUnit.container.promotion.id }) }}">
-			<input type="button" value="Add an existing student for this formation">
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			<a href="{{ path('studentpromotion_new', { 'promotionId': entity.teachingUnit.container.promotion.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
+				Ajouter un étudiant existant
+			</a>
+			<a href="{{ path('student_new', { 'id': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
+				Créer un nouvel étudiant
+			</a>
 		</a>
-		or
-		<a href="{{ path('student_new', { 'id': entity.id }) }}"><input type="button" value="Create new student">
-		</a>
-	</li>
-</ul>
-{% endblock %}
+        </p>
+    </div>
+    {% endblock %}

@@ -28,7 +28,7 @@ class Container
   private $name;
   
    /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion", inversedBy="containers")
    */
   private $promotion;
   
@@ -53,60 +53,204 @@ class Container
    */
   private $minAverage;
 
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit", mappedBy="container")
+   */
+  private $teachingUnits;
+  
+  /**
+   * @var boolean  $areTeachingUnitsCompensable
+   *
+   * @ORM\Column(name="areTeachingUnitsCompensable", type="boolean")
+   */
+  private $areTeachingUnitsCompensable;
+  
+  /**
+   * @var float  $minMark
+   *
+   * @ORM\Column(name="minMark", type="float")
+   */
+  private $minMark;
+  
+  /**
+   * @var float  $minAverage
+   *
+   * @ORM\Column(name="minAverage", type="float")
+   */
+  private $minAverage;
+
+  /**
+   * Get id
+   *
+   * @return integer 
+   */
+  public function getId()
+  {
+      return $this->id;
+  }
+
+  /**
+   * Set name
+   *
+   * @param string $name
+   * @return Container
+   */
+  public function setName($name)
+  {
+      $this->name = $name;
+  
+      return $this;
+  }
+
+  /**
+   * Get name
+   *
+   * @return string 
+   */
+  public function getName()
+  {
+      return $this->name;
+  }
+
+  /**
+   * Set promotion
+   *
+   * @param \C2J\EasySaisieBundle\Entity\Promotion $promotion
+   * @return Container
+   */
+  public function setPromotion(\C2J\EasySaisieBundle\Entity\Promotion $promotion = null)
+  {
+      $this->promotion = $promotion;
+  
+      return $this;
+  }
+
+  /**
+   * Get promotion
+   *
+   * @return \C2J\EasySaisieBundle\Entity\Promotion 
+   */
+  public function getPromotion()
+  {
+      return $this->promotion;
+  }
+
+  public function __toString()
+  {
+      return $this->name;
+  }
+
+  /**
+   * Set areTeachingUnitsCompensable
+   *
+   * @param boolean $areTeachingUnitsCompensable
+   * @return Container
+   */
+  public function setAreTeachingUnitsCompensable($areTeachingUnitsCompensable)
+  {
+      $this->areTeachingUnitsCompensable = $areTeachingUnitsCompensable;
+  
+      return $this;
+  }
+
+  /**
+   * Get areTeachingUnitsCompensable
+   *
+   * @return boolean 
+   */
+  public function getAreTeachingUnitsCompensable()
+  {
+      return $this->areTeachingUnitsCompensable;
+  }
+
+  /**
+   * Set minMark
+   *
+   * @param float $minMark
+   * @return Container
+   */
+  public function setMinMark($minMark)
+  {
+      $this->minMark = $minMark;
+  
+      return $this;
+  }
+
+  /**
+   * Get minMark
+   *
+   * @return float 
+   */
+  public function getMinMark()
+  {
+      return $this->minMark;
+  }
+
+  /**
+   * Set minAverage
+   *
+   * @param float $minAverage
+   * @return Container
+   */
+  public function setMinAverage($minAverage)
+  {
+      $this->minAverage = $minAverage;
+  
+      return $this;
+  }
+
+  /**
+   * Get minAverage
+   *
+   * @return float 
+   */
+  public function getMinAverage()
+  {
+      return $this->minAverage;
+  }
     /**
-     * Get id
-     *
-     * @return integer 
+     * Constructor
      */
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
+        $this->teachingUnits = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Set name
+     * Add teachingUnits
      *
-     * @param string $name
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits
      * @return Container
      */
-    public function setName($name)
+    public function addTeachingUnit(\C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits)
     {
-        $this->name = $name;
-    
+        $this->teachingUnits[] = $teachingUnits;
+
         return $this;
     }
 
     /**
-     * Get name
+     * Remove teachingUnits
      *
-     * @return string 
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set promotion
-     *
-     * @param \C2J\EasySaisieBundle\Entity\Promotion $promotion
-     * @return Container
-     */
+<<<<<<< HEAD
     public function setPromotion(\C2J\EasySaisieBundle\Entity\Promotion $promotion = null)
+=======
+    public function removeTeachingUnit(\C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits)
+>>>>>>> master
     {
-        $this->promotion = $promotion;
-    
-        return $this;
+        $this->teachingUnits->removeElement($teachingUnits);
     }
 
     /**
-     * Get promotion
+     * Get teachingUnits
      *
-     * @return \C2J\EasySaisieBundle\Entity\Promotion 
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getPromotion()
+    public function getTeachingUnits()
     {
-        return $this->promotion;
+        return $this->teachingUnits;
     }
 	
 	public function __toString()

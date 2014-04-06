@@ -1,0 +1,66 @@
+@font-face {
+    font-family: "Lobster";
+    src: url(../fonts/LobsterTwo-Regular.otf);
+}
+
+body {
+	font-family: Calibri, "Sans Serif";
+}
+
+.center {
+	text-align: center;
+}
+
+.table {
+	width: auto;
+	margin: auto;
+}
+
+.purple, h1 {
+	color: #6f5499;
+}
+
+.easysaisie, h1 {
+	font-family: Lobster;
+}
+
+h1, h2 {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.header {
+	padding-top: 60px;
+	padding-bottom: 60px;
+	font-size: 24px;
+	text-align: left;
+	margin-bottom: 40px;
+	font-size: 20px;
+	position: relative;
+	padding: 30px 15px;
+	color: #cdbfe3;
+	text-shadow: 0 1px 0 rgba(0,0,0,.1);
+	background-color: #6f5499;
+	background-image: -webkit-linear-gradient(top,#563d7c 0,#6f5499 100%);
+	background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+	background-repeat: repeat-x;
+}
+
+.header h1, .btn-login {
+	color: #fff;
+}
+
+.btn-purple, .btn-purple:active, .btn-purple:hover, .btn-purple:focus, .btn-purple:visited {
+	color: #fff;
+	background-color: #6f5499;
+	border-color: #563d7c;
+}
+
+.navbar-brand {
+	font-size: 20px;
+	padding-top: 11px;
+}
+
+.clickableRow {
+	cursor: pointer;
+}

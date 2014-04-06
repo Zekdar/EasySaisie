@@ -1,41 +1,37 @@
 {% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
-
 {% block body %}
     {{ parent() }}
-    <h1>Promotion</h1>
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-			<tr>
-                <th>Name</th>
-				<td>{{ entity.name }}</td>
-            </tr>
-			<tr>
-                <th>Formation</th>
-				<td>{{ entity.formation.name }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('promotion') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('promotion_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-	<li>
-		<a href="{{ path('container_new', { 'promotionId': entity.id }) }}"><input type="button" value="Add a container">
-		</a>
-	</li>
-</ul>
-{% endblock %}
+    <h1 class="page-header">Promotion - {{ entity.name }}</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover ">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ entity.name }} - {{ entity.formation.name }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ path('promotion_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+                            <a href="{{ path('promotion_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('promotion') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			<a href="{{ path('container_new', { 'promotionId': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>Créer un container</a>
+        </p>
+    </div>
+    {% endblock %}
