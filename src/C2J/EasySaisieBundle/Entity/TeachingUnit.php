@@ -159,6 +159,7 @@ class TeachingUnit
     {
         return $this->isCompensable;
     }
+
     /**
      * Constructor
      */

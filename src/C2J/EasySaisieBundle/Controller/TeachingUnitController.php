@@ -91,6 +91,16 @@ class TeachingUnitController extends Controller
     public function newAction()
     {
         $entity = new TeachingUnit();
+		$request = Request::createFromGlobals();
+		$request->getPathInfo();
+		$id=$request->query->get('id');
+		
+		if($id != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Container')->find($id);
+			$entity->setContainer($entity2);
+		}
+		
         $form   = $this->createCreateForm($entity);
 
         return array(

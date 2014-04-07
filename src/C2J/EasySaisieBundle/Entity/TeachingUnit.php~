@@ -136,6 +136,8 @@ class TeachingUnit
     {
         return $this->name;
     }
+<<<<<<< HEAD
+=======
 
     /**
      * Set isCompensable
@@ -199,4 +201,5 @@ class TeachingUnit
     {
         return $this->teachingUnitSubjects;
     }
+>>>>>>> master
 }

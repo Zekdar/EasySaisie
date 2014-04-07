@@ -40,6 +40,9 @@ class Promotion
    * @ORM\Column(name="minAverageToValidate", type="float")
    */
   private $minAverageToValidate;
+<<<<<<< HEAD
+  
+=======
 
   /**
    * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion", mappedBy="promotion")
@@ -156,6 +159,7 @@ public function __toString()
         return $this;
     }
 
+>>>>>>> master
     /**
      * Remove studentPromotions
      *
@@ -207,5 +211,56 @@ public function __toString()
     public function getContainers()
     {
         return $this->containers;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Promotion
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+	
+	public function __toString()
+    {
+        return $this->name." ".$this->getFormation();
+    }
+
+    /**
+     * Set minAverageToValidate
+     *
+     * @param float $minAverageToValidate
+     * @return Promotion
+     */
+    public function setMinAverageToValidate($minAverageToValidate)
+    {
+        $this->minAverageToValidate = $minAverageToValidate;
+    
+        return $this;
+    }
+
+    /**
+     * Get minAverageToValidate
+     *
+     * @return float 
+     */
+    public function getMinAverageToValidate()
+    {
+        return $this->minAverageToValidate;
     }
 }

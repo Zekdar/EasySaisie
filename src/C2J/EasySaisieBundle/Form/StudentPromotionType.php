@@ -15,9 +15,9 @@ class StudentPromotionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('year')
-            ->add('student')
-            ->add('promotion')
+            ->add('year', 'text', array('label' => 'Année'))
+            ->add('student', null, array('label' => 'Etudiant'))
+            ->add('promotion', null, array('label' => 'Promotion'))
         ;
     }
     

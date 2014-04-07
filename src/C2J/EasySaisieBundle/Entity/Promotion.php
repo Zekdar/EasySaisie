@@ -107,33 +107,11 @@ class Promotion
       return $this->name;
   }
 
-public function __toString()
-  {
-      return $this->name." ".$this->getFormation();
-  }
+	public function __toString()
+	{
+		return $this->name." ".$this->getFormation();
+	}
 
-  /**
-   * Set minAverageToValidate
-   *
-   * @param float $minAverageToValidate
-   * @return Promotion
-   */
-  public function setMinAverageToValidate($minAverageToValidate)
-  {
-      $this->minAverageToValidate = $minAverageToValidate;
-  
-      return $this;
-  }
-
-  /**
-   * Get minAverageToValidate
-   *
-   * @return float 
-   */
-  public function getMinAverageToValidate()
-  {
-      return $this->minAverageToValidate;
-  }
     /**
      * Constructor
      */
@@ -207,5 +185,28 @@ public function __toString()
     public function getContainers()
     {
         return $this->containers;
+    }
+
+    /**
+     * Set minAverageToValidate
+     *
+     * @param float $minAverageToValidate
+     * @return Promotion
+     */
+    public function setMinAverageToValidate($minAverageToValidate)
+    {
+        $this->minAverageToValidate = $minAverageToValidate;
+    
+        return $this;
+    }
+
+    /**
+     * Get minAverageToValidate
+     *
+     * @return float 
+     */
+    public function getMinAverageToValidate()
+    {
+        return $this->minAverageToValidate;
     }
 }

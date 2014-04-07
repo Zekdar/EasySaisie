@@ -91,8 +91,25 @@ class StudentPromotionController extends Controller
     public function newAction()
     {
         $entity = new StudentPromotion();
-        $form   = $this->createCreateForm($entity);
-
+		$request = Request::createFromGlobals();
+		$request->getPathInfo();
+        
+		$studentId=$request->query->get('studentId');
+		$promotionId=$request->query->get('promotionId');
+		
+		if($studentId != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Student')->find($studentId);
+			$entity->setStudent($entity2);
+		}
+		
+		if($promotionId != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
+			$entity->setPromotion($entity2);
+		}
+		
+		$form   = $this->createCreateForm($entity);
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),

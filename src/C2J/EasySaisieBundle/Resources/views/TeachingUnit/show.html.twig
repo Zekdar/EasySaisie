@@ -15,7 +15,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ entity.name }}</td>
+                    <td>{{ entity.code }} {{ entity.name }} - {{ entity.container.promotion }} - {{ entity.container }}</td>
                     <td>
                         <div class="btn-group">
                             <a href="{{ path('teachingunit_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
@@ -32,6 +32,7 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('teachingunit') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			<a href="{{ path('teachingunitsubject_new', { 'teachingUnitId': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>Ajouter une matière</a>
         </p>
     </div>
     {% endblock %}

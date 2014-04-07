@@ -15,8 +15,8 @@ class SubjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('abbreviation')
-            ->add('name')
+            ->add('abbreviation', 'text', array('label' => 'Abréviation de la matière'))
+            ->add('name', 'text', array('label' => 'Nom de la matière'))
         ;
     }
     

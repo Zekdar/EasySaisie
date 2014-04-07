@@ -4,7 +4,6 @@
     {{ parent() }}
     
     <h1 class="page-header">Formation - {{ entity.name }}</h1>
-
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover ">
             <thead>
@@ -28,10 +27,11 @@
     </div>
 
     <hr />
-    
+   
     <div class="row">
         <p class="center">            
             <a href="{{ path('formation') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			<a href="{{ path('promotion_new', { 'formationId': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Créer une promotion</a>
         </p>
     </div>
     {% endblock %}
