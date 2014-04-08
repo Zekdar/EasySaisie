@@ -47,7 +47,7 @@
                         <td>{{ sp.student.number }}</td>
                         <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                         
-                        {% for tu in subjectsByTu %}
+                        {% for tuCode,tu in subjectsByTu %}
                             <td class="tuAvg"></td>
 
                             {% set markId = '' %} {# declared here to use it after the for loop #}
@@ -66,7 +66,8 @@
                                 <td class="tdMark">
                                     <a 
                                         href="" 
-                                        class="mark" 
+                                        class="mark"
+                                        data-tucode="{{ tuCode }}" 
                                         data-coeff="{{ tuId.subject.coeff }}"
                                         data-pk="{{ markId }}"
                                         data-spid="{{ spId }}"

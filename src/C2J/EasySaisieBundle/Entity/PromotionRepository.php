@@ -32,6 +32,7 @@ class PromotionRepository extends EntityRepository
 					->andWhere('sp.year = :year')
 						->setParameter('year', $year)
 					->addOrderBy('tu.code', 'ASC')
+					->addOrderBy('s.abbreviation', 'ASC')
 					->getQuery()
 					->getResult();
 	}
