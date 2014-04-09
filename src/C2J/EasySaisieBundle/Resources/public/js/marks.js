@@ -37,11 +37,15 @@ function getMarksByIndex(index) {
 	return  marks.sort(function(a,b) {return a - b}); // Sort asc
 }
 
-function getMarksByStudent(student) {
+function getMarksByStudent(student, includeAvg) {
 	var marksCells = new Array();
 	var marks = new Array();
 
-	marksCells = $('#marksTable tbody tr:contains(' + student + ') td');
+	if(includeAvg)
+		marksCells = $('#marksTable tbody tr:contains(' + student + ') td');
+	else
+		marksCells = $('#marksTable tbody tr:contains(' + student + ') td.tdMark');
+
 	marksCells.splice(0, 2);
 
 	$(marksCells).each(function() {
@@ -54,7 +58,7 @@ function getMarksByStudent(student) {
 function getStudentsName() {
 	var names = new Array();
 
-	$('#marksTable tbody td:nth-child(2)').each(function() {
+	$('#marksTable tbody td.studentName').each(function() {
 		names.push($(this).text().trim());
 	});
 
@@ -124,8 +128,8 @@ function refreshAvg(toggleLoader) {
 		studentMarks = getMarksByStudent(students[i]);
 
 		for(var j = 0; j < studentMarks.length; j++) {
-			
-		}
+		
+			}
 	}
 
 	$('#marksTable thead tr:nth-child(3) th.tuAvg').each(function() {

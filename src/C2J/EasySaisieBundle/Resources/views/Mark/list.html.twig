@@ -45,7 +45,7 @@
                     {% set spId = sp.id %} {# declared here to use it after the for loop #}
                     <tr>
                         <td>{{ sp.student.number }}</td>
-                        <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                        <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                         
                         {% for tu in subjectsByTu %}
                             <td class="tuAvg"></td>
