@@ -23,7 +23,7 @@
                     {% for container in containers %}
                         {% for tu in container.teachingUnits %} 
                             {# +1 to take in account the avg column #}
-                            <th colspan="{{ tu.teachingUnitSubjects | length + 1}}">{{ tu.code }} {{ tu.name }}</th>
+                            <th colspan="{{ tu.teachingUnitSubjects | length + 1}}" data-tucode="{{ tu.code }}">{{ tu.code }} {{ tu.name }}</th>
                         {% endfor %}
                     {% endfor %}
                 </tr>

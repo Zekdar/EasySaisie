@@ -55,6 +55,17 @@ function getMarksByStudent(student, includeAvg) {
 	return marks;	
 }
 
+function getTuCodes() {
+	var tuCodesCells = $('#marksTable thead tr:nth-child(2)').find('[data-tucode]');
+	var tuCodes = new Array();
+
+	$(tuCodesCells).each(function(){
+		tuCodes.push($(this).data('tucode'));
+	});
+
+	return tuCodes;
+}
+
 function getStudentsName() {
 	var names = new Array();
 
@@ -109,29 +120,40 @@ function refreshAvg(toggleLoader) {
 	});
 
 	// Calculates each teaching unit avg
-	var index;
-	var tu = $('#marksTable thead tr:nth-child(2) th');
-	var subjects = $('#marksTable thead tr:nth-child(3) th');
-	subjects.splice(0, 2); // removes the 2 first cells (Num. Etudiant + Etudiant)
-	tu.splice(0, 2); // removes the 2 first cells (Num. Etudiant + Etudiant)
+	// var index;
+	// var tu = $('#marksTable thead tr:nth-child(2) th');
+	// var subjects = $('#marksTable thead tr:nth-child(3) th');
+	// subjects.splice(0, 2); // removes the 2 first cells (Num. Etudiant + Etudiant)
+	// tu.splice(0, 2); // removes the 2 first cells (Num. Etudiant + Etudiant)
 
-	var sum = 0;
-	for(var i = 0; i < tu.length; i++) {
-		for(var j = 0; j < $(tu).attr('colspan'); j++) {
-			sum += subjects[j];
+	
+	// Calculates each teaching unit avg
+	var tuCodes = getTuCodes();
+	var sum = 0; var avg = 0;
+	var studentMarks;
+	var students = getStudentsName();
+	var content;
+	for(var i = 0; i < students.length; i++) {		
+		for(var j = 0; j < tuCodes.length; j++) {
+			studentMarks = new Array();
+			sum = 0;
+			avg = 0;
+
+			$('#marksTable tbody tr:contains("' + students[i] + '") td').find('[data-tucode="' + tuCodes[j] + '"]').each(function() {
+				content = $(this).text().trim();
+
+				if(content != 'Empty')
+					studentMarks.push(parseFloat(content));
+			});
+
+			for(var k = 0; k < studentMarks.length; k++) {
+				sum += studentMarks[k];
+			}
+			avg = sum / studentMarks.length;
 		}
 	}
 
-	var students = getStudentsName();
-	var studentMarks =  new Array();
-	for(var i = 0; i < students.length; i++) {
-		studentMarks = getMarksByStudent(students[i]);
-
-		for(var j = 0; j < studentMarks.length; j++) {
-		
-			}
-	}
-
+	var index;
 	$('#marksTable thead tr:nth-child(3) th.tuAvg').each(function() {
 		index = $(this).index();		
 
