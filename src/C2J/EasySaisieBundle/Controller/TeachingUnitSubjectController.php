@@ -91,7 +91,24 @@ class TeachingUnitSubjectController extends Controller
     public function newAction()
     {
         $entity = new TeachingUnitSubject();
-        $form   = $this->createCreateForm($entity);
+		$request = Request::createFromGlobals();
+		$request->getPathInfo();
+		$teachingUnitId=$request->query->get('teachingUnitId');
+		$subjectId=$request->query->get('subjectId');
+        
+		if($teachingUnitId != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($teachingUnitId);
+			$entity->setTeachingUnit($entity2);
+		}
+		
+		if($subjectId != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Subject')->find($subjectId);
+			$entity->setSubject($entity2);
+		}
+		
+		$form   = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
@@ -111,7 +128,7 @@ class TeachingUnitSubjectController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->find($id);
-
+				
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find TeachingUnitSubject entity.');
         }

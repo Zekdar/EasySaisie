@@ -18,7 +18,7 @@
                 <tbody>
                 {% for entity in entities %}
                     <tr>
-                        <td>{{ entity.name }}</td>
+                        <td>{{ entity.id }}</td>
                         <td>
                             <div class="btn-group">
                                 <a href="{{ path('rule_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>

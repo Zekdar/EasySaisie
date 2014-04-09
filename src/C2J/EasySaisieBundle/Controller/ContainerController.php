@@ -91,6 +91,16 @@ class ContainerController extends Controller
     public function newAction()
     {
         $entity = new Container();
+		$request = Request::createFromGlobals();
+		$request->getPathInfo();
+		$promotionId=$request->query->get('promotionId');
+		
+		if($promotionId != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
+			$entity->setPromotion($entity2);
+		}
+		
         $form   = $this->createCreateForm($entity);
 
         return array(

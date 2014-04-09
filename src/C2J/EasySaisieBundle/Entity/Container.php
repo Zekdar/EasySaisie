@@ -31,11 +31,6 @@ class Container
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Promotion", inversedBy="containers")
    */
   private $promotion;
-
-  /**
-   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit", mappedBy="container")
-   */
-  private $teachingUnits;
   
   /**
    * @var boolean  $areTeachingUnitsCompensable
@@ -58,6 +53,11 @@ class Container
    */
   private $minAverage;
 
+  /**
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit", mappedBy="container")
+   */
+  private $teachingUnits;
+  
   /**
    * Get id
    *

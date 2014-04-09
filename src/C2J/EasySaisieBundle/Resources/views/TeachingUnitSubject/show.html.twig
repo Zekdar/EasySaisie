@@ -3,7 +3,7 @@
 {% block body %}
     {{ parent() }}
     
-    <h1 class="page-header">Règle {{ entity.name }}</h1>
+    <h1 class="page-header">Règle {{ entity.id }}</h1>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover ">
@@ -15,7 +15,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ entity.name }}</td>
+                    <td>{{ entity.teachingUnit }} {{ entity.subject }} {{ entity.coeff }} {{ entity.teachingUnit.container.promotion }} {{ entity.teachingUnit.container }}</td>
                     <td>
                         <div class="btn-group">
                             <a href="{{ path('rule_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
@@ -32,6 +32,13 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			<a href="{{ path('studentpromotion_new', { 'promotionId': entity.teachingUnit.container.promotion.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
+				Ajouter un étudiant existant
+			</a>
+			<a href="{{ path('student_new', { 'id': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
+				Créer un nouvel étudiant
+			</a>
+		</a>
         </p>
     </div>
     {% endblock %}
