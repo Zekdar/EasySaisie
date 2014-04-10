@@ -12,6 +12,7 @@ body {
 }
 
 .table {
+	text-align: center;
 	width: auto;
 	margin: auto;
 }
@@ -82,4 +83,8 @@ h1, h2 {
 	display: inline-block;
 	height: 50%;
 	vertical-align: middle;
+}
+
+.tuAvg {
+	font-weight: bold;
 }

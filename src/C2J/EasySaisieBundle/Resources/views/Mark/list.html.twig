@@ -50,11 +50,11 @@
                         {% for tuCode,tu in subjectsByTu %}
                             <td class="tuAvg"></td>
 
+                            {% for tuId in tu %}
                             {% set markId = '' %} {# declared here to use it after the for loop #}
                             {% set tusId = '' %} {# declared here to use it after the for loop #}
                             {% set markValue = '' %}
                             
-                            {% for tuId in tu %}
                                 {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                 {% for mark in sp.marks if continue %}
                                     {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
