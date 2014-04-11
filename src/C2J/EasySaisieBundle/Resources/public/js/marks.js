@@ -194,9 +194,9 @@ function refreshAvgTableWidth() {console.log('refresh width');
 
 function createAvgTable() {
 	var marksTableFirstRow = $('#marksTable tbody tr:first td').splice(2);
-	var row = '';	
+	var rows = '';	
 
-	row += '<tr><td></td>';
+	rows += '<tr><td></td>';
 		var subjectsList = $('#marksTable thead tr:nth-child(3) th').splice(2);
 		var content;
 
@@ -205,29 +205,27 @@ function createAvgTable() {
 				content = '<img src="/EasySaisie/web/bundles/c2jeasysaisie/img/xbar.png">';
 			else 
 				content = $(this).text();
-			row += '<td>' + content + '</td>';
+			rows += '<td>' + content + '</td>';
 		});
-	row += '</tr>';
+	rows += '</tr>';
 
 	var rowTitles = ['Moyenne', 'Min', 'Max'];
 	for(var i = 0; i < 3; i++) {
-		row += '<tr><td><b>' + rowTitles[i] + '</b></td>';
+		rows += '<tr><td><b>' + rowTitles[i] + '</b></td>';
+			$(marksTableFirstRow).each(function() {
 
-		$(marksTableFirstRow).each(function() {
+				var index = $(this).index();
 
-			var index = $(this).index();
+				if($('#marksTable tbody tr:nth-child(3) td:nth-child(' + (index + 1) + ')').hasClass('tuAvg'))
+					rows += '<td class="tuAvg"></td>';
+				else
+					rows += '<td></td>';
 
-			if($('#marksTable tbody tr:nth-child(3) td:nth-child(' + (index + 1) + ')').hasClass('tuAvg'))
-				row += '<td class="tuAvg"></td>';
-			else
-				row += '<td></td>';
-
-		});
-	
-			row += '</tr>';
+			});	
+		rows += '</tr>';
 	}
 
-	$('#avgTable').append(row);
+	$('#avgTable').append(rows);
 }
 
 /***** WINDOW INIT *****/
