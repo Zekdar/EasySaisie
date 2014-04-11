@@ -1,10 +1,22 @@
-function getAvg(marks) {	
+function getAvg(marks, withCoeff) {	
 	var sum = 0.0;
+	var sumCoeff = 0;
+	var coeff;
+
 	for(var i = 0; i < marks.length; i++) {
-		sum += marks[i];
+		if(withCoeff) {
+			coeff = marks[i].coeff;
+			sum += marks[i].value * coeff;
+		}
+		else {
+			coeff = 1;
+			sum += marks[i];
+		}
+
+		sumCoeff += coeff;
 	}
 	if(sum != 0)
-		return (sum / marks.length).toFixed(2, 0); // Rounds at 10^-2 decimals
+		return (sum / sumCoeff).toFixed(2, 0); // Rounds at 10^-2 decimals
 	else
 		return 'Empty';
 }
@@ -14,17 +26,8 @@ function getMinAvg(marks) {
 }
 
 function getMaxAvg(marks) {
-	return marks[marks.length-1];
+	return marks[marks.length - 1];
 }
-
-// function getMarksBySubject(subject) {
-// 	var subjectIndex = $('#marksTable thead th:contains("' + subject + '")').index();
-
-// 	if(subjectIndex == -1)
-// 		throw 'La matière est inconnue.';
-
-// 	return getMarksByIndex(subjectIndex);
-// }
 
 function getMarksByIndex(index) {
 	var marks = new Array;
@@ -93,6 +96,7 @@ function refreshAvg(toggleLoader) {
 	var tableAvg;
 	var students = getStudentsName();
 	var content;
+	var coeff;
 
 	for(var i = 0; i < students.length; i++) {		
 		tableAvg = new Array();
@@ -104,18 +108,18 @@ function refreshAvg(toggleLoader) {
 
 			$('#marksTable tbody tr:contains("' + students[i] + '") td').find('[data-tucode="' + tuCodes[j] + '"]').each(function() {
 				content = $(this).text().trim();
+				coeff = $(this).data('coeff');
 
 				if(content != 'Empty') {
-					studentMarks.push(parseFloat(content));
+					studentMarks.push({
+						"value"	: 	parseFloat(content),
+						"coeff"	: 	coeff
+					});
 				}
 			});
 
-			for(var k = 0; k < studentMarks.length; k++) {
-				sum += studentMarks[k];
-			}
-
-			avg = (sum / studentMarks.length).toFixed(2, 0);
-			if(avg == 'NaN')
+			avg = getAvg(studentMarks, true);
+			if(avg == 'Empty')
 				avg = '';
 			tableAvg.push(avg);
 		}
@@ -134,19 +138,21 @@ function refreshAvg(toggleLoader) {
 	var index;
 	var avg, minAvg, maxAvg;
 
+	// Average
 	$(avgCells).each(function() {
 		index = $(this).index();
 		marks = getMarksByIndex(index);
 
-		if(marks.length > 0)
+		if(marks.length > 0) {
 			avg = getAvg(marks);
+		}
 		else 
 			avg = '';
-		if($('#marksTable thead tr:nth-child(' + index + ') th').hasClass('tuAvg'))
 		
 		$(this).html(avg);
 	});
 
+	// Min
 	$(minCells).each(function() {
 		marks = getMarksByIndex($(this).index());
 		
@@ -158,6 +164,7 @@ function refreshAvg(toggleLoader) {
 		$(this).html(minAvg);
 	});
 
+	// Max
 	$(maxCells).each(function() {
 		marks = getMarksByIndex($(this).index());
 
@@ -188,22 +195,25 @@ function refreshAvgTableWidth() {console.log('refresh width');
 function createAvgTable() {
 	var marksTableFirstRow = $('#marksTable tbody tr:first td').splice(2);
 	var row = '';
+	
+	var rowTitles = ['Moyenne', 'Min', 'Max'];
+	for(var i = 0; i < 3; i++) {
+		row += '<tr><td><b>' + rowTitles[i] + '</b></td>';
 
-	row += '<tr><td><b>Moyenne</b></td>';
 		$(marksTableFirstRow).each(function() {
-			row += '<td></td>';
+
+			var index = $(this).index();
+
+			if($('#marksTable tbody tr:nth-child(3) td:nth-child(' + (index + 1) + ')').hasClass('tuAvg'))
+				row += '<td class="tuAvg"></td>';
+			else
+				row += '<td></td>';
+
 		});
-	row += '</tr>';
-	row += '<tr><td><b>Min</b></td>';
-		$(marksTableFirstRow).each(function() {
-			row += '<td></td>';
-		});
-	row += '</tr>';
-	row += '<tr><td><b>Max</b></td>';
-		$(marksTableFirstRow).each(function() {
-			row += '<td></td>';
-		});
-	row += '</tr>';
+	
+			row += '</tr>';
+	}
+
 	$('#avgTable').append(row);
 }
 
@@ -221,6 +231,4 @@ $(document).ready(function() {
 	catch(e) {
 		console.log(e);
 	}
-
-	// $('#avgTable tr td').on('change', refreshAvgTableWidth());
 });
