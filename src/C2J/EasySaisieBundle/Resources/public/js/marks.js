@@ -131,9 +131,9 @@ function refreshAvg(toggleLoader) {
 	}	
 
 	// Refreshes avegerage table 
-	var avgCells = $('#avgTable tbody tr:first td').splice(1);
-	var minCells = $('#avgTable tbody tr:nth-child(2) td').splice(1);
-	var maxCells = $('#avgTable tbody tr:last td').splice(1);
+	var avgCells = $('#avgTable tbody tr:contains(Moyenne) td').splice(1);
+	var minCells = $('#avgTable tbody tr:contains(Min) td').splice(1);
+	var maxCells = $('#avgTable tbody tr:contains(Max) td').splice(1);
 	var marks = new Array();
 	var index;
 	var avg, minAvg, maxAvg;
@@ -194,8 +194,21 @@ function refreshAvgTableWidth() {console.log('refresh width');
 
 function createAvgTable() {
 	var marksTableFirstRow = $('#marksTable tbody tr:first td').splice(2);
-	var row = '';
-	
+	var row = '';	
+
+	row += '<tr><td></td>';
+		var subjectsList = $('#marksTable thead tr:nth-child(3) th').splice(2);
+		var content;
+
+		$(subjectsList).each(function() {
+			if($(this).text().trim() == '')
+				content = '<img src="/EasySaisie/web/bundles/c2jeasysaisie/img/xbar.png">';
+			else 
+				content = $(this).text();
+			row += '<td>' + content + '</td>';
+		});
+	row += '</tr>';
+
 	var rowTitles = ['Moyenne', 'Min', 'Max'];
 	for(var i = 0; i < 3; i++) {
 		row += '<tr><td><b>' + rowTitles[i] + '</b></td>';
