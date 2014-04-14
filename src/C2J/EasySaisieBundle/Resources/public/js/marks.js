@@ -180,7 +180,7 @@ function refreshAvg(toggleLoader) {
 		displayLoadingWheel(false);
 }
 
-function refreshAvgTableWidth() {console.log('refresh width');
+function refreshAvgTableWidth() {
 	var markWidths = $('#marksTable tbody tr:first td');
 	var avgWidths = $('#avgTable tbody tr:first td');
 	var avgTable = $('#avgTable');
@@ -228,16 +228,56 @@ function createAvgTable() {
 	$('#avgTable').append(rows);
 }
 
+function switchTables(href, e) {	
+	if(e)
+		e.preventDefault();
+	
+	if(href == '#displayMarks') {
+		$('#displayContainersAvg').fadeOut(400, function() {
+			window.location.hash = '#displayMarks';
+			$('#displayMarks').fadeIn(400);
+			$('#switchDisplayMarks').hide(0, function() {
+				$('#switchDisplayContainersAvg').show(0);
+			});
+		});	
+	}
+	else {
+		$('#displayMarks').fadeOut(400, function() {
+			window.location.hash = '#displayContainersAvg';
+			$('#displayContainersAvg').fadeIn(400);
+			$('#switchDisplayContainersAvg').hide(0, function() {
+				$('#switchDisplayMarks').show(0);
+			});
+		});	
+	}
+}
+
+function switchTablesWithHash(hash) {
+	switchTables(hash);		
+} 
+
 /***** WINDOW INIT *****/
 $(document).ready(function() {
+	$('#switchDisplayMarks, #switchDisplayContainersAvg').on('click', function(event) {
+		switchTables($(this).attr('href'), event);
+	});
+
 	try {
+		var startStopWatch = (new Date()).getTime();
+
 		displayLoadingWheel(true);
+
+		if(window.location.hash != '')
+			switchTablesWithHash(window.location.hash)
 
 		createAvgTable();
 		refreshAvg();
 		refreshAvgTableWidth();
 
 		displayLoadingWheel(false);
+
+		var totalTime = (new Date()).getTime() - startStopWatch;
+		console.log('Generated in : ' + totalTime + 'ms');
 	}
 	catch(e) {
 		console.log(e);

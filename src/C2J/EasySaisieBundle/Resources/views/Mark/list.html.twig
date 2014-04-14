@@ -3,96 +3,152 @@
 
 {% block body %}
     {{ parent() }}
-    
     {% if studentPromotions is not empty %}
-        <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].year}}</h1>
+        <div>
+            <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].year}}</h1>
+        </div>
 
-        <!-- MARKS TABLE -->
-        <table class="table table-bordered table-bordered" id="marksTable">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    {% for container in containers %}
-                        <th colspan="{{ containersColspan[loop.index - 1] }}">{{ container.name }}</th>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    {% for container in containers %}
-                        {% for tu in container.teachingUnits %} 
-                            {# +1 to take in account the avg column #}
-                            <th colspan="{{ tu.teachingUnitSubjects | length + 1}}" data-tucode="{{ tu.code }}">{{ tu.code }} {{ tu.name }}</th>
-                        {% endfor %}
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <th>Num. Etudiant</th>
-                    <th>Etudiant</th>
-                    {% for container in containers %}
-                        {% for tu in container.teachingUnits %}
-                            <th class="tuAvg"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /></th>
-                            {% for tus in tu.teachingUnitSubjects %}
-                                <th class="subject">{{ tus.subject.abbreviation }}</th>
-                            {% endfor %}
-                        {% endfor %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for sp in studentPromotions %}
-                    {% set spId = sp.id %} {# declared here to use it after the for loop #}
-                    <tr>
-                        <td>{{ sp.student.number }}</td>
-                        <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
-                        
-                        {% for tuCode,tu in subjectsByTu %}
-                            <td class="tuAvg"></td>
-
-                            {% for tuId in tu %}
-                            {% set markId = '' %} {# declared here to use it after the for loop #}
-                            {% set tusId = '' %} {# declared here to use it after the for loop #}
-                            {% set markValue = '' %}
-                            
-                                {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
-                                {% for mark in sp.marks if continue %}
-                                    {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
-                                        {% set markValue = mark.value %}
-                                        {% set markId = mark.id %}
-                                        {% set continue = false %}
-                                    {% endif %}
-                                {% endfor %}
-                                <td class="tdMark">
-                                    <a 
-                                        href="" 
-                                        class="mark"
-                                        data-tucode="{{ tuCode }}" 
-                                        data-coeff="{{ tuId.subject.coeff }}"
-                                        data-pk="{{ markId }}"
-                                        data-spid="{{ spId }}"
-                                        data-tusid="{{ tuId.tusId }}" 
-                                        data-type="text" 
-                                        data-url="{{ path('mark_persist_ajax') }}">
-                                        {{ markValue }}
-                                    </a>
-                                </td>
-                            {% endfor %}
-                        {% endfor %}
-                    </tr> 
-                {% endfor %} 
-            </tbody>
-        </table>
+        <div>
+            <a href="#displayMarks" class="btn btn-default" id="switchDisplayMarks"><span class="glyphicon glyphicon-list purple"></span> Notes</a>
+            <a href="#displayContainersAvg" class="btn btn-default" id="switchDisplayContainersAvg"><span class="glyphicon glyphicon-sort-by-attributes purple"></span> Moyennes générales</a>
+        </div>
 
         <hr />
 
-        <!-- AVG TABLE -->
-        <table class="table table-bordered table-bordered table-striped" id="avgTable">
-            <tbody>
+        <!-- DISPLAY MARKS -->        
+        <div id="displayMarks">
+            <!-- MARKS TABLE -->
+            <table class="table table-bordered table-bordered" id="marksTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        {% for container in containers %}
+                            <th colspan="{{ containersColspan[loop.index - 1] }}">{{ container.name }}</th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        {% for container in containers %}
+                            {% for tu in container.teachingUnits %} 
+                                {# +1 to take in account the avg column #}
+                                <th colspan="{{ tu.teachingUnitSubjects | length + 1}}" data-tucode="{{ tu.code }}">{{ tu.code }} {{ tu.name }}</th>
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th>Num. Etudiant</th>
+                        <th>Etudiant</th>
+                        {% for container in containers %}
+                            {% for tu in container.teachingUnits %}
+                                <th class="tuAvg"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /></th>
+                                {% for tus in tu.teachingUnitSubjects %}
+                                    <th class="subject">{{ tus.subject.abbreviation }}</th>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sp in studentPromotions %}
+                        {% set spId = sp.id %} {# declared here to use it after the for loop #}
+                        <tr>
+                            <td>{{ sp.student.number }}</td>
+                            <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                            
+                            {% for tuCode,tu in subjectsByTu %}
+                                <td class="tuAvg"></td>
 
-            </tbody>
-        </table>                   
+                                {% for tuId in tu %}
+                                {% set markId = '' %} {# declared here to use it after the for loop #}
+                                {% set tusId = '' %} {# declared here to use it after the for loop #}
+                                {% set markValue = '' %}
                                 
+                                    {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
+                                    {% for mark in sp.marks if continue %}
+                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
+                                            {% set markValue = mark.value %}
+                                            {% set markId = mark.id %}
+                                            {% set continue = false %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <td class="tdMark">
+                                        <a 
+                                            href="" 
+                                            class="mark"
+                                            data-tucode="{{ tuCode }}" 
+                                            data-coeff="{{ tuId.subject.coeff }}"
+                                            data-pk="{{ markId }}"
+                                            data-spid="{{ spId }}"
+                                            data-tusid="{{ tuId.tusId }}" 
+                                            data-type="text" 
+                                            data-url="{{ path('mark_persist_ajax') }}">
+                                            {{ markValue }}
+                                        </a>
+                                    </td>
+                                {% endfor %}
+                            {% endfor %}
+                        </tr> 
+                    {% endfor %} 
+                </tbody>
+            </table>
+
+            <hr />
+
+            <!-- AVG TABLE -->
+            <table class="table table-bordered table-bordered table-striped" id="avgTable">
+                <tbody>
+
+                </tbody>
+            </table>                   
+        </div>
+
+        <!-- DISPLAY CONTAINERS AVG -->
+        <div id="displayContainersAvg" style="display: hidden;">
+             <table class="table table-bordered table-bordered" id="containersAvgTable">
+                <thead>
+                    <tr>
+                        <th>Num. Etudiant</th>
+                        <th>Etudiant</th>
+                        {% for container in containers %}
+                            <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> {{ container.name }}</th>
+                        {% endfor %}
+                        <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> Générale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sp in studentPromotions %}
+                        <tr>
+                            <td>{{ sp.student.number }}</td>
+                            <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                        </tr> 
+                    {% endfor %} 
+                </tbody> 
+            </table>
+
+            <!-- STUDENTS AVG TABLE -->
+            <table class="table table-bordered table-bordered table-striped" id="studentsAvgTable">
+                <thead>
+                    <th></th>
+                    {% for container in containers %}
+                            <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> {{ container.name }}</th>
+                    {% endfor %}
+                    <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> Générale</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><b>Moyenne</b></td>
+                </tr>
+                <tr>
+                    <td><b>Min</b></td>
+                </tr>
+                <tr>
+                    <td><b>Max</b></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <p class="center no-reccords-to-display">Il n'y a pas de notes à afficher pour cette promotion.</p>
     {% endif %}
