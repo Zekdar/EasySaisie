@@ -69,11 +69,12 @@ class MarkController extends Controller
                 foreach ($tu->getTeachingUnitSubjects() as $tus) {
                     $subjectsByTu[$tu->getCode()][] = array(
                         'tusId' => $tus->getId(),
+                        'container' => $container->getName(),
                         'subject'           => array(
                             'id'            => $tus->getSubject()->getId(),
                             'name'          => $tus->getSubject()->getName(),
                             'abbreviation'  => $tus->getSubject()->getAbbreviation(),
-                            'coeff'          => $tus->getCoeff()
+                            'coeff'         => $tus->getCoeff()
                         )
                     );
                 }

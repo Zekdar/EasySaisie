@@ -58,7 +58,7 @@
                             <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                             
                             {% for tuCode,tu in subjectsByTu %}
-                                <td class="tuAvg"></td>
+                                <td class="tuAvg" data-container="{{ tu[0].container }}"></td>
 
                                 {% for tuId in tu %}
                                 {% set markId = '' %} {# declared here to use it after the for loop #}
@@ -122,6 +122,9 @@
                         <tr>
                             <td>{{ sp.student.number }}</td>
                             <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                            <td class="avg"></td>
+                            <td class="avg"></td>
+                            <td class="generalAvg"></td>
                         </tr> 
                     {% endfor %} 
                 </tbody> 
