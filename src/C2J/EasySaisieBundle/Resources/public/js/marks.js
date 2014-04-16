@@ -208,8 +208,9 @@ function refreshGeneralAvgs(students) {
 			content = $(tuAvgsFromMarksTable[j]).text().trim();
 			currentContainer = $(tuAvgsFromMarksTable[j]).data('container');
 
-			if($(tuAvgsFromMarksTable[j]).data('container') == container && content != '') {			
-				tmp.push(parseFloat(content));
+			if($(tuAvgsFromMarksTable[j]).data('container') == container) {
+				if(content != '') 
+					tmp.push(parseFloat(content));
 			}
 			else {
 				studentAvgs['' + container] = tmp;
@@ -226,9 +227,7 @@ function refreshGeneralAvgs(students) {
 		
 		var avgsTmp = [];
 		for(var j in studentAvgs) {
-			for(var k = 0; k < studentAvgs[j].length; k++) {
-				avgsTmp.push(getAvg(studentAvgs[j]));
-			}			
+			avgsTmp.push(getAvg(studentAvgs[j]));
 		}
 		tableAvgs.push(avgsTmp);
 	}
@@ -236,10 +235,8 @@ function refreshGeneralAvgs(students) {
 	var studentAvgCells;
 	for(var i = 0; i < students.length; i++) {
 		studentAvgCells = $('#displayContainersAvg tbody tr:contains(' + students[i] + ') td.avg');
-		for(var j = 0; j < tableAvgs.length; j++) {
-			for(var k = 0; k < tableAvgs[j].length; k++) {
-				$(studentAvgCells[j]).text(tableAvgs[j][k]);
-			}
+		for(var j = 0; j < tableAvgs[i].length; j++) {
+			$(studentAvgCells[j]).text(tableAvgs[i][j]);
 		}
 	}	
 }
