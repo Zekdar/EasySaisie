@@ -236,7 +236,8 @@ function refreshGeneralAvgs(students) {
 	for(var i = 0; i < students.length; i++) {
 		studentAvgCells = $('#displayContainersAvg tbody tr:contains(' + students[i] + ') td.avg');
 		for(var j = 0; j < tableAvgs[i].length; j++) {
-			$(studentAvgCells[j]).text(tableAvgs[i][j]);
+			if(tableAvgs[i][j] != "Empty")
+				$(studentAvgCells[j]).text(tableAvgs[i][j]);
 		}
 	}	
 }
