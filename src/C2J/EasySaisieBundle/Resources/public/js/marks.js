@@ -3,22 +3,26 @@ function getAvg(marks, withCoeff) {
 	var sumCoeff = 0;
 	var coeff;
 
-	for(var i = 0; i < marks.length; i++) {
-		if(withCoeff) {
-			coeff = marks[i].coeff;
-			sum += marks[i].value * coeff;
-		}
-		else {
-			coeff = 1;
-			sum += marks[i].value;
-		}
-
-		sumCoeff += coeff;
-	}
-	if(sum != 0)
-		return (sum / sumCoeff).toFixed(2, 0); // Rounds at 10^-2 decimals
-	else
+	if(marks.length == 0) {
 		return 'Empty';
+	}
+	else {
+		for(var i = 0; i < marks.length; i++) {
+			if(marks[i].value != 'Empty') {
+				if(withCoeff) {
+					coeff = marks[i].coeff;
+					sum += marks[i].value * coeff;
+					sumCoeff += coeff;
+				}
+				else {
+					coeff = 1;
+					sum += marks[i];
+					sumCoeff += coeff;
+				}				
+			}
+		}
+		return (sum / sumCoeff).toFixed(2, 0); // Rounds at 10^-2 decimals
+	}
 }
 
 function getMinAvg(marks) {
@@ -30,7 +34,7 @@ function getMaxAvg(marks) {
 }
 
 function getMarksByIndex(index) {
-	var marks = new Array;
+	var marks = [];
 	var searchPattern = ''; // Necessary to know if we have to search for a <a> inside the <td> ou just the <td> itself
 
 	if($(this).hasClass('tdMark'))
@@ -47,8 +51,8 @@ function getMarksByIndex(index) {
 }
 
 function getMarksByStudent(student, includeAvg) {
-	var marksCells = new Array();
-	var marks = new Array();
+	var marksCells = [];
+	var marks = [];
 
 	if(includeAvg)
 		marksCells = $('#marksTable tbody tr:contains(' + student + ') td');
@@ -66,7 +70,7 @@ function getMarksByStudent(student, includeAvg) {
 
 function getTuCodes() {
 	var tuCodesCells = $('#marksTable thead tr:nth-child(2)').find('[data-tucode]');
-	var tuCodes = new Array();
+	var tuCodes = [];
 
 	$(tuCodesCells).each(function(){
 		tuCodes.push($(this).data('tucode'));
@@ -76,7 +80,7 @@ function getTuCodes() {
 }
 
 function getStudentsName() {
-	var names = new Array();
+	var names = [];
 
 	$('#marksTable tbody td.studentName').each(function() {
 		names.push($(this).text().trim());
@@ -92,17 +96,17 @@ function refreshAvg(toggleLoader) {
 	// Calculates each teaching unit avg
 	var tuCodes = getTuCodes();
 	var sum = 0; var avg = 0;
-	var studentMarks = new Array(); 
+	var studentMarks = []; 
 	var tableAvg;
 	var students = getStudentsName();
 	var content;
 	var coeff;
 
 	for(var i = 0; i < students.length; i++) {		
-		tableAvg = new Array();
+		tableAvg = [];
 
 		for(var j = 0; j < tuCodes.length; j++) {
-			studentMarks = new Array();
+			studentMarks = [];
 			sum = 0;
 			avg = 0;
 
@@ -135,7 +139,7 @@ function refreshAvg(toggleLoader) {
 	var avgCells = $('#avgTable tbody tr:contains(Moyenne) td').splice(1);
 	var minCells = $('#avgTable tbody tr:contains(Min) td').splice(1);
 	var maxCells = $('#avgTable tbody tr:contains(Max) td').splice(1);
-	var marks = new Array();
+	var marks = [];
 	var index;
 	var avg, minAvg, maxAvg;
 
@@ -185,8 +189,8 @@ function refreshAvg(toggleLoader) {
 }
 
 function refreshGeneralAvgs(students) {
-	var studentAvgs = new Array();
-	var tableAvgs = {};
+	var studentAvgs = [];
+	var tableAvgs = [];
 	var content;
 	var container;
 	var currentContainer;
@@ -205,34 +209,37 @@ function refreshGeneralAvgs(students) {
 			currentContainer = $(tuAvgsFromMarksTable[j]).data('container');
 
 			if($(tuAvgsFromMarksTable[j]).data('container') == container && content != '') {			
-				tmp.push({"value": parseFloat(content)});
+				tmp.push(parseFloat(content));
 			}
 			else {
 				studentAvgs['' + container] = tmp;
 				tmp = [];
 
 				if(content != '')
-					tmp.push({"value": parseFloat(content)});
+					tmp.push(parseFloat(content));
 
 				container = $(tuAvgsFromMarksTable[j]).data('container');
 			}
 		}
 
 		studentAvgs['' + container] = tmp;
-
+		
+		var avgsTmp = [];
 		for(var j in studentAvgs) {
-			avg = getAvg(studentAvgs[j]);
-
-			if(avg != 'Empty')
-				tableAvgs.push(avg);
+			for(var k = 0; k < studentAvgs[j].length; k++) {
+				avgsTmp.push(getAvg(studentAvgs[j]));
+			}			
 		}
+		tableAvgs.push(avgsTmp);
 	}
-
-	var studentAvg;
+	console.log(tableAvgs);
+	var studentAvgCells;
 	for(var i = 0; i < students.length; i++) {
-		studentAvg = $('#displayContainersAvg tbody tr:contains(' + students[i] + ') td.avg');
-		for(var j = 0; j < studentAvg.length; j++) {
-			$(students[i]).text(tableAvgs[j]);
+		studentAvgCells = $('#displayContainersAvg tbody tr:contains(' + students[i] + ') td.avg');
+		for(var j = 0; j < tableAvgs.length; j++) {
+			for(var k = 0; k < tableAvgs[j].length; k++) {
+				$(studentAvgCells[j]).text(tableAvgs[j][k]);
+			}
 		}
 	}	
 }
