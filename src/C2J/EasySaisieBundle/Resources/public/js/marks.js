@@ -227,19 +227,28 @@ function refreshGeneralAvgs(students) {
 		
 		var avgsTmp = [];
 		for(var j in studentAvgs) {
-			avgsTmp.push(getAvg(studentAvgs[j]));
+			avgsTmp.push(parseFloat(getAvg(studentAvgs[j])));
 		}
 		tableAvgs.push(avgsTmp);
 	}
-	console.log(tableAvgs);
+	
 	var studentAvgCells;
+	var generalAvgCell;
 	for(var i = 0; i < students.length; i++) {
 		studentAvgCells = $('#displayContainersAvg tbody tr:contains(' + students[i] + ') td.avg');
+		generalAvgCell = $('#displayContainersAvg tbody tr:contains(' + students[i] + ') td.generalAvg');
+
 		for(var j = 0; j < tableAvgs[i].length; j++) {
-			if(tableAvgs[i][j] != "Empty")
+			if(tableAvgs[i][j] != "Empty") {
 				$(studentAvgCells[j]).text(tableAvgs[i][j]);
+			}
 		}
-	}	
+		
+		if(tableAvgs[i].length > 0) {
+			// Containers AVG calculation
+			$(generalAvgCell).text(getAvg(tableAvgs[i]));
+		}
+	}
 }
 
 function refreshAvgTableWidth() {
