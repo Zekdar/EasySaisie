@@ -135,19 +135,31 @@
                 <thead>
                     <th></th>
                     {% for container in containers %}
-                            <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> {{ container.name }}</th>
+                        <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> {{ container.name }}</th>
                     {% endfor %}
                     <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> Générale</th>
                 </thead>
                 <tbody>
                 <tr>
                     <td><b>Moyenne</b></td>
+                    {% for container in containers %}
+                        <td></td>
+                    {% endfor %}
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>Min</b></td>
+                    {% for container in containers %}
+                        <td></td>
+                    {% endfor %}
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>Max</b></td>
+                    {% for container in containers %}
+                        <td></td>
+                    {% endfor %}
+                    <td></td>
                 </tr>
                 </tbody>
             </table>

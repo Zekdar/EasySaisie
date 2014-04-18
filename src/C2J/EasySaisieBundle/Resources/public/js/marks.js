@@ -8,20 +8,22 @@ function getAvg(marks, withCoeff) {
 	}
 	else {
 		for(var i = 0; i < marks.length; i++) {
-			if(marks[i].value != 'Empty') {
-				if(withCoeff) {
+			if(withCoeff) {
+				if(marks[i].value != 'Empty') {
 					coeff = marks[i].coeff;
 					sum += marks[i].value * coeff;
 					sumCoeff += coeff;
 				}
-				else {
+			}
+			else {
+				if(marks[i] != 'Empty') {
 					coeff = 1;
 					sum += marks[i];
 					sumCoeff += coeff;
-				}				
+				}
 			}
 		}
-		return (sum / sumCoeff).toFixed(2, 0); // Rounds at 10^-2 decimals
+		return parseFloat((sum / sumCoeff).toFixed(2, 0)); // Rounds at 10^-2 decimals
 	}
 }
 
@@ -33,15 +35,14 @@ function getMaxAvg(marks) {
 	return marks[marks.length - 1];
 }
 
-function getMarksByIndex(index) {
+function getMarksByIndex(index, tableId) {
 	var marks = [];
-	var searchPattern = ''; // Necessary to know if we have to search for a <a> inside the <td> ou just the <td> itself
+	index += 2;
 
-	if($(this).hasClass('tdMark'))
-		searchPattern = 'a'
+	if(!tableId)
+		return [];
 
-	var content;
-	$('#marksTable tbody tr td:nth-child(' + (index + 2) + ') ' + searchPattern).each(function() {
+	$('#' + tableId + ' tbody tr td:nth-child(' + index + ')').each(function() {
 		content = $(this).text().trim();
 		if(content != 'Empty' && content != '') 
 			marks.push(parseFloat(content));
@@ -146,7 +147,7 @@ function refreshAvg(toggleLoader) {
 	// Average
 	$(avgCells).each(function() {
 		index = $(this).index();
-		marks = getMarksByIndex(index);
+		marks = getMarksByIndex(index, 'marksTable');
 
 		if(marks.length > 0) {
 			avg = getAvg(marks);
@@ -159,7 +160,7 @@ function refreshAvg(toggleLoader) {
 
 	// Min
 	$(minCells).each(function() {
-		marks = getMarksByIndex($(this).index());
+		marks = getMarksByIndex($(this).index(), 'marksTable');
 		
 		if(marks.length > 0)
 			minAvg = getMinAvg(marks).toFixed(2, 0);
@@ -171,7 +172,7 @@ function refreshAvg(toggleLoader) {
 
 	// Max
 	$(maxCells).each(function() {
-		marks = getMarksByIndex($(this).index());
+		marks = getMarksByIndex($(this).index(), 'marksTable');
 
 		if(marks.length > 0)
 			maxAvg = getMaxAvg(marks).toFixed(2, 0);
@@ -227,11 +228,12 @@ function refreshGeneralAvgs(students) {
 		
 		var avgsTmp = [];
 		for(var j in studentAvgs) {
-			avgsTmp.push(parseFloat(getAvg(studentAvgs[j])));
+			avgsTmp.push(getAvg(studentAvgs[j]));
 		}
 		tableAvgs.push(avgsTmp);
 	}
 	
+	// AVG display
 	var studentAvgCells;
 	var generalAvgCell;
 	for(var i = 0; i < students.length; i++) {
@@ -249,6 +251,52 @@ function refreshGeneralAvgs(students) {
 			$(generalAvgCell).text(getAvg(tableAvgs[i]));
 		}
 	}
+
+	// Refreshed Students AVG Table
+	var avgCells = $('#studentsAvgTable tbody tr:contains(Moyenne) td').splice(1);
+	var minCells = $('#studentsAvgTable tbody tr:contains(Min) td').splice(1);
+	var maxCells = $('#studentsAvgTable tbody tr:contains(Max) td').splice(1);
+	var marks = [];
+	var index;
+	var avg, minAvg, maxAvg;
+
+	// Average
+	$(avgCells).each(function() {
+		index = $(this).index();
+		marks = getMarksByIndex(index, 'containersAvgTable');
+
+		if(marks.length > 0) {
+			avg = getAvg(marks);
+		}
+		else 
+			avg = '';
+		
+		$(this).html(avg);
+	});
+
+	// Min
+	$(minCells).each(function() {
+		marks = getMarksByIndex($(this).index(), 'containersAvgTable');
+		
+		if(marks.length > 0)
+			minAvg = getMinAvg(marks).toFixed(2, 0);
+		else 
+			minAvg = '';
+
+		$(this).html(minAvg);
+	});
+
+	// Max
+	$(maxCells).each(function() {
+		marks = getMarksByIndex($(this).index(),'containersAvgTable');
+
+		if(marks.length > 0)
+			maxAvg = getMaxAvg(marks).toFixed(2, 0);
+		else 
+			maxAvg = '';
+
+		$(this).html(maxAvg);
+	});
 }
 
 function refreshAvgTableWidth() {
