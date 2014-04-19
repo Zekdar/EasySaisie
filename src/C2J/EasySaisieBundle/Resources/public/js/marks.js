@@ -2,6 +2,7 @@ function getAvg(marks, withCoeff) {
 	var sum = 0.0;
 	var sumCoeff = 0;
 	var coeff;
+	var containsSomething = false;
 
 	if(marks.length == 0) {
 		return 'Empty';
@@ -10,6 +11,7 @@ function getAvg(marks, withCoeff) {
 		for(var i = 0; i < marks.length; i++) {
 			if(withCoeff) {
 				if(marks[i].value != 'Empty') {
+					containsSomething = true;
 					coeff = marks[i].coeff;
 					sum += marks[i].value * coeff;
 					sumCoeff += coeff;
@@ -17,13 +19,18 @@ function getAvg(marks, withCoeff) {
 			}
 			else {
 				if(marks[i] != 'Empty') {
+					containsSomething = true;
 					coeff = 1;
 					sum += marks[i];
 					sumCoeff += coeff;
 				}
 			}
 		}
-		return parseFloat((sum / sumCoeff).toFixed(2, 0)); // Rounds at 10^-2 decimals
+
+		if(containsSomething)
+			return parseFloat((sum / sumCoeff).toFixed(2, 0)); // Rounds at 10^-2 decimals
+		else
+			return 'Empty';
 	}
 }
 
@@ -246,9 +253,12 @@ function refreshGeneralAvgs(students) {
 			}
 		}
 		
+		var generalAvg;
 		if(tableAvgs[i].length > 0) {
 			// Containers AVG calculation
-			$(generalAvgCell).text(getAvg(tableAvgs[i]));
+			generalAvg = getAvg(tableAvgs[i]);
+			if(generalAvg != 'Empty')
+				$(generalAvgCell).text(generalAvg);
 		}
 	}
 
