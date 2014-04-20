@@ -131,9 +131,13 @@ function refreshAvg(toggleLoader) {
 			});
 
 			avg = getAvg(studentMarks, true);
-			if(avg == 'Empty')
+			if(avg == 'Empty'){
 				avg = '';
-			tableAvg.push(avg);
+				tableAvg.push(avg);
+			}
+			else {
+				tableAvg.push(avg.toFixed(2, 0));	
+			}
 		}
 
 		var tableTuAvg = $('#marksTable tbody tr:contains("' + students[i] + '") td.tuAvg');
@@ -157,7 +161,7 @@ function refreshAvg(toggleLoader) {
 		marks = getMarksByIndex(index, 'marksTable');
 
 		if(marks.length > 0) {
-			avg = getAvg(marks);
+			avg = getAvg(marks).toFixed(2, 0);
 		}
 		else 
 			avg = '';
@@ -258,7 +262,7 @@ function refreshGeneralAvgs(students) {
 			// Containers AVG calculation
 			generalAvg = getAvg(tableAvgs[i]);
 			if(generalAvg != 'Empty')
-				$(generalAvgCell).text(generalAvg);
+				$(generalAvgCell).text(generalAvg.toFixed(2, 0));
 		}
 	}
 
@@ -276,7 +280,7 @@ function refreshGeneralAvgs(students) {
 		marks = getMarksByIndex(index, 'containersAvgTable');
 
 		if(marks.length > 0) {
-			avg = getAvg(marks);
+			avg = getAvg(marks).toFixed(2, 0);
 		}
 		else 
 			avg = '';
