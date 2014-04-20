@@ -28,6 +28,13 @@ class Mark
   private $value;
   
   /**
+   * @var float $value
+   *
+   * @ORM\Column(name="session", type="integer")
+   */
+  private $session;
+  
+  /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject", inversedBy="marks")
    */
   private $teachingUnitSubject;
@@ -115,5 +122,28 @@ class Mark
     public function getValue()
     {
         return $this->value;
+    }
+	
+	/**
+     * Set value
+     *
+     * @param integer $session
+     * @return Mark
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return integer 
+     */
+    public function getSession()
+    {
+        return $this->session;
     }
 }
