@@ -97,29 +97,36 @@ class MarkController extends Controller
             $colspans[] = $containersColspan; 
         }        
 
-        $subjectsByTu = array();
-        foreach ($promotions[0]->getContainers() as $container) {
-            foreach ($container->getTeachingUnits() as $tu) {
-                foreach ($tu->getTeachingUnitSubjects() as $tus) {
-                    $subjectsByTu[$tu->getCode()][] = array(
-                        'tusId' => $tus->getId(),
-                        'container' => $container->getName(),
-                        'subject'           => array(
-                            'id'            => $tus->getSubject()->getId(),
-                            'name'          => $tus->getSubject()->getName(),
-                            'abbreviation'  => $tus->getSubject()->getAbbreviation(),
-                            'coeff'         => $tus->getCoeff()
-                        )
-                    );
+        if(count($promotions) >= 1) {
+            $containers = $promotions[0]->getContainers();
+
+            $subjectsByTu = array();
+            foreach ($containers as $container) {
+                foreach ($container->getTeachingUnits() as $tu) {
+                    foreach ($tu->getTeachingUnitSubjects() as $tus) {
+                        $subjectsByTu[$tu->getCode()][] = array(
+                            'tusId' => $tus->getId(),
+                            'container' => $container->getName(),
+                            'subject'           => array(
+                                'id'            => $tus->getSubject()->getId(),
+                                'name'          => $tus->getSubject()->getName(),
+                                'abbreviation'  => $tus->getSubject()->getAbbreviation(),
+                                'coeff'         => $tus->getCoeff()
+                            )
+                        );
+                    }
                 }
             }
+        }
+        else {
+            $containers = array();
         }
         // asort($subjectsByTu); // Sort is necessary to display marks in the correct order in the view
         // var_dump($subjectsByTu['72m']);
         return array(
             'session' => $session,
             'studentPromotions' => $studentPromotions,
-            'containers' => $promotions[0]->getContainers(),
+            'containers' => $containers,
             'containersColspan' => $colspans,
             'subjectsByTu' => $subjectsByTu
         );
