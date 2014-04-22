@@ -84,6 +84,7 @@ $(document).ready(function() {
 		    params.spid = $(this).data('spid');
 		    params.tusid = $(this).data('tusid');
 		    params.pk = $(this).data('pk');
+		    params.session = $(this).data('session');
 		    return params;
 		},
 		success: function(response, newValue) {

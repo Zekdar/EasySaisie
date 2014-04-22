@@ -39,13 +39,47 @@ class MarkController extends Controller
     }
 
     /**
+     * Adds marks for a given subject
+     *
+     * @Route("/addBySubject/{subjectName}/{year}/{promotion_id}", name="mark_add_by_subject")
+     * @Method("GET")
+     * @Template()
+     */    
+    public function addBySubjectAction($subjectName, $year, $promotion_id) 
+    {
+        // $mark = new Mark();
+        // $form = $this->createFormBuilder($mark)
+        //             ->add('value', 'text')
+        //             ->add('session', 'text')
+        //             ->add('save', 'submit')
+        //         ->getForm();
+
+        // return array('form' => $form->createView());
+        // if ($form->isValid()) {
+            // $em = $this->getDoctrine()->getManager();
+            // $em->persist($entity);
+            // $em->flush();
+
+            // return $this->redirect($this->generateUrl('container_show', array('id' => $entity->getId())));
+        // }
+
+        $em = $this->getDoctrine()->getManager();
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
+
+        return array(
+            'studentPromotions' => $studentPromotions,
+            'subject' => $subjectName
+        );
+    }
+
+    /**
      * Lists all marks for every students from a promotion for the specified year.
      *
-     * @Route("/list/{year}/{promotion_id}", name="mark_list")
+     * @Route("/list/{year}/{promotion_id}/{session}", name="mark_list")
      * @Method("GET")
      * @Template()
      */
-    public function listAction($year, $promotion_id) 
+    public function listAction($year, $promotion_id, $session) 
     {
         $em = $this->getDoctrine()->getManager();
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
@@ -83,6 +117,7 @@ class MarkController extends Controller
         // asort($subjectsByTu); // Sort is necessary to display marks in the correct order in the view
         // var_dump($subjectsByTu['72m']);
         return array(
+            'session' => $session,
             'studentPromotions' => $studentPromotions,
             'containers' => $promotions[0]->getContainers(),
             'containersColspan' => $colspans,
@@ -339,8 +374,11 @@ class MarkController extends Controller
 
             // If the new value is not empty : set the mark value
             $value = $request->request->get('value');
+            $session = $request->request->get('session');
+            
             if($value != '') {
                 $mark->setValue($value);
+                $mark->setSession($session);
                 $em->persist($mark);
             } 
             // Otherwise the mark needs to be deleted from the DB : delete
