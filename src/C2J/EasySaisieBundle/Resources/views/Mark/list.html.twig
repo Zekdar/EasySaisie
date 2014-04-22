@@ -5,7 +5,7 @@
     {{ parent() }}
     {% if studentPromotions is not empty %}
         <div>
-            <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].year}}</h1>
+            <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].promotion.year}}</h1>
         </div>
 
         <div>

@@ -13,9 +13,8 @@
     	</thead>
     	<tbody>
 			{% for entity in entities %}
-			<tr class="clickableRow" href="{{ path('mark_list', { 'promotion_id': entity.promotion.id, 'year': entity.year, 'session' : 1 }) }}">
-				<td>{{ entity.year }}</td>
-				<td>{{ entity.promotion }}</td>
+			<tr class="clickableRow" href="{{ path('mark_list', { 'promotion_id': entity.promotion.id, 'year': entity.promotion.year, 'session' : 1 }) }}">
+				<td>{{ entity.promotion.year }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>

@@ -20,6 +20,13 @@ class Promotion
    * @ORM\GeneratedValue(strategy="AUTO")
    */
   private $id;
+	
+	/**
+   * @var string $year
+   *
+   * @ORM\Column(name="year", type="string", length=4)
+   */
+  private $year;
 
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Formation")
@@ -60,6 +67,29 @@ class Promotion
   {
       return $this->id;
   }
+  
+   /**
+     * Set year
+     *
+     * @param string $year
+     * @return Promotion
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    
+        return $this;
+    }
+
+    /**
+     * Get year
+     *
+     * @return string 
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
 
   /**
    * Set formation

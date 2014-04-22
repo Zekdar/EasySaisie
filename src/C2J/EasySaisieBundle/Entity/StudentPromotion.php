@@ -19,13 +19,6 @@ class StudentPromotion
    * @ORM\GeneratedValue(strategy="AUTO")
    */
   private $id;
-
-  /**
-   * @var string $year
-   *
-   * @ORM\Column(name="year", type="string", length=4)
-   */
-  private $year;
   
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Student")
@@ -41,29 +34,6 @@ class StudentPromotion
    * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\Mark", mappedBy="studentPromotion")
    */
   private $marks;
-
-    /**
-     * Set year
-     *
-     * @param string $year
-     * @return StudentPromotion
-     */
-    public function setYear($year)
-    {
-        $this->year = $year;
-    
-        return $this;
-    }
-
-    /**
-     * Get year
-     *
-     * @return string 
-     */
-    public function getYear()
-    {
-        return $this->year;
-    }
 
     /**
      * Set student

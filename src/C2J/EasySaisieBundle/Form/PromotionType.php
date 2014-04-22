@@ -17,6 +17,7 @@ class PromotionType extends AbstractType
         $builder
             ->add('formation' , null, array('label' => 'Formation'))
 			->add('name', 'text', array('label' => 'Nom de la promotion'))
+			->add('year', 'text', array('label' => 'Année'))
 			->add('minAverageToValidate', 'text', array('label' => 'Moyenne pour valider l\'année'))
         ;
     }
