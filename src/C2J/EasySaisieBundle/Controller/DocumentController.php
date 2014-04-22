@@ -82,7 +82,6 @@ class DocumentController extends Controller
 						$entity = new StudentPromotion();
 						$entity->setStudent($student);
 						$entity->setPromotion($promotion);
-						$entity->setYear(2014);
 						$em->persist($entity);
 						$em->flush();
 					}
