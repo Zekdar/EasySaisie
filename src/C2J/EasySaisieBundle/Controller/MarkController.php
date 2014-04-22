@@ -50,7 +50,8 @@ class MarkController extends Controller
         $em = $this->getDoctrine()->getManager();
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
-        
+        //var_dump($promotions);exit;
+		
         $colspans = [];
         foreach ($promotions[0]->getContainers() as $container) {
             $containersColspan = 0; 
