@@ -116,7 +116,7 @@ function getStudentsSession2() {
 			content = $(this).text().trim();
 			// If it's an avg
 			if($(this).hasClass('tuAvg')) {
-				if(std in studentsNumbers == false)
+				//if(std in studentsNumbers == false)
 					marks['' + studentsNumbers[i]] = {};
 
 				marks['' + studentsNumbers[i]][i] = '1'
@@ -446,11 +446,20 @@ var tableToExcel = (function() {
   return function(table, name) {
     if (!table.nodeType) table = document.getElementById(table)
     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+    window.location.href = uri + base64(format(template, ctx))
+  }
+})()
 
 /***** WINDOW INIT *****/
 $(document).ready(function() {
 	$('#switchDisplayMarks, #switchDisplayContainersAvg').on('click', function(event) {
 		switchTables($(this).attr('href'), event);
+	});
+	
+	$('#btnExport').on('click', function(event) {
+		event.preventDefault();
+		var id = $('.exportable:visible').attr('id');
+		tableToExcel(id, 'export');		
 	});
 	
 	// try {
@@ -459,8 +468,8 @@ $(document).ready(function() {
 		// displayLoadingWheel(true);
 
 		if(window.location.hash == '')
-			window.location.hash = '#displayMarks'
-		switchTablesWithHash(window.location.hash)
+			window.location.hash = '#displayMarks';
+		switchTablesWithHash(window.location.hash);
 
 		createAvgTable();
 		refreshAvg();

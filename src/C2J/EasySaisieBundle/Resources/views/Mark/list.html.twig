@@ -3,7 +3,12 @@
 
 {% block body %}
     {{ parent() }}
-    {% if studentPromotions is not empty %}
+    {% if 
+		studentPromotions is not empty 
+		and containers is not empty 
+		and containersColspan is not empty 
+		and subjectsByTu is not empty 
+	%}
         <div>
             <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].promotion.year}}</h1>
         </div>
@@ -16,7 +21,8 @@
         <div class="btn-group">
             <a href="#" class="btn btn-info btn-xs" id="">Session 1</a>    
             <a href="#" class="btn btn-default btn-xs" id="">Session 2</a>    
-            <a href="#" class="btn btn-default btn-xs" id="">PV Final</a>    
+            <a href="#" class="btn btn-default btn-xs" id="">PV Final</a>
+			<a href="#" class="btn btn-success btn-xs" id="btnExport">Export Excel</a>  
         </div>
 
         <hr />
@@ -24,7 +30,7 @@
         <!-- DISPLAY MARKS -->        
         <div id="displayMarks">
             <!-- MARKS TABLE -->
-            <table class="table table-bordered table-bordered" id="marksTable">
+            <table class="table table-bordered table-bordered exportable" id="marksTable">
                 <thead>
                     <tr>
                         <th data-sorter="false"></th>
@@ -125,7 +131,7 @@
 
         <!-- DISPLAY CONTAINERS AVG -->
         <div id="displayContainersAvg" style="display: hidden;">
-            <table class="table table-bordered table-bordered" id="containersAvgTable">
+            <table class="table table-bordered table-bordered exportable" id="containersAvgTable">
                 <thead>
                     <tr>
                         <th>Num. Etudiant</th>

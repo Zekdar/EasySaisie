@@ -86,22 +86,24 @@ class MarkController extends Controller
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
         //var_dump($promotions);exit;
 		
-        $colspans = [];
-        foreach ($promotions[0]->getContainers() as $container) {
-            $containersColspan = 0; 
-            foreach ($container->getTeachingUnits() as $tu) {
-                $containersColspan++; // +1 for the average column
-                foreach ($tu->getTeachingUnitSubjects() as $subject) {
-                    $containersColspan++;
-                }
-            }
-            $colspans[] = $containersColspan; 
-        }        
+		$colspans = [];	
+		if(count($promotions) >= 1) {			
+			foreach ($promotions[0]->getContainers() as $container) {
+				$containersColspan = 0; 
+				foreach ($container->getTeachingUnits() as $tu) {
+					$containersColspan++; // +1 for the average column
+					foreach ($tu->getTeachingUnitSubjects() as $subject) {
+						$containersColspan++;
+					}
+				}
+				$colspans[] = $containersColspan; 
+			}   
+		}
 
+		$subjectsByTu = array();
         if(count($promotions) >= 1) {
             $containers = $promotions[0]->getContainers();
 
-            $subjectsByTu = array();
             foreach ($containers as $container) {
                 foreach ($container->getTeachingUnits() as $tu) {
                     foreach ($tu->getTeachingUnitSubjects() as $tus) {
