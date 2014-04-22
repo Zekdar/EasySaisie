@@ -13,6 +13,12 @@
             <a href="#displayContainersAvg" class="btn btn-default" id="switchDisplayContainersAvg"><span class="glyphicon glyphicon-sort-by-attributes purple"></span> Moyennes générales</a>
         </div>
 
+        <div class="btn-group">
+            <a href="#" class="btn btn-info btn-xs" id="">Session 1</a>    
+            <a href="#" class="btn btn-default btn-xs" id="">Session 2</a>    
+            <a href="#" class="btn btn-default btn-xs" id="">PV Final</a>    
+        </div>
+
         <hr />
 
         <!-- DISPLAY MARKS -->        
@@ -21,19 +27,19 @@
             <table class="table table-bordered table-bordered" id="marksTable">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th></th>
+                        <th data-sorter="false"></th>
+                        <th data-sorter="false"></th>
                         {% for container in containers %}
-                            <th colspan="{{ containersColspan[loop.index - 1] }}">{{ container.name }}</th>
+                            <th data-sorter="false" colspan="{{ containersColspan[loop.index - 1] }}">{{ container.name }}</th>
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th></th>
-                        <th></th>
+                        <th data-sorter="false"></th>
+                        <th data-sorter="false"></th>
                         {% for container in containers %}
                             {% for tu in container.teachingUnits %} 
                                 {# +1 to take in account the avg column #}
-                                <th colspan="{{ tu.teachingUnitSubjects | length + 1}}" data-tucode="{{ tu.code }}">{{ tu.code }} {{ tu.name }}</th>
+                                <th data-sorter="false" colspan="{{ tu.teachingUnitSubjects | length + 1}}" data-tucode="{{ tu.code }}">{{ tu.code }} {{ tu.name }}</th>
                             {% endfor %}
                         {% endfor %}
                     </tr>
@@ -45,6 +51,18 @@
                                 <th class="tuAvg"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /></th>
                                 {% for tus in tu.teachingUnitSubjects %}
                                     <th class="subject">{{ tus.subject.abbreviation }}</th>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th data-sorter="false"></th>
+                        <th data-sorter="false"></th>
+                        {% for container in containers %}
+                            {% for tu in container.teachingUnits %}
+                                <th></th>
+                                {% for tus in tu.teachingUnitSubjects %}
+                                    <th data-sorter="false"><a href=""><span class="glyphicon glyphicon-plus purple"></span></a></th>
                                 {% endfor %}
                             {% endfor %}
                         {% endfor %}
@@ -77,6 +95,7 @@
                                         <a 
                                             href="" 
                                             class="mark"
+                                            data-session="{{ session }}"
                                             data-tucode="{{ tuCode }}" 
                                             data-coeff="{{ tuId.subject.coeff }}"
                                             data-pk="{{ markId }}"
@@ -106,7 +125,7 @@
 
         <!-- DISPLAY CONTAINERS AVG -->
         <div id="displayContainersAvg" style="display: hidden;">
-             <table class="table table-bordered table-bordered" id="containersAvgTable">
+            <table class="table table-bordered table-bordered" id="containersAvgTable">
                 <thead>
                     <tr>
                         <th>Num. Etudiant</th>

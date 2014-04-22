@@ -1,7 +1,7 @@
 {% extends 'C2JEasySaisieBundle::base.html.twig' %}
 
-
 {% block body %}
+
     {{ parent() }}
         
     <h1 class="page-header">Sélectionnez une promotion</h1>
@@ -13,10 +13,10 @@
     	</thead>
     	<tbody>
 			{% for entity in entities %}
-			<tr class="clickableRow" href="{{ path('mark_list', { 'promotion_id': entity.promotion.id, 'year': entity.promotion.year }) }}">
-				<td>{{ entity.promotion.year }}</td>
-				<td>{{ entity.promotion }}</td>
-			</tr>
+				<tr class="clickableRow" href="{{ path('mark_list', { 'year': entity.promotion.year, 'promotion_id': entity.promotion.id, 'session' : 1 }) }}">
+					<td>{{ entity.promotion.year }}</td>
+					<td>{{ entity.promotion }}</td>
+				</tr>
 			{% endfor %}
 		</tbody>
     </table>

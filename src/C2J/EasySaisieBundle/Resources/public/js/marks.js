@@ -1,3 +1,5 @@
+var studentMarksTable = {};
+
 function getAvg(marks, withCoeff) {	
 	var sum = 0.0;
 	var sumCoeff = 0;
@@ -97,6 +99,53 @@ function getStudentsName() {
 	return names;
 }
 
+function getStudentsSession2() {
+	var studentsNumbers = [];
+	var marks = {};
+	var marksTmp = [];
+	var content;
+
+	// Gets students number
+	$('#marksTable tbody tr td:nth-child(1)').each(function() {
+		studentsNumbers.push($(this).text().trim());
+	});
+
+	// Gets students marks by their number
+	for(var i = 0; i < studentsNumbers.length; i++) {
+		$('#marksTable tbody tr:contains(' + studentsNumbers[i] + ') td').each(function() {
+			content = $(this).text().trim();
+			// If it's an avg
+			if($(this).hasClass('tuAvg')) {
+				if(std in studentsNumbers == false)
+					marks['' + studentsNumbers[i]] = {};
+
+				marks['' + studentsNumbers[i]][i] = '1'
+					// ['' + $(this).data('tucode')]['mark'].push(content);
+			}
+			// Else it's a mark
+			if($(this).hasClass('tdMark')) {
+				marksTmp.push(content);
+			}
+		});
+		marks['' + studentsNumbers[i]] = marksTmp;
+	}
+	console.log(marks);
+	// for(var i = 0; i < studentsNumbers.length; i++) {
+	// 	marksTmp = getMarksByStudent(studentsNumbers[i], true);
+
+	// 	for(var j = 0; j < marksTmp.length; j++) {
+	// 		if($(marksTmp[j]).hasClass('tuAvg')) {
+	// 			marks['' + studentsNumbers[i]]['' + $(this).data('tucode')].push(marksTmp[j]);
+	// 		}
+	// 		else {
+	// 			// marks['' + studentsNumbers[i]] = getMarksByStudent(studentsNumbers[i], true);
+	// 		}
+	// 	}
+		// marks['' + studentsNumbers[i]] = getMarksByStudent(studentsNumbers[i], true);
+	// }
+	// console.log(marks); 
+}
+
 function refreshAvg(toggleLoader) {
 	if(toggleLoader)
 		displayLoadingWheel(true);
@@ -131,9 +180,13 @@ function refreshAvg(toggleLoader) {
 			});
 
 			avg = getAvg(studentMarks, true);
-			if(avg == 'Empty')
+			if(avg == 'Empty'){
 				avg = '';
-			tableAvg.push(avg);
+				tableAvg.push(avg);
+			}
+			else {
+				tableAvg.push(avg.toFixed(2, 0));	
+			}
 		}
 
 		var tableTuAvg = $('#marksTable tbody tr:contains("' + students[i] + '") td.tuAvg');
@@ -157,7 +210,7 @@ function refreshAvg(toggleLoader) {
 		marks = getMarksByIndex(index, 'marksTable');
 
 		if(marks.length > 0) {
-			avg = getAvg(marks);
+			avg = getAvg(marks).toFixed(2, 0);
 		}
 		else 
 			avg = '';
@@ -258,7 +311,7 @@ function refreshGeneralAvgs(students) {
 			// Containers AVG calculation
 			generalAvg = getAvg(tableAvgs[i]);
 			if(generalAvg != 'Empty')
-				$(generalAvgCell).text(generalAvg);
+				$(generalAvgCell).text(generalAvg.toFixed(2, 0));
 		}
 	}
 
@@ -276,7 +329,7 @@ function refreshGeneralAvgs(students) {
 		marks = getMarksByIndex(index, 'containersAvgTable');
 
 		if(marks.length > 0) {
-			avg = getAvg(marks);
+			avg = getAvg(marks).toFixed(2, 0);
 		}
 		else 
 			avg = '';
@@ -412,6 +465,7 @@ $(document).ready(function() {
 		createAvgTable();
 		refreshAvg();
 		refreshAvgTableWidth();
+		getStudentsSession2();
 
 		displayLoadingWheel(false);
 
