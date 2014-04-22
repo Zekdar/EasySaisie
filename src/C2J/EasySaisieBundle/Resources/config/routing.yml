@@ -10,6 +10,10 @@ formation:
     resource: "@C2JEasySaisieBundle/Controller/FormationController.php"
     type: annotation
 
+document:
+    resource: "@C2JEasySaisieBundle/Controller/DocumentController.php"
+    type: annotation
+
 mark:
     resource: "@C2JEasySaisieBundle/Controller/MarkController.php"
     type: annotation

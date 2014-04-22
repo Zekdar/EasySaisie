@@ -1,0 +1,19 @@
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
+
+
+{% block body %}
+    {{ parent() }}
+
+    <h1>Importer une liste d'étudiants</h1>
+
+    {{ form(form) }}
+
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('student') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste des étudiants</a>
+        </p>
+    </div>
+</ul>
+{% endblock %}
