@@ -35,6 +35,11 @@ class TeachingUnitSubject
   private $ects;
   
   /**
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Teacher")
+   */
+  private $teacher;
+  
+  /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit", inversedBy="teachingUnitSubjects")
    */
   private $teachingUnit;
@@ -95,6 +100,29 @@ class TeachingUnitSubject
     public function getEcts()
     {
         return $this->ects;
+    }
+	
+	/**
+     * Set teacher
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Teacher $teacher
+     * @return TeachingUnitSubject
+     */
+    public function setTeacher(\C2J\EasySaisieBundle\Entity\Teacher $teacher)
+    {
+        $this->teacher = $teacher;
+    
+        return $this;
+    }
+
+    /**
+     * Get teacher
+     *
+     * @return \C2J\EasySaisieBundle\Entity\Teacher 
+     */
+    public function getTeacher()
+    {
+        return $this->teacher;
     }
 
     /**
