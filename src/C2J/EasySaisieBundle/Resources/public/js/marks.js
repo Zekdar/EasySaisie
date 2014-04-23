@@ -438,10 +438,12 @@ function switchTablesWithHash(hash) {
 	switchTables(hash);		
 } 
 
+/*
 var tableToExcel = (function() {
   var uri = 'data:application/vnd.ms-excel;base64,'
     , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+    , base64 = function(s) { 
+		return window.btoa(unescape(encodeURIComponent(s))) }
     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
   return function(table, name) {
     if (!table.nodeType) table = document.getElementById(table)
@@ -449,6 +451,8 @@ var tableToExcel = (function() {
     window.location.href = uri + base64(format(template, ctx))
   }
 })()
+*/
+
 
 /***** WINDOW INIT *****/
 $(document).ready(function() {
@@ -457,11 +461,39 @@ $(document).ready(function() {
 	});
 	
 	$('#btnExport').on('click', function(event) {
+		var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+		excelFile += "<head>";
+		excelFile += "<!--[if gte mso 9]>";
+		excelFile += "<xml>";
+		excelFile += "<x:ExcelWorkbook>";
+		excelFile += "<x:ExcelWorksheets>";
+		excelFile += "<x:ExcelWorksheet>";
+		excelFile += "<x:Name>";
+		excelFile += "{worksheet}";
+		excelFile += "</x:Name>";
+		excelFile += "<x:WorksheetOptions>";
+		excelFile += "<x:DisplayGridlines/>";
+		excelFile += "</x:WorksheetOptions>";
+		excelFile += "</x:ExcelWorksheet>";
+		excelFile += "</x:ExcelWorksheets>";
+		excelFile += "</x:ExcelWorkbook>";
+		excelFile += "</xml>";
+		excelFile += "<![endif]-->";
+		excelFile += "</head>";
+		excelFile += "<body>";
+		excelFile += "<table>";
+		excelFile += $('.exportable').html().replace(/"/g, '\'').replace(/<a.+Empty<\/a>/g, '').replace(/<img.+xbar.png'>/g, '');
+		excelFile += "</table>";
+		excelFile += "</body>";
+		excelFile += "</html>";
+
+		window.open('data:application/vnd.ms-excel,' + decodeURIComponent(encodeURIComponent(escape(excelFile))));
+		//window.open('data:application/vnd.ms-excel;charset=utf-8;filename=coucou;' + base64data);
 		event.preventDefault();
-		var id = $('.exportable:visible').attr('id');
-		tableToExcel(id, 'export');		
+		//var id = $('.exportable:visible').attr('id');
+		//tableToExcel(id);
 	});
-	
+		
 	// try {
 		var startStopWatch = (new Date()).getTime();
 
