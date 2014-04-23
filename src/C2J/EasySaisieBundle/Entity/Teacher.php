@@ -121,4 +121,9 @@ class Teacher
     {
         return $this->firstName;
     }
+	
+	public function __toString()
+    {
+        return $this->getLastName()." ".$this->getFirstName();
+    }
 }
