@@ -1,4 +1,6 @@
 var studentMarksTable = {};
+var containersInfo = {};
+var teachingUnitsInfo = {};
 
 function getAvg(marks, withCoeff) {	
 	var sum = 0.0;
@@ -52,9 +54,14 @@ function getMarksByIndex(index, tableId) {
 		return [];
 
 	$('#' + tableId + ' tbody tr td:nth-child(' + index + ')').each(function() {
-		content = $(this).text().trim();
-		if(content != 'Empty' && content != '') 
+		if($(this).hasClass('tdMark'))
+			content = $(this).find('a:first').text().trim();
+		else
+			content = $(this).text().trim();
+
+		if(content != 'Empty' && content != '') {
 			marks.push(parseFloat(content));
+		}
 	});
 
 	return  marks.sort(function(a,b) {return a - b}); // Sort asc
@@ -99,51 +106,25 @@ function getStudentsName() {
 	return names;
 }
 
-function getStudentsSession2() {
-	var studentsNumbers = [];
-	var marks = {};
-	var marksTmp = [];
-	var content;
-
-	// Gets students number
-	$('#marksTable tbody tr td:nth-child(1)').each(function() {
-		studentsNumbers.push($(this).text().trim());
+function getNotationSystemRules() {
+	// Containers
+	$($('#marksTable thead tr:first th').splice(2)).each(function() {
+		var container = {};
+		
+		containersInfo[$(this).text().trim()] = {
+			areTusCompensable : $(this).data('aretuscompensable'),
+			minMark : $(this).data('minmark'),
+			minAvg : $(this).data('minavg')			
+		}
 	});
 
-	// Gets students marks by their number
-	for(var i = 0; i < studentsNumbers.length; i++) {
-		$('#marksTable tbody tr:contains(' + studentsNumbers[i] + ') td').each(function() {
-			content = $(this).text().trim();
-			// If it's an avg
-			if($(this).hasClass('tuAvg')) {
-				//if(std in studentsNumbers == false)
-					marks['' + studentsNumbers[i]] = {};
-
-				marks['' + studentsNumbers[i]][i] = '1'
-					// ['' + $(this).data('tucode')]['mark'].push(content);
-			}
-			// Else it's a mark
-			if($(this).hasClass('tdMark')) {
-				marksTmp.push(content);
-			}
-		});
-		marks['' + studentsNumbers[i]] = marksTmp;
-	}
-	console.log(marks);
-	// for(var i = 0; i < studentsNumbers.length; i++) {
-	// 	marksTmp = getMarksByStudent(studentsNumbers[i], true);
-
-	// 	for(var j = 0; j < marksTmp.length; j++) {
-	// 		if($(marksTmp[j]).hasClass('tuAvg')) {
-	// 			marks['' + studentsNumbers[i]]['' + $(this).data('tucode')].push(marksTmp[j]);
-	// 		}
-	// 		else {
-	// 			// marks['' + studentsNumbers[i]] = getMarksByStudent(studentsNumbers[i], true);
-	// 		}
-	// 	}
-		// marks['' + studentsNumbers[i]] = getMarksByStudent(studentsNumbers[i], true);
-	// }
-	// console.log(marks); 
+	// Teaching Units
+	$($('#marksTable thead tr:nth-child(2) th').splice(2)).each(function() {
+		var tu = {};
+		teachingUnitsInfo[$(this).data('tucode')] = {
+			isCompensable : $(this).data('iscompensable')
+		}
+	});
 }
 
 function refreshAvg(toggleLoader) {
@@ -152,7 +133,7 @@ function refreshAvg(toggleLoader) {
 
 	// Calculates each teaching unit avg
 	var tuCodes = getTuCodes();
-	var sum = 0; var avg = 0;
+	var sum = 0; var avg = {};
 	var studentMarks = []; 
 	var tableAvg;
 	var students = getStudentsName();
@@ -165,7 +146,7 @@ function refreshAvg(toggleLoader) {
 		for(var j = 0; j < tuCodes.length; j++) {
 			studentMarks = [];
 			sum = 0;
-			avg = 0;
+			avg = {};
 
 			$('#marksTable tbody tr:contains("' + students[i] + '") td').find('[data-tucode="' + tuCodes[j] + '"]').each(function() {
 				content = $(this).text().trim();
@@ -179,19 +160,23 @@ function refreshAvg(toggleLoader) {
 				}
 			});
 
-			avg = getAvg(studentMarks, true);
-			if(avg == 'Empty'){
-				avg = '';
+			avg.value = getAvg(studentMarks, true);
+			if(avg.value == 'Empty'){
+				avg.value = '';
+				avg.tuCode = tuCodes[j];
 				tableAvg.push(avg);
 			}
 			else {
-				tableAvg.push(avg.toFixed(2, 0));	
+				avg.value = avg.value.toFixed(2, 0);
+				avg.tuCode = tuCodes[j];
+				tableAvg.push(avg);	
 			}
 		}
 
 		var tableTuAvg = $('#marksTable tbody tr:contains("' + students[i] + '") td.tuAvg');
 		for(var k = 0; k < tableAvg.length; k++) {
-			$(tableTuAvg[k]).text(tableAvg[k]);
+			$(tableTuAvg[k]).text(tableAvg[k].value);
+			$(tableTuAvg[k]).data('tuCode', tableAvg[k].tuCode);
 		}
 
 	}	
@@ -244,6 +229,9 @@ function refreshAvg(toggleLoader) {
 
 	// General averages table
 	refreshGeneralAvgs(students);
+	
+	// Checks if there are new students going to session 2
+	refreshStudentsGoingToSession2();
 
 	if(toggleLoader)
 		displayLoadingWheel(false);
@@ -253,6 +241,7 @@ function refreshGeneralAvgs(students) {
 	var studentAvgs = [];
 	var tableAvgs = [];
 	var content;
+	var coeff
 	var container;
 	var currentContainer;
 	var avg;
@@ -263,24 +252,31 @@ function refreshGeneralAvgs(students) {
 		tmp = [];
 
 		var tuAvgsFromMarksTable = $('#marksTable tbody tr:contains("' + students[i] + '") td.tuAvg');
-		container = $(tuAvgsFromMarksTable[0]).data('container');
+		container = $(tuAvgsFromMarksTable[0]).data('containername');
 
 		for(var j = 0; j < tuAvgsFromMarksTable.length; j++) {
 			content = $(tuAvgsFromMarksTable[j]).text().trim();
-			currentContainer = $(tuAvgsFromMarksTable[j]).data('container');
+			coeff = $(tuAvgsFromMarksTable[j]).data('coeff');
+			currentContainer = $(tuAvgsFromMarksTable[j]).data('containername');
 
-			if($(tuAvgsFromMarksTable[j]).data('container') == container) {
+			if($(tuAvgsFromMarksTable[j]).data('containername') == container) {
 				if(content != '') 
-					tmp.push(parseFloat(content));
+					tmp.push({
+						"value"	: 	parseFloat(content),
+						"coeff"	: 	coeff
+					});
 			}
 			else {
 				studentAvgs['' + container] = tmp;
 				tmp = [];
 
 				if(content != '')
-					tmp.push(parseFloat(content));
+					tmp.push({
+						"value"	: 	parseFloat(content),
+						"coeff"	: 	coeff
+					});
 
-				container = $(tuAvgsFromMarksTable[j]).data('container');
+				container = $(tuAvgsFromMarksTable[j]).data('containername');
 			}
 		}
 
@@ -288,7 +284,7 @@ function refreshGeneralAvgs(students) {
 		
 		var avgsTmp = [];
 		for(var j in studentAvgs) {
-			avgsTmp.push(getAvg(studentAvgs[j]));
+			avgsTmp.push(getAvg(studentAvgs[j], true));
 		}
 		tableAvgs.push(avgsTmp);
 	}
@@ -360,6 +356,50 @@ function refreshGeneralAvgs(students) {
 
 		$(this).html(maxAvg);
 	});
+}
+
+function refreshStudentsGoingToSession2() {
+	var studentsNumbers = [];
+	var goToSession2 = [];
+	var currentStudent;
+	var content;
+
+	// Gets students number
+	$('#marksTable tbody tr td:nth-child(1)').each(function() {
+		studentsNumbers.push($(this).text().trim());
+	});
+
+	// Gets students marks by their number
+	var stop = false;
+	for(var i = 0; i < studentsNumbers.length && !stop; i++) {
+		currentStudent = $('#marksTable tbody tr:contains(' + studentsNumbers[i] + ')');
+
+		// Rule minMark
+		$(currentStudent).find('td.tdMark a').each(function() {
+			content = $(this).text().trim();
+
+			if(!$.isEmptyObject(containersInfo) && !$.isEmptyObject(teachingUnitsInfo)) {
+				if(content != 'Empty' && content < containersInfo[$(this).data('containername')].minMark) {
+					goToSession2.push(studentsNumbers[i]);
+					return false;
+				}
+			}
+			else {
+				alert('Il y a un problème de paramétrages au niveau des règles de validation. \nMerci de contacter l\'administrateur d\'EasySaisie en lui donnant cette erreur : \n"containersInfo == [] || teachingUnitsInfo == []"');
+				stop = true;
+				return false;
+			}
+		});
+
+		// Teaching Unit : isCompensable rule
+		$(currentStudent).find('td.tuAvg').each(function() {
+			content = $(this).text().trim();
+
+			// if(content != 'Empty')
+		});
+	}
+	console.log(goToSession2);
+	return goToSession2;
 }
 
 function refreshAvgTableWidth() {
@@ -472,9 +512,9 @@ $(document).ready(function() {
 		switchTablesWithHash(window.location.hash);
 
 		createAvgTable();
+		getNotationSystemRules();
 		refreshAvg();
 		refreshAvgTableWidth();
-		getStudentsSession2();
 
 		displayLoadingWheel(false);
 
