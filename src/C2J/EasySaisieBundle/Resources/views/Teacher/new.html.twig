@@ -1,0 +1,18 @@
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
+
+
+{% block body %}
+    {{ parent() }}
+    <h1>Créer un professeur</h1>
+
+    {{ form(form) }}
+
+    <hr />
+    
+    <div class="row">
+        <p class="center">            
+            <a href="{{ path('teacher') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+        </p>
+    </div>
+</ul>
+{% endblock %}

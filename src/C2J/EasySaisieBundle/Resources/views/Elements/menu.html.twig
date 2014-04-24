@@ -14,6 +14,7 @@
                 <li>
                     <a href="{{ path('mark') }}"><span class="glyphicon glyphicon-list purple"></span> NOTES</a>
                 </li>
+
                 {% if app.user.roles is defined and app.user.roles[0] == "ROLE_ADMIN" %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog purple"></span> GÉRER <b class="caret"></b></a>
@@ -27,8 +28,8 @@
                             <li><a href="{{ path('teachingunit') }}">UEs</a></li>
                         </ul>
                     </li>
-
                 {% endif %}
+
 				<li><a href="{{ path('formation_new') }}"><span class="glyphicon glyphicon-play purple"></span> Get Started</a></li>
             </ul>
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}

@@ -6,17 +6,23 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class StudentPromotionType extends AbstractType
+class DocumentType extends AbstractType
 {
-        /**
+	/**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('student', null, array('label' => 'Etudiant'))
-            ->add('promotion', null, array('label' => 'Promotion'))
+			->add('promotion', 'entity', array(
+				'empty_value' => "Choisir une promotion",
+				'class' => 'C2JEasySaisieBundle:Promotion',
+				'property' => 'name',
+				'label' => 'Promotion',
+				'required' => false
+			))
+            ->add('file', 'file', array('label' => 'Fichier .xls'))
         ;
     }
     
@@ -26,7 +32,7 @@ class StudentPromotionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'C2J\EasySaisieBundle\Entity\StudentPromotion'
+            'data_class' => 'C2J\EasySaisieBundle\Entity\Document'
         ));
     }
 
@@ -35,6 +41,6 @@ class StudentPromotionType extends AbstractType
      */
     public function getName()
     {
-        return 'c2j_easysaisiebundle_studentpromotion';
+        return 'c2j_easysaisiebundle_document';
     }
 }

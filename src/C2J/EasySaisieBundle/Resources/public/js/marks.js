@@ -1,3 +1,5 @@
+var studentMarksTable = {};
+
 function getAvg(marks, withCoeff) {	
 	var sum = 0.0;
 	var sumCoeff = 0;
@@ -97,6 +99,53 @@ function getStudentsName() {
 	return names;
 }
 
+function getStudentsSession2() {
+	var studentsNumbers = [];
+	var marks = {};
+	var marksTmp = [];
+	var content;
+
+	// Gets students number
+	$('#marksTable tbody tr td:nth-child(1)').each(function() {
+		studentsNumbers.push($(this).text().trim());
+	});
+
+	// Gets students marks by their number
+	for(var i = 0; i < studentsNumbers.length; i++) {
+		$('#marksTable tbody tr:contains(' + studentsNumbers[i] + ') td').each(function() {
+			content = $(this).text().trim();
+			// If it's an avg
+			if($(this).hasClass('tuAvg')) {
+				//if(std in studentsNumbers == false)
+					marks['' + studentsNumbers[i]] = {};
+
+				marks['' + studentsNumbers[i]][i] = '1'
+					// ['' + $(this).data('tucode')]['mark'].push(content);
+			}
+			// Else it's a mark
+			if($(this).hasClass('tdMark')) {
+				marksTmp.push(content);
+			}
+		});
+		marks['' + studentsNumbers[i]] = marksTmp;
+	}
+	console.log(marks);
+	// for(var i = 0; i < studentsNumbers.length; i++) {
+	// 	marksTmp = getMarksByStudent(studentsNumbers[i], true);
+
+	// 	for(var j = 0; j < marksTmp.length; j++) {
+	// 		if($(marksTmp[j]).hasClass('tuAvg')) {
+	// 			marks['' + studentsNumbers[i]]['' + $(this).data('tucode')].push(marksTmp[j]);
+	// 		}
+	// 		else {
+	// 			// marks['' + studentsNumbers[i]] = getMarksByStudent(studentsNumbers[i], true);
+	// 		}
+	// 	}
+		// marks['' + studentsNumbers[i]] = getMarksByStudent(studentsNumbers[i], true);
+	// }
+	// console.log(marks); 
+}
+
 function refreshAvg(toggleLoader) {
 	if(toggleLoader)
 		displayLoadingWheel(true);
@@ -131,9 +180,13 @@ function refreshAvg(toggleLoader) {
 			});
 
 			avg = getAvg(studentMarks, true);
-			if(avg == 'Empty')
+			if(avg == 'Empty'){
 				avg = '';
-			tableAvg.push(avg);
+				tableAvg.push(avg);
+			}
+			else {
+				tableAvg.push(avg.toFixed(2, 0));	
+			}
 		}
 
 		var tableTuAvg = $('#marksTable tbody tr:contains("' + students[i] + '") td.tuAvg');
@@ -157,7 +210,7 @@ function refreshAvg(toggleLoader) {
 		marks = getMarksByIndex(index, 'marksTable');
 
 		if(marks.length > 0) {
-			avg = getAvg(marks);
+			avg = getAvg(marks).toFixed(2, 0);
 		}
 		else 
 			avg = '';
@@ -258,7 +311,7 @@ function refreshGeneralAvgs(students) {
 			// Containers AVG calculation
 			generalAvg = getAvg(tableAvgs[i]);
 			if(generalAvg != 'Empty')
-				$(generalAvgCell).text(generalAvg);
+				$(generalAvgCell).text(generalAvg.toFixed(2, 0));
 		}
 	}
 
@@ -276,7 +329,7 @@ function refreshGeneralAvgs(students) {
 		marks = getMarksByIndex(index, 'containersAvgTable');
 
 		if(marks.length > 0) {
-			avg = getAvg(marks);
+			avg = getAvg(marks).toFixed(2, 0);
 		}
 		else 
 			avg = '';
@@ -385,24 +438,75 @@ function switchTablesWithHash(hash) {
 	switchTables(hash);		
 } 
 
+/*
+var tableToExcel = (function() {
+  var uri = 'data:application/vnd.ms-excel;base64,'
+    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+    , base64 = function(s) { 
+		return window.btoa(unescape(encodeURIComponent(s))) }
+    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+  return function(table, name) {
+    if (!table.nodeType) table = document.getElementById(table)
+    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+    window.location.href = uri + base64(format(template, ctx))
+  }
+})()
+*/
+
+
 /***** WINDOW INIT *****/
 $(document).ready(function() {
 	$('#switchDisplayMarks, #switchDisplayContainersAvg').on('click', function(event) {
 		switchTables($(this).attr('href'), event);
 	});
+	
+	$('#btnExport').on('click', function(event) {
+		var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+		excelFile += "<head>";
+		excelFile += "<!--[if gte mso 9]>";
+		excelFile += "<xml>";
+		excelFile += "<x:ExcelWorkbook>";
+		excelFile += "<x:ExcelWorksheets>";
+		excelFile += "<x:ExcelWorksheet>";
+		excelFile += "<x:Name>";
+		excelFile += "{worksheet}";
+		excelFile += "</x:Name>";
+		excelFile += "<x:WorksheetOptions>";
+		excelFile += "<x:DisplayGridlines/>";
+		excelFile += "</x:WorksheetOptions>";
+		excelFile += "</x:ExcelWorksheet>";
+		excelFile += "</x:ExcelWorksheets>";
+		excelFile += "</x:ExcelWorkbook>";
+		excelFile += "</xml>";
+		excelFile += "<![endif]-->";
+		excelFile += "</head>";
+		excelFile += "<body>";
+		excelFile += "<table>";
+		excelFile += $('.exportable').html().replace(/"/g, '\'').replace(/<a.+Empty<\/a>/g, '').replace(/<img.+xbar.png'>/g, '');
+		excelFile += "</table>";
+		excelFile += "</body>";
+		excelFile += "</html>";
 
+		window.open('data:application/vnd.ms-excel,' + decodeURIComponent(encodeURIComponent(escape(excelFile))));
+		//window.open('data:application/vnd.ms-excel;charset=utf-8;filename=coucou;' + base64data);
+		event.preventDefault();
+		//var id = $('.exportable:visible').attr('id');
+		//tableToExcel(id);
+	});
+		
 	// try {
 		var startStopWatch = (new Date()).getTime();
 
 		// displayLoadingWheel(true);
 
 		if(window.location.hash == '')
-			window.location.hash = '#displayMarks'
-		switchTablesWithHash(window.location.hash)
+			window.location.hash = '#displayMarks';
+		switchTablesWithHash(window.location.hash);
 
 		createAvgTable();
 		refreshAvg();
 		refreshAvgTableWidth();
+		getStudentsSession2();
 
 		displayLoadingWheel(false);
 

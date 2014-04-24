@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class StudentPromotionType extends AbstractType
+class TeacherType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -15,8 +15,9 @@ class StudentPromotionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('student', null, array('label' => 'Etudiant'))
-            ->add('promotion', null, array('label' => 'Promotion'))
+			->add('login', 'text', array('label' => 'Login'))
+            ->add('lastName', 'text', array('label' => 'Nom'))
+            ->add('firstName', 'text', array('label' => 'Prénom'))
         ;
     }
     
@@ -26,7 +27,7 @@ class StudentPromotionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'C2J\EasySaisieBundle\Entity\StudentPromotion'
+            'data_class' => 'C2J\EasySaisieBundle\Entity\Teacher'
         ));
     }
 
@@ -35,6 +36,6 @@ class StudentPromotionType extends AbstractType
      */
     public function getName()
     {
-        return 'c2j_easysaisiebundle_studentpromotion';
+        return 'c2j_easysaisiebundle_teacher';
     }
 }

@@ -29,7 +29,7 @@ class PromotionRepository extends EntityRepository
 						->addSelect('m')
 					->where('p.id = :promotion_id')
 						->setParameter('promotion_id', $promotion_id)
-					->andWhere('sp.year = :year')
+					->andWhere('p.year = :year')
 						->setParameter('year', $year)
 					->addOrderBy('tu.code', 'ASC')
 					->addOrderBy('s.abbreviation', 'ASC')

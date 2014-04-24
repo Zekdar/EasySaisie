@@ -3,7 +3,7 @@
 {% block body %}
     {{ parent() }}
     
-    <h1 class="page-header">Règle {{ entity.lastName }}</h1>
+    <h1 class="page-header">Règle {{ entity.id }}</h1>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover ">
@@ -15,7 +15,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ entity.student }} - {{ entity.promotion }} {{ entity.year }}</td>
+                    <td>{{ entity.student }} - {{ entity.promotion }} {{ entity.promotion.year }}</td>
                     <td>
                         <div class="btn-group">
                             <a href="{{ path('rule_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>

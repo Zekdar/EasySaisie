@@ -1,46 +1,48 @@
 <?php
-// src/EasySaisieBundle/Student.php
 
 namespace C2J\EasySaisieBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Teacher
+ *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="C2J\EasySaisieBundle\Entity\StudentRepository")
+ * @ORM\Entity(repositoryClass="C2J\EasySaisieBundle\Entity\TeacherRepository")
  */
-class Student
+class Teacher
 {
-  /**
-   * @var integer $id
-   *
-   * @ORM\Column(name="id", type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  private $id;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
-  /**
-   * @var integer $number
-   *
-   * @ORM\Column(name="number", type="integer", unique=true)
-   */
-  private $number;
-  
-  /**
-   * @var string $lastName
-   *
-   * @ORM\Column(name="lastName", type="string", length=255)
-   */
-  private $lastName;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="login", type="string", length=255)
+     */
+    private $login;
 
-  /**
-   * @var string $firstName
-   *
-   * @ORM\Column(name="firstName", type="string", length=255)
-   */
-  private $firstName;
- 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lastName", type="string", length=255)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firstName", type="string", length=255)
+     */
+    private $firstName;
+
+
     /**
      * Get id
      *
@@ -52,38 +54,38 @@ class Student
     }
 
     /**
-     * Set number
+     * Set login
      *
-     * @param integer $number
-     * @return Student
+     * @param string $login
+     * @return Teacher
      */
-    public function setNumber($number)
+    public function setLogin($login)
     {
-        $this->number = $number;
-    
+        $this->login = $login;
+
         return $this;
     }
 
     /**
-     * Get number
+     * Get login
      *
-     * @return integer 
+     * @return string 
      */
-    public function getNumber()
+    public function getLogin()
     {
-        return $this->number;
+        return $this->login;
     }
 
     /**
      * Set lastName
      *
      * @param string $lastName
-     * @return Student
+     * @return Teacher
      */
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
-    
+
         return $this;
     }
 
@@ -101,12 +103,12 @@ class Student
      * Set firstName
      *
      * @param string $firstName
-     * @return Student
+     * @return Teacher
      */
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
-    
+
         return $this;
     }
 

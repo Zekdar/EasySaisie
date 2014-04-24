@@ -1,0 +1,34 @@
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
+
+
+{% block body %}
+    {{ parent() }}
+        
+    <h1 class="page-header">Veuillez saisir les notes pour la matière {{ subject }}</h1>
+
+    <form method="post" action="#">
+	    <table class="table table-bordered table-bordered">
+		    <thead>
+		    	<th>Num. Etudiant</th>
+		    	<th>Etudiant</th>
+		    	<th>Note</th>
+		    </thead>
+		    <tbody>
+		        {% for i, sp in studentPromotions %}
+		            <tr>
+		                <td>{{ sp.student.number }}</td>
+		                <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+		                <td><input type="text" name="mark-{{i}}" /></td>
+		            </tr>
+		        {% endfor %}
+			</tbody>
+		</table>
+
+		<hr />
+
+		<div clas="center">
+			<input type="submit" class="btn btn-purple" value="Enregistrer les notes" />	
+		</div>
+	</form>
+{% endblock %}
+    

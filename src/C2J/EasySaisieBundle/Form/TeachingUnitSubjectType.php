@@ -16,8 +16,10 @@ class TeachingUnitSubjectType extends AbstractType
     {
         $builder
             ->add('coeff')
+			->add('ects')
             ->add('teachingUnit')
             ->add('subject')
+			->add('teacher')
         ;
     }
     

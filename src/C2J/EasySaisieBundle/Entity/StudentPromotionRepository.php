@@ -18,7 +18,7 @@ class StudentPromotionRepository extends EntityRepository
 					->join('sp.promotion', 'p')
 						->addSelect('p')
 					->groupBy('p.name')
-					->orderBy('sp.year', 'DESC')
+					->orderBy('p.year', 'DESC')
 					->addOrderBy('p.name', 'ASC');
 
 	    // $qb = $this ->createQueryBuilder('sp')
@@ -45,7 +45,7 @@ class StudentPromotionRepository extends EntityRepository
 						->addSelect('p')
 					->where('sp.promotion = :promotion_id')
 						->setParameter('promotion_id', $promotion_id)
-					->andWhere('sp.year = :year')
+					->andWhere('p.year = :year')
 						->setParameter('year', $year)
 					->addOrderBy('s.lastName', 'ASC');
 		
