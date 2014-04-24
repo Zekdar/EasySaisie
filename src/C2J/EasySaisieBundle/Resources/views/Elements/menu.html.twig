@@ -14,29 +14,28 @@
                 <li>
                     <a href="{{ path('mark') }}"><span class="glyphicon glyphicon-list purple"></span> NOTES</a>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog purple"></span> GÉRER <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ path('container') }}">CONTENEURS D'UEs</a></li>
-                        <li><a href="{{ path('student') }}">ÉTUDIANTS</a></li>
-                        <li><a href="{{ path('formation') }}">FORMATIONS</a></li>
-                        <li><a href="{{ path('subject') }}">MATIÈRES</a></li>
-                        <li><a href="{{ path('promotion') }}">PROMOTIONS</a></li>
-                        <li><a href="{{ path('rule') }}">RÈGLES</a></li>
-                        <li><a href="{{ path('teachingunit') }}">UEs</a></li>
-                    </ul>
-                </li>
+                {% if app.user.roles is defined and app.user.roles[0] == "ROLE_ADMIN" %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog purple"></span> GÉRER <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('container') }}">CONTENEURS D'UEs</a></li>
+                            <li><a href="{{ path('student') }}">ÉTUDIANTS</a></li>
+                            <li><a href="{{ path('formation') }}">FORMATIONS</a></li>
+                            <li><a href="{{ path('subject') }}">MATIÈRES</a></li>
+                            <li><a href="{{ path('promotion') }}">PROMOTIONS</a></li>
+                            <li><a href="{{ path('rule') }}">RÈGLES</a></li>
+                            <li><a href="{{ path('teachingunit') }}">UEs</a></li>
+                        </ul>
+                    </li>
+
+                {% endif %}
 				<li><a href="{{ path('formation_new') }}"><span class="glyphicon glyphicon-play purple"></span> Get Started</a></li>
             </ul>
-            <form class="navbar-form navbar-right" role="form">
-                <div class="form-group">
-                    <input type="text" placeholder="Email" class="form-control">
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                <div class="navbar-form navbar-right">
+                    <p>Connecté en tant que {{ app.user.username }} <a class="btn btn-purple" href="{{ path('fos_user_security_logout') }}">Déconnexion</a></p>
                 </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-purple">Se connecter</button>
-            </form>
+            {% endif %}
         </nav>
-    </div>
+    </div><p></p>
 </header>
