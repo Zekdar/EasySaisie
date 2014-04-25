@@ -62,7 +62,7 @@ class StudentPromotionController extends Controller
 				$em->flush();
 				$this->get('session')->getFlashBag()->add(
 					'success',
-					'L\'étudiant a été ajouté avec succès dans la promotion !'
+					'L\'étudiant a été ajouté dans la promotion avec succès !'
 				);
 				return $this->redirect($this->generateUrl('studentpromotion_show', array('id' => $entity->getId())));
 			}			
