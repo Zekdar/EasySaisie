@@ -24,13 +24,6 @@ class Teacher
     /**
      * @var string
      *
-     * @ORM\Column(name="login", type="string", length=255)
-     */
-    private $login;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="lastName", type="string", length=255)
      */
     private $lastName;
