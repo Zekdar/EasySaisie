@@ -41,6 +41,7 @@ class DocumentController extends Controller
 			$inputFileName=$entity->getAbsolutePath();
 			
 			$promotionId=null;
+			
 			if($entity->getPromotion()!=null)
 			{
 				$promotionId=$entity->getPromotion()->getId();
@@ -50,6 +51,8 @@ class DocumentController extends Controller
 			$sheet = $objPHPExcel->getSheet(0);
 			$highestRow = $sheet->getHighestRow(); 
 			$highestColumn = "C"; // C column
+			$nbStudent=0;
+			$nbStudentPromotion=0;
 			
 			for ($row = 1; $row <= $highestRow; $row++){ 
 				$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -57,9 +60,9 @@ class DocumentController extends Controller
 												TRUE,
 												FALSE);
 												
-				$number=trim($rowData[0][0]);
-				$lastName=trim(strtoupper($rowData[0][1]));
-				$firstName=trim(strtolower(ucwords($rowData[0][2])));
+				$number = trim($rowData[0][0]);
+				$lastName = trim(strtoupper($rowData[0][1]));
+				$firstName = trim(strtolower(ucwords($rowData[0][2])));
 				$em = $this->getDoctrine()->getManager();
 				$student = $em->getRepository('C2JEasySaisieBundle:Student')->findOneByNumber($number);
 				
@@ -71,11 +74,15 @@ class DocumentController extends Controller
 					$entity->setFirstName($firstName);
 					$em->persist($entity);
 					$em->flush();
+					$nbStudent++;
 				}
 				
 				if($promotionId != null)
-				{					
-					if($student != null) //if student exists
+				{				
+					$student = $em->getRepository('C2JEasySaisieBundle:Student')->findOneByNumber($number);
+					$studentId = $student->getId();
+					$studentPromotion = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $studentId, 'promotion' => $promotionId));
+					if($studentPromotion == null) //if studentPromotion doesn't exist
 					{
 						$promotion = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
 					
@@ -84,10 +91,20 @@ class DocumentController extends Controller
 						$entity->setPromotion($promotion);
 						$em->persist($entity);
 						$em->flush();
+						$nbStudentPromotion++;
 					}
 				}
 			}
 		}
+		$this->get('session')->getFlashBag()->add(
+					'success',
+					$nbStudent." ".'étudiant(s) importé(s) !'
+				);
+		$this->get('session')->getFlashBag()->add(
+					'success',
+					$nbStudentPromotion." ".'étudiant(s) affecté(s) à une promotion !'
+				);
+		
 		return $this->redirect($this->generateUrl('student'));
     }
 	
