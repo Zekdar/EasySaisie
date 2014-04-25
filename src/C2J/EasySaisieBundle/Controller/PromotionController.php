@@ -44,18 +44,39 @@ class PromotionController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new Promotion();
+		$entity = new Promotion();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-		
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
 
-            return $this->redirect($this->generateUrl('promotion_show', array('id' => $entity->getId())));
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$name=$entity->getName();
+			$year=$entity->getYear();
+			$formationId=$entity->getFormation()->getId();
+
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->findBy(array('name' => $name, 'year' => $year, 'formation' => $formationId));
+			
+			if($entity2 == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'La promotion a été créée avec succès !'
+				);
+				return $this->redirect($this->generateUrl('promotion_show', array('id' => $entity->getId())));
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'La promotion existe déjà !'
+				);
+				return $this->redirect($this->generateUrl('promotion_new'));
+			}  
         }
-
+	
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),

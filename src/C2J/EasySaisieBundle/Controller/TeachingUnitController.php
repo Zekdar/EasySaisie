@@ -48,12 +48,33 @@ class TeachingUnitController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('teachingunit_show', array('id' => $entity->getId())));
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$name=$entity->getName();
+			$code=$entity->getCode();
+			$containerId=$entity->getContainer()->getId();
+			
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findBy(array('name' => $name, 'code' => $code, 'container' => $containerId));
+			
+			if($entity2 == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'L\'UE a été créée avec succès !'
+				);
+				return $this->redirect($this->generateUrl('teachingunit_show', array('id' => $entity->getId())));
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'L\'UE existe déjà !'
+				);
+				return $this->redirect($this->generateUrl('teachingunit_new'));
+			}  
         }
 
         return array(

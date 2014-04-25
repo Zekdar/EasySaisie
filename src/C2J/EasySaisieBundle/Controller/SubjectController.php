@@ -48,12 +48,33 @@ class SubjectController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$name=$entity->getName();
+			$abbreviation=$entity->getAbbreviation();
 
-            return $this->redirect($this->generateUrl('subject_show', array('id' => $entity->getId())));
+			$checkName = $em->getRepository('C2JEasySaisieBundle:Subject')->findByName($name);
+			$checkAbbreviation = $em->getRepository('C2JEasySaisieBundle:Subject')->findByAbbreviation($abbreviation);
+			
+			if($checkName == null && $checkAbbreviation == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'La matière a été créée avec succès !'
+				);
+				return $this->redirect($this->generateUrl('subject_show', array('id' => $entity->getId())));
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'La matière existe déjà !'
+				);
+				return $this->redirect($this->generateUrl('subject_new'));
+			}  
         }
 
         return array(

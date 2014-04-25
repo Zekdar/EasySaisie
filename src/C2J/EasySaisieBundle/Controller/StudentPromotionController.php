@@ -48,12 +48,32 @@ class StudentPromotionController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$studentId=$entity->getStudent()->getId();
+			$promotionId=$entity->getPromotion()->getId();
 
-            return $this->redirect($this->generateUrl('studentpromotion_show', array('id' => $entity->getId())));
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $studentId, 'promotion' => $promotionId));
+			
+			if($entity2 == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'L\'étudiant a été ajouté avec succès dans la promotion !'
+				);
+				return $this->redirect($this->generateUrl('studentpromotion_show', array('id' => $entity->getId())));
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'L\'étudiant existe déjà dans la promotion !'
+				);
+				return $this->redirect($this->generateUrl('studentpromotion_new'));
+			}  
         }
 
         return array(

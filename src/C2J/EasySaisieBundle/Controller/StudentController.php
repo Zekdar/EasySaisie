@@ -48,12 +48,31 @@ class StudentController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$number=$entity->getNumber();
 
-            return $this->redirect($this->generateUrl('student_show', array('id' => $entity->getId())));
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Student')->findByNumber($number);
+			
+			if($entity2 == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'L\'étudiant a été créé avec succès !'
+				);
+				return $this->redirect($this->generateUrl('student_show', array('id' => $entity->getId())));
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'L\'étudiant existe déjà !'
+				);
+				return $this->redirect($this->generateUrl('student_new'));
+			}  
         }
 
         return array(
