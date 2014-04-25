@@ -3,6 +3,11 @@
 
 {% block body %}
     {{ parent() }}
+	{% for flashMessage in app.session.flashbag.get('failure') %}
+		<div class="flash-notice">
+			<font color="red">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
     <h1>Créer une promotion</h1>
 
     {{ form(form) }}
