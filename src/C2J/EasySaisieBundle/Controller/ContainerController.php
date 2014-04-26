@@ -62,7 +62,7 @@ class ContainerController extends Controller
 				$em->flush();
 				$this->get('session')->getFlashBag()->add(
 					'success',
-					'Le container a été créé avec succès !'
+					'Le conteneur a été créé avec succès !'
 				);
 				return $this->redirect($this->generateUrl('container_show', array('id' => $entity->getId())));
 			}			
@@ -70,7 +70,7 @@ class ContainerController extends Controller
 			{
 				$this->get('session')->getFlashBag()->add(
 					'failure',
-					'Le container existe déjà !'
+					'Le conteneur existe déjà !'
 				);
 				return $this->redirect($this->generateUrl('container_new'));
 			}  
@@ -141,6 +141,7 @@ class ContainerController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:Container')->find($id);
+		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findBy(array('container' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Container entity.');
@@ -151,6 +152,7 @@ class ContainerController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+			'entities'	  => $entities,
         );
     }
 

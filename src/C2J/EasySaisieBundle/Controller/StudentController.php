@@ -130,6 +130,7 @@ class StudentController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:Student')->find($id);
+		$entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Student entity.');
@@ -140,6 +141,7 @@ class StudentController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+			'entities'      => $entities,
         );
     }
 

@@ -131,6 +131,7 @@ class FormationController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:Formation')->find($id);
+		$entities = $em->getRepository('C2JEasySaisieBundle:Promotion')->findBy(array('formation' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Formation entity.');
@@ -141,6 +142,7 @@ class FormationController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+			'entities' => $entities,
         );
     }
 

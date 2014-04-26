@@ -142,6 +142,7 @@ class TeachingUnitController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($id);
+		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->findBy(array('teachingUnit' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find TeachingUnit entity.');
@@ -152,6 +153,7 @@ class TeachingUnitController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+			'entities'      => $entities,
         );
     }
 

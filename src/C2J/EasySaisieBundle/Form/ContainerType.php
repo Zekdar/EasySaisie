@@ -19,7 +19,7 @@ class ContainerType extends AbstractType
             ->add('promotion')
 			->add('areTeachingUnitsCompensable', 'checkbox', array(
 				'required'  => false,
-				'label' => 'Est-ce que les UEs sont compensables ?'))
+				'label' => 'Est-ce que les UEs du conteneur sont compensables entre elles ?'))
 			->add('minMark', 'text', array('label' => 'Note minimale'))
 			->add('minAverage', 'text', array('label' => 'Moyenne minimale'))
         ;

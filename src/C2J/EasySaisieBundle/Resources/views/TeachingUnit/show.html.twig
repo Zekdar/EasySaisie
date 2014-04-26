@@ -38,7 +38,39 @@
         <p class="center">            
             <a href="{{ path('teachingunit') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
 			<a href="{{ path('teachingunit_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Créer une autre UE</a>
-			<a href="{{ path('teachingunitsubject_new', { 'teachingUnitId': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Etape suivante : Ajouter une matière dans cette UE</a>
+			<a href="{{ path('teachingunitsubject_new', { 'teachingUnitId': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Passer à l'étape suivante</a>
         </p>
     </div>
+	
+	<hr />
+	
+	<h1 class="page-header">Liste des matières affectées à cette UE</h1>
+	{% if entities is not empty %}		
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover ">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td>{{ entity.subject.name }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('teachingunitsubject_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>
+                                <a href="{{ path('teachingunitsubject_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+                                <a href="{{ path('teachingunitsubject_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>               
+    {% else %}
+        <p class="center no-reccords-to-display">Aucun enregistrement à afficher.</p>
+    {% endif %}
     {% endblock %}
