@@ -85,7 +85,7 @@ class MarkController extends Controller
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
         //var_dump($promotions);exit;
-		
+        
 		$colspans = [];	
 		if(count($promotions) >= 1) {			
 			foreach ($promotions[0]->getContainers() as $container) {
@@ -103,11 +103,15 @@ class MarkController extends Controller
 		$subjectsByTu = array();
         if(count($promotions) >= 1) {
             $containers = $promotions[0]->getContainers();
-
+            $minAvgToValidate = $promotions[0]->getMinAverageToValidate();
+            
+            $sumCoeffs = array();
             foreach ($containers as $container) {
                 foreach ($container->getTeachingUnits() as $tu) {
+                    $sum = 0;
                     foreach ($tu->getTeachingUnitSubjects() as $tus) {
                         $subjectsByTu[$tu->getCode()][] = array(
+                            'isCompensable' => $tu->getIsCompensable(),
                             'tusId' => $tus->getId(),
                             'container' => $container->getName(),
                             'subject'           => array(
@@ -117,16 +121,22 @@ class MarkController extends Controller
                                 'coeff'         => $tus->getCoeff()
                             )
                         );
+                        $sum += $tus->getCoeff();
                     }
+                    $sumCoeffs[] = $sum;
                 }
             }
         }
         else {
             $containers = array();
+            $minAvgToValidate = '';
+            $sumCoeffs = array();
         }
         // asort($subjectsByTu); // Sort is necessary to display marks in the correct order in the view
         // var_dump($subjectsByTu['72m']);
         return array(
+            'sumCoeffs' => $sumCoeffs,
+            'minAvgToValidate' => $minAvgToValidate,
             'session' => $session,
             'studentPromotions' => $studentPromotions,
             'containers' => $containers,

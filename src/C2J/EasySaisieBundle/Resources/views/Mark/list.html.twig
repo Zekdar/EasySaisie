@@ -36,7 +36,14 @@
                         <th data-sorter="false"></th>
                         <th data-sorter="false"></th>
                         {% for container in containers %}
-                            <th data-sorter="false" colspan="{{ containersColspan[loop.index - 1] }}">{{ container.name }}</th>
+                            <th 
+                                data-sorter="false" 
+                                data-aretuscompensable="{{ container.areteachingunitscompensable ? 1 : 0 }}"
+                                data-minmark="{{ container.minMark }}"
+                                data-minavg="{{ container.minAverage }}"                                
+                                colspan="{{ containersColspan[loop.index - 1] }}">
+                                {{ container.name }}
+                            </th>
                         {% endfor %}
                     </tr>
                     <tr>
@@ -45,7 +52,13 @@
                         {% for container in containers %}
                             {% for tu in container.teachingUnits %} 
                                 {# +1 to take in account the avg column #}
-                                <th data-sorter="false" colspan="{{ tu.teachingUnitSubjects | length + 1}}" data-tucode="{{ tu.code }}">{{ tu.code }} {{ tu.name }}</th>
+                                <th 
+                                    data-sorter="false" 
+                                    colspan="{{ tu.teachingUnitSubjects | length + 1}}" 
+                                    data-iscompensable="{{ tu.isCompensable ? 1 : 0 }}"
+                                    data-tucode="{{ tu.code }}">
+                                    {{ tu.code }} {{ tu.name }}
+                                </th>
                             {% endfor %}
                         {% endfor %}
                     </tr>
@@ -82,25 +95,27 @@
                             <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                             
                             {% for tuCode,tu in subjectsByTu %}
-                                <td class="tuAvg" data-container="{{ tu[0].container }}"></td>
+                                <td class="tuAvg" data-coeff="{{ sumCoeffs[loop.index0] }}" data-containername="{{ tu[0].container }}"></td>
 
                                 {% for tuId in tu %}
-                                {% set markId = '' %} {# declared here to use it after the for loop #}
-                                {% set tusId = '' %} {# declared here to use it after the for loop #}
-                                {% set markValue = '' %}
+                                    {% set markId = '' %} {# declared here to use it after the for loop #}
+                                    {% set tusId = '' %} {# declared here to use it after the for loop #}
+                                    {% set markValue = '' %}
                                 
                                     {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                     {% for mark in sp.marks if continue %}
-                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
+                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id and mark.session == session %}
                                             {% set markValue = mark.value %}
                                             {% set markId = mark.id %}
                                             {% set continue = false %}
                                         {% endif %}
                                     {% endfor %}
+
                                     <td class="tdMark">
                                         <a 
                                             href="" 
                                             class="mark"
+                                            data-containername="{{ tu[0].container }}"
                                             data-session="{{ session }}"
                                             data-tucode="{{ tuCode }}" 
                                             data-coeff="{{ tuId.subject.coeff }}"
@@ -147,8 +162,9 @@
                         <tr>
                             <td>{{ sp.student.number }}</td>
                             <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
-                            <td class="avg"></td>
-                            <td class="avg"></td>
+                            {% for container in containers %}
+                                <td class="avg" data-containername="{{ container }}"></td>
+                            {% endfor %}
                             <td class="generalAvg"></td>
                         </tr> 
                     {% endfor %} 
