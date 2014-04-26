@@ -156,27 +156,4 @@ class User extends BaseUser
     {
         return $this->student;
     }
-
-    /**
-     * Set teacher
-     *
-     * @param \C2J\EasySaisieBundle\Entity\Teacher $teacher
-     * @return User
-     */
-    public function setTeacher(\C2J\EasySaisieBundle\Entity\Teacher $teacher = null)
-    {
-        $this->teacher = $teacher;
-
-        return $this;
-    }
-
-    /**
-     * Get teacher
-     *
-     * @return \C2J\EasySaisieBundle\Entity\Teacher 
-     */
-    public function getTeacher()
-    {
-        return $this->teacher;
-    }
 }

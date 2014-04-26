@@ -3,48 +3,46 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Student list</h1>
+    <h1>Liste des utilisateurs</h1>
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Number</th>
-				<th>UserName</th>
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.number }}</td>
-				<td>{{ entity.username }}</td>
-                <td>{{ entity.lastName }}</td>
-                <td>{{ entity.firstName }}</td>
-                <td>{{ entity.email }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('user_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('user_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% if entities is not empty %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Habilitation</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td>{{ entity.userName }}</td>
+                        <td>{{ entity.email }}</td>
+                        <td>{{ entity.myRoles }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('user_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>
+                                <a href="{{ path('user_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+                                <a href="{{ path('user_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>               
+    {% else %}
+        <p class="center no-reccords-to-display">Aucun enregistrement à afficher.</p>
+    {% endif %}
+        <hr />
+        
+        <div class="row">
+            <p class="center">
+                <a href="{{ path('user_new') }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> Ajouter</a>
+            </p>
+        </div>
 
-        <ul>
-        <li>
-            <a href="{{ path('student_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
     {% endblock %}

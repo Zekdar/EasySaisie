@@ -15,52 +15,42 @@ class LoadStudentPromotionsData extends AbstractFixture implements OrderedFixtur
     public function load(ObjectManager $manager)
     {
 		$studentPromotion1=new StudentPromotion();
-		$studentPromotion1->setYear('2014');
 		$studentPromotion1->setStudent($this->getReference('student1'));
 		$studentPromotion1->setPromotion($this->getReference('promotion1'));
 
 		$studentPromotion2=new StudentPromotion();
-		$studentPromotion2->setYear('2014');
 		$studentPromotion2->setStudent($this->getReference('student2'));
 		$studentPromotion2->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion3=new StudentPromotion();
-		$studentPromotion3->setYear('2014');
 		$studentPromotion3->setStudent($this->getReference('student3'));
 		$studentPromotion3->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion4=new StudentPromotion();
-		$studentPromotion4->setYear('2014');
 		$studentPromotion4->setStudent($this->getReference('student4'));
 		$studentPromotion4->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion5=new StudentPromotion();
-		$studentPromotion5->setYear('2014');
 		$studentPromotion5->setStudent($this->getReference('student5'));
 		$studentPromotion5->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion6=new StudentPromotion();
-		$studentPromotion6->setYear('2014');
 		$studentPromotion6->setStudent($this->getReference('student6'));
 		$studentPromotion6->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion7=new StudentPromotion();
-		$studentPromotion7->setYear('2014');
 		$studentPromotion7->setStudent($this->getReference('student7'));
 		$studentPromotion7->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion8=new StudentPromotion();
-		$studentPromotion8->setYear('2014');
 		$studentPromotion8->setStudent($this->getReference('student8'));
 		$studentPromotion8->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion9=new StudentPromotion();
-		$studentPromotion9->setYear('2014');
 		$studentPromotion9->setStudent($this->getReference('student9'));
 		$studentPromotion9->setPromotion($this->getReference('promotion1'));
 		
 		$studentPromotion10=new StudentPromotion();
-		$studentPromotion10->setYear('2014');
 		$studentPromotion10->setStudent($this->getReference('student10'));
 		$studentPromotion10->setPromotion($this->getReference('promotion1'));
 		

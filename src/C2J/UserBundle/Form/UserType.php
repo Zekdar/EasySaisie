@@ -26,10 +26,15 @@ class UserType extends AbstractType
                 'second_options' => array('label' => 'form.password_confirmation'),
                 'invalid_message' => 'fos_user.password.mismatch',
             ))
-            ->add('number')
             ->add('lastName')
             ->add('firstName')
-			->add('roles', 'collection', array('type'   => 'choice',
+            ->add('myRoles', 'choice',array('choices'  => array(
+                                                                    'ROLE_ADMIN' => 'Admin',
+                                                                    'ROLE_RESP'     => 'Responsable',
+                                                                    'ROLE_PROF'    => 'Professeur',
+                                                                    'ROLE_STUD'    => 'Eleve',
+                                                               )))
+		/*	->add('roles', 'collection', array('type'   => 'choice',
 												'options'  => array(
 																'choices'  => array(
 																	'ROLE_ADMIN' => 'Admin',
@@ -39,7 +44,9 @@ class UserType extends AbstractType
 																				),
 																),
 											)
-		)
+		)*/
+            ->add('student')
+            ->add('teacher')
         ;
     }
     

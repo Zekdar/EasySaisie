@@ -3,7 +3,7 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Student</h1>
+    <h1>Utilisateur</h1>
 
     <table class="record_properties">
         <tbody>
@@ -12,8 +12,8 @@
                 <td>{{ entity.id }}</td>
             </tr>
             <tr>
-                <th>Number</th>
-                <td>{{ entity.number }}</td>
+                <th>Roles</th>
+                <td>{{ entity.myRoles }}</td>
             </tr>
 			<tr>
                 <th>UserName</th>
@@ -37,12 +37,12 @@
         <ul class="record_actions">
     <li>
         <a href="{{ path('user') }}">
-            Back to the list
+            Retour à la liste
         </a>
     </li>
     <li>
         <a href="{{ path('user_edit', { 'id': entity.id }) }}">
-            Edit
+            Editer
         </a>
     </li>
     <li>{{ form(delete_form) }}</li>

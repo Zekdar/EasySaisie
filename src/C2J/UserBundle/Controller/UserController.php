@@ -58,8 +58,9 @@ class UserController extends Controller
             //$em = $this->getDoctrine()->getManager();
             //$em->persist($entity);
             //$em->flush();
-			
-			
+			$role = array($form->get('myRoles')->getData());
+			$entity->setRoles($role);
+
 			$userManager->updateUser($entity);
 			
             return $this->redirect($this->generateUrl('user_show', array('id' => $entity->getId())));
@@ -209,6 +210,8 @@ class UserController extends Controller
 
         if ($editForm->isValid()) {
             //$em->flush();
+            $role = array($editForm->get('myRoles')->getData());
+            $entity->setRoles($role);
 			$userManager->updateUser($entity);
             return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
         }
