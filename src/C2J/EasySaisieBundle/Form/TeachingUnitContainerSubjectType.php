@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TeachingUnitSubjectType extends AbstractType
+class TeachingUnitContainerSubjectType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -17,7 +17,7 @@ class TeachingUnitSubjectType extends AbstractType
         $builder
             ->add('coeff')
 			->add('ects')
-            ->add('teachingUnit')
+            ->add('teachingUnitContainer')
             ->add('subject')
 			->add('teacher')
         ;
@@ -29,7 +29,7 @@ class TeachingUnitSubjectType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'C2J\EasySaisieBundle\Entity\TeachingUnitSubject'
+            'data_class' => 'C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject'
         ));
     }
 
@@ -38,6 +38,6 @@ class TeachingUnitSubjectType extends AbstractType
      */
     public function getName()
     {
-        return 'c2j_easysaisiebundle_teachingunitsubject';
+        return 'c2j_easysaisiebundle_teachingunitcontainersubject';
     }
 }

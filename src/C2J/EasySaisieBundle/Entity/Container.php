@@ -54,9 +54,9 @@ class Container
   private $minAverage;
 
   /**
-   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit", mappedBy="container")
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitContainer", mappedBy="container")
    */
-  private $teachingUnits;
+  private $teachingUnitContainers;
   
   /**
    * Get id
@@ -192,39 +192,39 @@ class Container
      */
     public function __construct()
     {
-        $this->teachingUnits = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->teachingUnitContainers = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Add teachingUnits
+     * Add teachingUnitContainers
      *
-     * @param \C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitContainer $teachingUnitContainers
      * @return Container
      */
-    public function addTeachingUnit(\C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits)
+    public function addTeachingContainerUnit(\C2J\EasySaisieBundle\Entity\TeachingUnitContainer $teachingUnitContainers)
     {
-        $this->teachingUnits[] = $teachingUnits;
+        $this->teachingUnitContainers[] = $teachingUnitContainers;
 
         return $this;
     }
 
     /**
-     * Remove teachingUnits
+     * Remove teachingUnitContainers
      *
-     * @param \C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitContainer $teachingUnitContainers
      */
-    public function removeTeachingUnit(\C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnits)
+    public function removeTeachingContainerUnit(\C2J\EasySaisieBundle\Entity\TeachingUnitContainer $teachingUnitContainers)
     {
-        $this->teachingUnits->removeElement($teachingUnits);
+        $this->teachingUnitContainers->removeElement($teachingUnitContainers);
     }
 
     /**
-     * Get teachingUnits
+     * Get teachingUnitContainers
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getTeachingUnits()
+    public function getTeachingUnitContainers()
     {
-        return $this->teachingUnits;
+        return $this->teachingUnitContainers;
     }
 }

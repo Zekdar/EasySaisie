@@ -1,5 +1,5 @@
 <?php
-// src/EasySaisieBundle/TeachingUnitSubject.php
+// src/EasySaisieBundle/TeachingUnitContainerSubject.php
 
 namespace C2J\EasySaisieBundle\Entity;
 
@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="C2J\EasySaisieBundle\Entity\TeachingUnitSubjectRepository")
+ * @ORM\Entity(repositoryClass="C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubjectRepository")
  */
-class TeachingUnitSubject
+class TeachingUnitContainerSubject
 {  
   /**
    * @var integer $id
@@ -40,9 +40,9 @@ class TeachingUnitSubject
   private $teacher;
   
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnit", inversedBy="teachingUnitSubjects")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitContainer", inversedBy="teachingUnitContainerSubjects")
    */
-  private $teachingUnit;
+  private $teachingUnitContainer;
   
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\Subject")
@@ -50,7 +50,7 @@ class TeachingUnitSubject
   private $subject;
   
   /**
-   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\Mark", mappedBy="teachingUnitSubject")
+   * @ORM\OneToMany(targetEntity="C2J\EasySaisieBundle\Entity\Mark", mappedBy="teachingUnitContainerSubject")
    */
   private $marks;
   
@@ -60,7 +60,7 @@ class TeachingUnitSubject
      * Set coeff
      *
      * @param integer $coeff
-     * @return TeachingUnitSubject
+     * @return TeachingUnitContainerSubject
      */
     public function setCoeff($coeff)
     {
@@ -83,7 +83,7 @@ class TeachingUnitSubject
      * Set ects
      *
      * @param integer $ects
-     * @return TeachingUnitSubject
+     * @return TeachingUnitContainerSubject
      */
     public function setEcts($ects)
     {
@@ -106,7 +106,7 @@ class TeachingUnitSubject
      * Set teacher
      *
      * @param \C2J\EasySaisieBundle\Entity\Teacher $teacher
-     * @return TeachingUnitSubject
+     * @return TeachingUnitContainerSubject
      */
     public function setTeacher(\C2J\EasySaisieBundle\Entity\Teacher $teacher)
     {
@@ -126,33 +126,33 @@ class TeachingUnitSubject
     }
 
     /**
-     * Set teachingUnit
+     * Set teachingUnitContainer
      *
-     * @param \C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnit
-     * @return TeachingUnitSubject
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitContainer $teachingUnitContainer
+     * @return TeachingUnitContainerSubject
      */
-    public function setTeachingUnit(\C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnit)
+    public function setTeachingUnitContainer(\C2J\EasySaisieBundle\Entity\TeachingUnitContainer $teachingUnitContainer)
     {
-        $this->teachingUnit = $teachingUnit;
+        $this->teachingUnitContainer = $teachingUnitContainer;
     
         return $this;
     }
 
     /**
-     * Get teachingUnit
+     * Get teachingUnitContainer
      *
-     * @return \C2J\EasySaisieBundle\Entity\TeachingUnit 
+     * @return \C2J\EasySaisieBundle\Entity\TeachingUnitContainer 
      */
-    public function getTeachingUnit()
+    public function getTeachingUnitContainer()
     {
-        return $this->teachingUnit;
+        return $this->teachingUnitContainer;
     }
 
     /**
      * Set subject
      *
      * @param \C2J\EasySaisieBundle\Entity\Subject $subject
-     * @return TeachingUnitSubject
+     * @return TeachingUnitContainerSubject
      */
     public function setSubject(\C2J\EasySaisieBundle\Entity\Subject $subject)
     {
@@ -197,7 +197,7 @@ class TeachingUnitSubject
      * Add marks
      *
      * @param \C2J\EasySaisieBundle\Entity\Mark $marks
-     * @return TeachingUnitSubject
+     * @return TeachingUnitContainerSubject
      */
     public function addMark(\C2J\EasySaisieBundle\Entity\Mark $marks)
     {

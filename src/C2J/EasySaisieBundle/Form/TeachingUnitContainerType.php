@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TeachingUnitType extends AbstractType
+class TeachingUnitContainerType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -15,11 +15,8 @@ class TeachingUnitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('label' => 'Nom de l\'UE'))
-            ->add('code', 'text', array('label' => 'Code UE'))
-			->add('isCompensable', 'checkbox', array(
-				'required'  => false,
-				'label'		=> 'L\'UE est-elle compensable ?'))
+            ->add('teachingUnit', null, array('label' => 'Bloc'))
+            ->add('container', null, array('label' => 'Bloc'))
         ;
     }
     

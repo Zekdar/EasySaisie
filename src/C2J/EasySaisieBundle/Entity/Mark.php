@@ -35,9 +35,9 @@ class Mark
   private $session;
   
   /**
-   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject", inversedBy="marks")
+   * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject", inversedBy="marks")
    */
-  private $teachingUnitSubject;
+  private $teachingUnitContainerSubject;
   
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\StudentPromotion", inversedBy="marks")
@@ -56,26 +56,26 @@ class Mark
     }
 
     /**
-     * Set teachingUnitSubject
+     * Set teachingUnitContainerSubject
      *
-     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubject
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject $teachingUnitContainerSubject
      * @return Mark
      */
-    public function setTeachingUnitSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitSubject = null)
+    public function setTeachingUnitContainerSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject $teachingUnitContainerSubject = null)
     {
-        $this->teachingUnitSubject = $teachingUnitSubject;
+        $this->teachingUnitContainerSubject = $teachingUnitContainerSubject;
     
         return $this;
     }
 
     /**
-     * Get teachingUnitSubject
+     * Get teachingUnitContainerSubject
      *
-     * @return \C2J\EasySaisieBundle\Entity\TeachingUnitSubject 
+     * @return \C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject 
      */
-    public function getTeachingUnitSubject()
+    public function getTeachingUnitContainerSubject()
     {
-        return $this->teachingUnitSubject;
+        return $this->teachingUnitContainerSubject;
     }
 
     /**

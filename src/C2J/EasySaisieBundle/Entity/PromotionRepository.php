@@ -19,6 +19,34 @@ class PromotionRepository extends EntityRepository
 						->addSelect('c')
 					->join('p.studentPromotions', 'sp')
 						->addSelect('sp')
+					->join('c.teachingUnitContainers', 'tuc')
+						->addSelect('tuc')
+					->join('tuc.teachingUnit', 'tu')
+						->addSelect('tu')
+					->leftjoin('tuc.teachingUnitContainerSubjects', 'tucs')
+						->addSelect('tucs')		
+					->leftjoin('tucs.subject', 's')
+						->addSelect('s')
+					->leftJoin('tucs.marks', 'm')
+						->addSelect('m')
+					->where('p.id = :promotion_id')
+						->setParameter('promotion_id', $promotion_id)
+					->andWhere('p.year = :year')
+						->setParameter('year', $year)
+					->addOrderBy('tu.code', 'ASC')
+					->addOrderBy('s.abbreviation', 'ASC')
+					->getQuery()
+					->getResult();
+					
+	}
+	/*
+	public function findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year) 
+	{
+		return $this->createQueryBuilder('p')
+					->join('p.containers', 'c')
+						->addSelect('c')
+					->join('p.studentPromotions', 'sp')
+						->addSelect('sp')
 					->join('c.teachingUnits', 'tu')
 						->addSelect('tu')
 					->join('tu.teachingUnitSubjects', 'tus')
@@ -36,4 +64,5 @@ class PromotionRepository extends EntityRepository
 					->getQuery()
 					->getResult();
 	}
+	*/
 }
