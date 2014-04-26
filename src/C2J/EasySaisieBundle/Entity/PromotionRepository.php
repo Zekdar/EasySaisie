@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class PromotionRepository extends EntityRepository
 {
-	public function findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year) 
+	public function findAllSubjectsByTucsByContainerByPromotionByYear($promotion_id, $year) 
 	{
 		return $this->createQueryBuilder('p')
 					->join('p.containers', 'c')

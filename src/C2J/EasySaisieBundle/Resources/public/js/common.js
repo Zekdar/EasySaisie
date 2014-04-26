@@ -82,7 +82,7 @@ $(document).ready(function() {
 		},
 		params: function(params) {
 		    params.spid = $(this).data('spid');
-		    params.tusid = $(this).data('tusid');
+		    params.tucsid = $(this).data('tucsid');
 		    params.pk = $(this).data('pk');
 		    params.session = $(this).data('session');
 		    return params;

@@ -123,7 +123,7 @@ class TeachingUnitContainer
      *
      * @param \C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject $teachingUnitContainerSubjects
      */
-    public function removeTeachingUnitContainerSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitSubject $teachingUnitContainerSubjects)
+    public function removeTeachingUnitContainerSubject(\C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject $teachingUnitContainerSubjects)
     {
         $this->teachingUnitContainerSubjects->removeElement($teachingUnitContainerSubjects);
     }
