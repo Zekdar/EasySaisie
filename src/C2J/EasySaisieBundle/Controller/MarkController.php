@@ -85,7 +85,7 @@ class MarkController extends Controller
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
         //var_dump($promotions);exit;
-		
+        
 		$colspans = [];	
 		if(count($promotions) >= 1) {			
 			foreach ($promotions[0]->getContainers() as $container) {

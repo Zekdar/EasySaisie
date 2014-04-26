@@ -35,7 +35,7 @@ class StudentPromotionRepository extends EntityRepository
 	}
 
 	public function findAllStudentsInPromotionByYear($promotion_id, $year) 
-	{
+	{$session= null;
 		$qb = $this ->createQueryBuilder('sp')
 					->join('sp.student', 's')
 						->addSelect('s')

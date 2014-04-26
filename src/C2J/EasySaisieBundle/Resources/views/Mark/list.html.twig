@@ -104,7 +104,7 @@
                                 
                                     {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                     {% for mark in sp.marks if continue %}
-                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
+                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id and mark.session == session %}
                                             {% set markValue = mark.value %}
                                             {% set markId = mark.id %}
                                             {% set continue = false %}
@@ -162,8 +162,9 @@
                         <tr>
                             <td>{{ sp.student.number }}</td>
                             <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
-                            <td class="avg"></td>
-                            <td class="avg"></td>
+                            {% for container in containers %}
+                                <td class="avg" data-containername="{{ container }}"></td>
+                            {% endfor %}
                             <td class="generalAvg"></td>
                         </tr> 
                     {% endfor %} 
