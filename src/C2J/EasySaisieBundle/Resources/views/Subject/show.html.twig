@@ -2,6 +2,11 @@
 
 {% block body %}
     {{ parent() }}
+	{% for flashMessage in app.session.flashbag.get('success') %}
+		<div class="flash-notice">
+			<font color="green">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
     
     <h1 class="page-header">Matière - {{ entity.name }}</h1>
 
@@ -32,7 +37,8 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('subject') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('teachingunit_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Créer une UE</a>
+			<a href="{{ path('subject_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Créer une autre matière</a>
+			<a href="{{ path('teacher_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Passer à l'étape suivante</a>
         </p>
     </div>
     {% endblock %}

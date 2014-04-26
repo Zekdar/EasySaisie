@@ -3,7 +3,12 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Rule creation</h1>
+	{% for flashMessage in app.session.flashbag.get('failure') %}
+		<div class="flash-notice">
+			<font color="red">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
+    <h1>Ajout d'une matière dans une UE</h1>
 
     {{ form(form) }}
 
@@ -12,6 +17,8 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			<a href="{{ path('teachingunit_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
+			<a href="{{ path('student_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Sauter cette étape</a>
         </p>
     </div>
 </ul>

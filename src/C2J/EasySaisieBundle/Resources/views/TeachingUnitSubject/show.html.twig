@@ -2,6 +2,11 @@
 
 {% block body %}
     {{ parent() }}
+	{% for flashMessage in app.session.flashbag.get('success') %}
+		<div class="flash-notice">
+			<font color="green">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
     
     <h1 class="page-header">Règle {{ entity.id }}</h1>
 
@@ -32,11 +37,8 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('studentpromotion_new', { 'promotionId': entity.teachingUnit.container.promotion.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
-				Ajouter un étudiant existant
-			</a>
-			<a href="{{ path('student_new', { 'id': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
-				Créer un nouvel étudiant
+			<a href="{{ path('student_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
+				Passer à l'étape suivante
 			</a>
 		</a>
         </p>

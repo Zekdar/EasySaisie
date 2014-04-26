@@ -38,6 +38,10 @@ subject:
     resource: "@C2JEasySaisieBundle/Controller/SubjectController.php"
     type: annotation
 
+teacher:
+    resource: "@C2JEasySaisieBundle/Controller/TeacherController.php"
+    type: annotation
+
 teachingUnit:
     resource: "@C2JEasySaisieBundle/Controller/TeachingUnitController.php"
     type: annotation

@@ -7,21 +7,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use C2J\EasySaisieBundle\Entity\Subject;
-use C2J\EasySaisieBundle\Form\SubjectType;
+use C2J\EasySaisieBundle\Entity\Teacher;
+use C2J\EasySaisieBundle\Form\TeacherType;
 
 /**
- * Subject controller.
+ * Teacher controller.
  *
- * @Route("/subject")
+ * @Route("/teacher")
  */
-class SubjectController extends Controller
+class TeacherController extends Controller
 {
 
     /**
-     * Lists all Subject entities.
+     * Lists all Teacher entities.
      *
-     * @Route("/", name="subject")
+     * @Route("/", name="teacher")
      * @Method("GET")
      * @Template()
      */
@@ -29,51 +29,50 @@ class SubjectController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('C2JEasySaisieBundle:Subject')->findAll();
+        $entities = $em->getRepository('C2JEasySaisieBundle:Teacher')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new Subject entity.
+     * Creates a new Teacher entity.
      *
-     * @Route("/", name="subject_create")
+     * @Route("/", name="teacher_create")
      * @Method("POST")
-     * @Template("C2JEasySaisieBundle:Subject:new.html.twig")
+     * @Template("C2JEasySaisieBundle:Teacher:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new Subject();
+        $entity = new Teacher();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {		
 			$em = $this->getDoctrine()->getManager();
 			
-			$name=$entity->getName();
-			$abbreviation=$entity->getAbbreviation();
+			$lastName=$entity->getLastName();
+			$firstName=$entity->getFirstName();
 
-			$checkName = $em->getRepository('C2JEasySaisieBundle:Subject')->findByName($name);
-			$checkAbbreviation = $em->getRepository('C2JEasySaisieBundle:Subject')->findByAbbreviation($abbreviation);
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Teacher')->findBy(array('lastName' => $lastName, 'firstName' => $firstName));
 			
-			if($checkName == null && $checkAbbreviation == null)
+			if($entity2 == null)
 			{
 				$em->persist($entity);
 				$em->flush();
 				$this->get('session')->getFlashBag()->add(
 					'success',
-					'La matière a été créée avec succès !'
+					'Le professeur a été créé avec succès !'
 				);
-				return $this->redirect($this->generateUrl('subject_show', array('id' => $entity->getId())));
+				return $this->redirect($this->generateUrl('teacher_show', array('id' => $entity->getId())));
 			}			
             else
 			{
 				$this->get('session')->getFlashBag()->add(
 					'failure',
-					'La matière existe déjà !'
+					'Le professeur existe déjà !'
 				);
-				return $this->redirect($this->generateUrl('subject_new'));
+				return $this->redirect($this->generateUrl('teacher_new'));
 			}  
         }
 
@@ -84,16 +83,16 @@ class SubjectController extends Controller
     }
 
     /**
-    * Creates a form to create a Subject entity.
+    * Creates a form to create a Teacher entity.
     *
-    * @param Subject $entity The entity
+    * @param Teacher $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm(Subject $entity)
+    private function createCreateForm(Teacher $entity)
     {
-        $form = $this->createForm(new SubjectType(), $entity, array(
-            'action' => $this->generateUrl('subject_create'),
+        $form = $this->createForm(new TeacherType(), $entity, array(
+            'action' => $this->generateUrl('teacher_create'),
             'method' => 'POST',
         ));
 
@@ -103,15 +102,15 @@ class SubjectController extends Controller
     }
 
     /**
-     * Displays a form to create a new Subject entity.
+     * Displays a form to create a new Teacher entity.
      *
-     * @Route("/new", name="subject_new")
+     * @Route("/new", name="teacher_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new Subject();
+        $entity = new Teacher();
         $form   = $this->createCreateForm($entity);
 
         return array(
@@ -121,9 +120,9 @@ class SubjectController extends Controller
     }
 
     /**
-     * Finds and displays a Subject entity.
+     * Finds and displays a Teacher entity.
      *
-     * @Route("/{id}", name="subject_show")
+     * @Route("/{id}", name="teacher_show")
      * @Method("GET")
      * @Template()
      */
@@ -131,10 +130,10 @@ class SubjectController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('C2JEasySaisieBundle:Subject')->find($id);
+        $entity = $em->getRepository('C2JEasySaisieBundle:Teacher')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Subject entity.');
+            throw $this->createNotFoundException('Unable to find Teacher entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -146,9 +145,9 @@ class SubjectController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Subject entity.
+     * Displays a form to edit an existing Teacher entity.
      *
-     * @Route("/{id}/edit", name="subject_edit")
+     * @Route("/{id}/edit", name="teacher_edit")
      * @Method("GET")
      * @Template()
      */
@@ -156,10 +155,10 @@ class SubjectController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('C2JEasySaisieBundle:Subject')->find($id);
+        $entity = $em->getRepository('C2JEasySaisieBundle:Teacher')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Subject entity.');
+            throw $this->createNotFoundException('Unable to find Teacher entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -173,16 +172,16 @@ class SubjectController extends Controller
     }
 
     /**
-    * Creates a form to edit a Subject entity.
+    * Creates a form to edit a Teacher entity.
     *
-    * @param Subject $entity The entity
+    * @param Teacher $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(Subject $entity)
+    private function createEditForm(Teacher $entity)
     {
-        $form = $this->createForm(new SubjectType(), $entity, array(
-            'action' => $this->generateUrl('subject_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new TeacherType(), $entity, array(
+            'action' => $this->generateUrl('teacher_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -191,20 +190,20 @@ class SubjectController extends Controller
         return $form;
     }
     /**
-     * Edits an existing Subject entity.
+     * Edits an existing Teacher entity.
      *
-     * @Route("/{id}", name="subject_update")
+     * @Route("/{id}", name="teacher_update")
      * @Method("PUT")
-     * @Template("C2JEasySaisieBundle:Subject:edit.html.twig")
+     * @Template("C2JEasySaisieBundle:Teacher:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('C2JEasySaisieBundle:Subject')->find($id);
+        $entity = $em->getRepository('C2JEasySaisieBundle:Teacher')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Subject entity.');
+            throw $this->createNotFoundException('Unable to find Teacher entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -214,7 +213,7 @@ class SubjectController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('subject_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('teacher_edit', array('id' => $id)));
         }
 
         return array(
@@ -224,9 +223,9 @@ class SubjectController extends Controller
         );
     }
     /**
-     * Deletes a Subject entity.
+     * Deletes a Teacher entity.
      *
-     * @Route("/{id}", name="subject_delete")
+     * @Route("/{id}", name="teacher_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -236,21 +235,21 @@ class SubjectController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('C2JEasySaisieBundle:Subject')->find($id);
+            $entity = $em->getRepository('C2JEasySaisieBundle:Teacher')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Subject entity.');
+                throw $this->createNotFoundException('Unable to find Teacher entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('subject'));
+        return $this->redirect($this->generateUrl('teacher'));
     }
 
     /**
-     * Creates a form to delete a Subject entity by id.
+     * Creates a form to delete a Teacher entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -259,7 +258,7 @@ class SubjectController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('subject_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('teacher_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()

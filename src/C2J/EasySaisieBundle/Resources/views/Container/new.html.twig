@@ -3,7 +3,12 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Créer un silot d'UEs</h1>
+	{% for flashMessage in app.session.flashbag.get('failure') %}
+		<div class="flash-notice">
+			<font color="red">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
+    <h1>Créer un conteneur d'UEs</h1>
 
     {{ form(form) }}
 
@@ -12,6 +17,10 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('container') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			{% if app.request.get('promotionId') is null %}
+				<a href="{{ path('promotion_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
+			{% endif %}
+			<a href="{{ path('subject_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Sauter cette étape</a>
         </p>
     </div>
 </ul>

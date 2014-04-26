@@ -48,12 +48,32 @@ class TeachingUnitSubjectController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('teachingunitsubject_show', array('id' => $entity->getId())));
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$teachingUnitId=$entity->getTeachingUnit()->getId();
+			$subjectId=$entity->getSubject()->getId();
+			
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->findBy(array('teachingUnit' => $teachingUnitId, 'subject' => $subjectId));
+			
+			if($entity2 == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'La matière a été ajoutée dans l\'UE avec succès !'
+				);
+				return $this->redirect($this->generateUrl('teachingunitsubject_show', array('id' => $entity->getId())));
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'La matière existe déjà dans l\'UE !'
+				);
+				return $this->redirect($this->generateUrl('teachingunitsubject_new'));
+			}  
         }
 
         return array(
