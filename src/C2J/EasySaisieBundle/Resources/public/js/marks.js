@@ -609,34 +609,24 @@ $(document).ready(function() {
 	$('#btns_session').find('a.sessionPicker').on('click', function(event) {
 		event.preventDefault();
 		
-		if($(this).attr('id') == '#btn_session2') {
+		var url = window.location.pathname;
+		var href = $(this).attr('href');
+
+		var studentsNumberToTransmit = []; // used if btn_session2 is clicked
+		if($(this).attr('id') == 'btn_session2') {
 			var studentsSession2 = getStudentsGoingToSession2();
-			var studentMarksToTransmit = {};
 			var content;
 			if(studentsSession2.length > 0) {
 				for(var i = 0; i < studentsSession2.length; i++) {
-					studentMarksToTransmit[studentsSession2[i]] = {};
-					for(var j in containersInfo) {
-						$('#marksTable tbody tr:contains(' + studentsSession2[i] + ')').find('td.tdMark a[data-containername="' + j + '"]').each(function() {
-							content = $(this).text().trim();
-							
-							if(content < containersInfo[j].minMark)
-								content = '';
-							
-							// studentMarksToTransmit[studentsSession2[i]][] = content;
-						});				
-					}
+					studentsNumberToTransmit.push(studentsSession2[i]);
 				}
-
-				console.log(studentsSession2);
+				href += '?studentsList=' + JSON.stringify(studentsNumberToTransmit); // passes the studentsList array to the controller
 			}
 			else {
 				alert('Aucun élève n\'est encore aux rattrapages.');
 			}
-		}
-
-		var url = window.location.pathname;
-		var href = $(this).attr('href');
+		}		
+		
 		if(href != '' && url != '' && url != href)
 			window.location = href;
 	});

@@ -79,13 +79,23 @@ class MarkController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function listAction($year, $promotion_id, $session, $studentsList = null) 
+    public function listAction($year, $promotion_id, $session) 
     {
+        $studentsList = $this->getRequest()->query->get('studentsList');
+
         $em = $this->getDoctrine()->getManager();
-        // if($studentsList)
-        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
+
+        // Display Session 2
+        if($studentsList != '') {
+            $studentsList = json_decode($studentsList);
+            $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllMarksForTheseStudentsByPromotionByYear($promotion_id, $year, $studentsList);
+        }
+        // Else display session 1 and PV Final
+        else
+            $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
+
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTucsByContainerByPromotionByYear($promotion_id, $year);
-        //var_dump($promotions);exit;
+        // var_dump($studentPromotions);exit;
         
 		$colspans = [];	
 		if(count($promotions) >= 1) {			
@@ -406,8 +416,19 @@ class MarkController extends Controller
                 $em->persist($mark);
             } 
             // Otherwise the mark needs to be deleted from the DB : delete
-            else { 
+            // Session1
+            elseif ($session == 1) {
                 $em->remove($mark);
+            }
+            // Session2
+            else {
+                if($mark->getValueS1() == '') {
+                    $em->remove($mark); // S1 == '' ==> delete
+                }
+                else { // S1 != '' && S2 == '' ==> update to null
+                    // Update 
+                    $mark->setValueS2(null);
+                }
             }
 
             $em->flush();
