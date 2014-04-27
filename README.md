@@ -19,4 +19,18 @@ Install the database
 Install the assets 
   
     php app/console asset:install web
+	
+2) Use GetStarted function to create necessary elements 
+----------------------------------
 
+The Get Started function will guide you in creating the necessary elements in order to use the application correctly
+
+First, you need to create a formation and then a promotion.
+
+After that, you need to add a container (you can add many containers).
+
+Then, you need to create some subjects, teaching units and affect them to your promotion.
+
+To finish, you have to create students and affect them to your promotion.
+
+Once this is done, you have the miminum to start using the application.
