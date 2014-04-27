@@ -21,7 +21,9 @@
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
         "mopa/bootstrap-bundle": "v3.0.0-beta2",
-		"phpoffice/phpexcel": "1.8.0"
+        "friendsofsymfony/user-bundle": "dev-master",
+		"phpoffice/phpexcel": "1.8.0",
+        "jms/security-extra-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

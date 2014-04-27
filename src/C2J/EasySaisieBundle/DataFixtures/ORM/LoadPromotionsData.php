@@ -16,11 +16,13 @@ class LoadPromotionsData extends AbstractFixture implements OrderedFixtureInterf
     {
         $promotion1 = new Promotion();
         $promotion1->setName('L3');
+        $promotion1->setYear('2014');
         $promotion1->setMinAverageToValidate('5');
         $promotion1->setFormation($this->getReference('formation1')); // TODO fixtures recherche partager objets
 
         $promotion2 = new Promotion();
         $promotion2->setName('M2');
+        $promotion2->setYear('2014');
         $promotion2->setMinAverageToValidate('5');
         $promotion2->setFormation($this->getReference('formation2'));
 
