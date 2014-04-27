@@ -267,6 +267,8 @@ class SubjectController extends Controller
     {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
+		var_dump($request);
+		exit;
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
