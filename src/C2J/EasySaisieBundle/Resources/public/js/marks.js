@@ -408,7 +408,7 @@ function getStudentsGoingToSession2() {
 					}
 				});			
 			}
-
+			
 			if(containersFullyFilled) {
 				for(var j in containersInfo) {
 					// foreach container marks
@@ -422,34 +422,35 @@ function getStudentsGoingToSession2() {
 						}
 					});
 				}
-			}
 			
-			// !stop means that this student doesn't have any eliminatory mark
-			if(!stop) {
-				var generalAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.generalAvg')[0]).text().trim();
-				if(generalAvg != '' && generalAvg != 'Toutes les notes n\'ont pas encore été remplies.') {
-					for(var j in containersInfo) {
-						var containerAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.avg[data-containername="' + j + '"]')[0]).text().trim();
+			
+				// !stop means that this student doesn't have any eliminatory mark
+				if(!stop) {
+					var generalAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.generalAvg')[0]).text().trim();
+					if(generalAvg != '' && generalAvg != 'Toutes les notes n\'ont pas encore été remplies.') {
+						for(var j in containersInfo) {
+							var containerAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.avg[data-containername="' + j + '"]')[0]).text().trim();
 
-						if(!containersInfo[j].isCompensable && containerAvg != '' && containerAvg < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
-							goToSession2.push(studentsNumbers[i]);
-							stop = true;
+							if(!containersInfo[j].isCompensable && containerAvg != '' && containerAvg < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+								goToSession2.push(studentsNumbers[i]);
+								stop = true;
+							}
 						}
 					}
 				}
-			}
 
-			if(!stop) {
-				var containername;
-				for(var j in containersInfo) {
-					$(currentStudent).find('td.tuAvg[data-containername="' + j + '"]').each(function() {
-						content = $(this).text().trim();
-						isCompensable = $(this).data('iscompensable');
+				if(!stop) {
+					var containername;
+					for(var j in containersInfo) {
+						$(currentStudent).find('td.tuAvg[data-containername="' + j + '"]').each(function() {
+							content = $(this).text().trim();
+							isCompensable = $(this).data('iscompensable');
 
-						if(content != '' && containername != '' && !isCompensable && content < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
-							goToSession2.push(studentsNumbers[i]);
-						}
-					});
+							if(content != '' && containername != '' && !isCompensable && content < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+								goToSession2.push(studentsNumbers[i]);
+							}
+						});
+					}
 				}
 			}
 		}
@@ -611,6 +612,7 @@ $(document).ready(function() {
 		
 		var url = window.location.pathname;
 		var href = $(this).attr('href');
+		var stop = false;
 
 		var studentsNumberToTransmit = []; // used if btn_session2 is clicked
 		if($(this).attr('id') == 'btn_session2') {
@@ -623,11 +625,12 @@ $(document).ready(function() {
 				href += '?studentsList=' + JSON.stringify(studentsNumberToTransmit); // passes the studentsList array to the controller
 			}
 			else {
+				stop = true;
 				alert('Aucun élève n\'est encore aux rattrapages.');
 			}
 		}		
 		
-		if(href != '' && url != '' && url != href)
+		if(!stop && href != '' && url != '' && url != href)
 			window.location = href;
 	});
 
