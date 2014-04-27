@@ -54,9 +54,18 @@ class PromotionController extends Controller
 			$name=$entity->getName();
 			$year=$entity->getYear();
 			$formationId=$entity->getFormation()->getId();
-
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->findBy(array('name' => $name, 'year' => $year, 'formation' => $formationId));
 			
+			$gsmode=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+			}
+
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->findOneBy(array('name' => $name, 'year' => $year, 'formation' => $formationId));
 			if($entity2 == null)
 			{
 				$em->persist($entity);
@@ -65,7 +74,16 @@ class PromotionController extends Controller
 					'success',
 					'La promotion a été créée avec succès !'
 				);
-				return $this->redirect($this->generateUrl('promotion_show', array('id' => $entity->getId())));
+				if($gsmode)
+				{
+					$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->findOneBy(array('name' => $name, 'year' => $year, 'formation' => $formationId));
+					$promotionId=$entity2->getId();
+					return $this->redirect($this->generateUrl('container_new').'?gsmode=true&promotionId='.$promotionId);
+				}			
+				else
+				{
+					return $this->redirect($this->generateUrl('promotion_show', array('id' => $entity->getId())));
+				}
 			}			
             else
 			{
@@ -73,7 +91,14 @@ class PromotionController extends Controller
 					'failure',
 					'La promotion existe déjà !'
 				);
-				return $this->redirect($this->generateUrl('promotion_new'));
+				if($gsmode)
+				{					
+					return $this->redirect($this->generateUrl('promotion_new').'?gsmode=true&formationId='.$formationId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('promotion_new'));
+				}
 			}  
         }
 	
@@ -116,17 +141,20 @@ class PromotionController extends Controller
 		$request->getPathInfo();
 		$formationId=$request->query->get('formationId');
 		
+		$em = $this->getDoctrine()->getManager();
+		$entities=null;
+		
 		if($formationId != null) {  
-			$em = $this->getDoctrine()->getManager();
+			$entities = $em->getRepository('C2JEasySaisieBundle:Promotion')->findBy(array("formation" => $formationId));
 			$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->find($formationId);
 			$entity->setFormation($entity2);
 		}
 		
         $form   = $this->createCreateForm($entity);
-
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities
         );
     }
 

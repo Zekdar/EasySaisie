@@ -57,6 +57,22 @@ class SubjectController extends Controller
 			$checkName = $em->getRepository('C2JEasySaisieBundle:Subject')->findByName($name);
 			$checkAbbreviation = $em->getRepository('C2JEasySaisieBundle:Subject')->findByAbbreviation($abbreviation);
 			
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+			
 			if($checkName == null && $checkAbbreviation == null)
 			{
 				$em->persist($entity);
@@ -65,7 +81,14 @@ class SubjectController extends Controller
 					'success',
 					'La matière a été créée avec succès !'
 				);
-				return $this->redirect($this->generateUrl('subject_show', array('id' => $entity->getId())));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('subject_new').'?gsmode=true&promotionId='.$promotionId);
+				}			
+				else
+				{
+					return $this->redirect($this->generateUrl('subject_show', array('id' => $entity->getId())));
+				}		
 			}			
             else
 			{
@@ -73,7 +96,14 @@ class SubjectController extends Controller
 					'failure',
 					'La matière existe déjà !'
 				);
-				return $this->redirect($this->generateUrl('subject_new'));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('subject_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('subject_new'));
+				}			
 			}  
         }
 
@@ -113,10 +143,14 @@ class SubjectController extends Controller
     {
         $entity = new Subject();
         $form   = $this->createCreateForm($entity);
+		
+		$em = $this->getDoctrine()->getManager();
+		$entities = $em->getRepository('C2JEasySaisieBundle:Subject')->findAll();
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 
@@ -233,6 +267,8 @@ class SubjectController extends Controller
     {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
+		var_dump($request);
+		exit;
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

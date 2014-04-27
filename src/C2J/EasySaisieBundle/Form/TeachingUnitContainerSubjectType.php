@@ -7,9 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class DocumentType extends AbstractType
+class TeachingUnitContainerSubjectType extends AbstractType
 {
-	/**
+        /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -21,18 +21,21 @@ class DocumentType extends AbstractType
 			$promotionId=$_GET['promotionId'];
 		}
         $builder
-            ->add('file', 'file', array('label' => 'Fichier .xls'))
-			->add('promotion', 'entity', array(
-				'empty_value' => "Choisir une promotion",
-				'class' => 'C2J\EasySaisieBundle\Entity\Promotion',
-				'property' => 'name',
+			->add('subject', null, array('label' => 'Matière'))
+            ->add('coeff', 'text', array('label' => 'Coefficient'))
+			->add('ects', 'text', array('label' => 'Nombre d\'ECTS'))
+            ->add('teachingUnit', 'entity', array(
+				'class' => 'C2J\EasySaisieBundle\Entity\TeachingUnit',
+				'label' => 'UE'
+			))
+			->add('teacher', null, array('label' => 'Professeur'))
+			->add('container', 'entity', array(
+				'class' => 'C2J\EasySaisieBundle\Entity\Container',
 				'query_builder' => function(EntityRepository $er) use ($promotionId)
 					{    
-						return $er->getPromotions( $promotionId ); },
-				'label' => 'Promotion',
-				'required' => false
-			))
-        ;
+						return $er->getContainers( $promotionId ); },
+				'label' => 'Conteneur'))
+		;
     }
     
     /**
@@ -41,7 +44,7 @@ class DocumentType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'C2J\EasySaisieBundle\Entity\Document'
+            'data_class' => 'C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject'
         ));
     }
 
@@ -50,6 +53,6 @@ class DocumentType extends AbstractType
      */
     public function getName()
     {
-        return 'c2j_easysaisiebundle_document';
+        return 'c2j_easysaisiebundle_teachingunitcontainersubject';
     }
 }

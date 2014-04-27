@@ -47,14 +47,24 @@ class FormationController extends Controller
         $entity = new Formation();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
+		
         if ($form->isValid()) {		
+			$gsmode=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+			}
+			
 			$em = $this->getDoctrine()->getManager();
 			
 			$name=$entity->getName();
 			$type=$entity->getType();
 			
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->findBy(array('name' => $name, 'type' => $type));
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->findOneBy(array('name' => $name, 'type' => $type));
 			
 			if($entity2 == null)
 			{
@@ -64,7 +74,17 @@ class FormationController extends Controller
 					'success',
 					'La formation a été créée avec succès !'
 				);
-				return $this->redirect($this->generateUrl('formation_show', array('id' => $entity->getId())));
+				
+				if($gsmode)
+				{
+					$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->findOneBy(array('name' => $name, 'type' => $type));
+					$formationId=$entity2->getId();
+					return $this->redirect($this->generateUrl('promotion_new').'?gsmode=true&formationId='.$formationId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('formation_show', array('id' => $entity->getId())));
+				}
 			}			
             else
 			{
@@ -72,7 +92,14 @@ class FormationController extends Controller
 					'failure',
 					'La formation existe déjà !'
 				);
-				return $this->redirect($this->generateUrl('formation_new'));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('formation_new').'?gsmode=true');
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('formation_new'));
+				}
 			}  
         }
 
@@ -112,10 +139,14 @@ class FormationController extends Controller
     {
         $entity = new Formation();
         $form   = $this->createCreateForm($entity);
+		
+		$em = $this->getDoctrine()->getManager();
+		$entities = $em->getRepository('C2JEasySaisieBundle:Formation')->findAll();
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 

@@ -53,9 +53,24 @@ class TeachingUnitController extends Controller
 			
 			$name=$entity->getName();
 			$code=$entity->getCode();
-			$containerId=$entity->getContainer()->getId();
-			
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findBy(array('name' => $name, 'code' => $code, 'container' => $containerId));
+					
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+				
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findBy(array('name' => $name, 'code' => $code));
 			
 			if($entity2 == null)
 			{
@@ -65,7 +80,14 @@ class TeachingUnitController extends Controller
 					'success',
 					'L\'UE a été créée avec succès !'
 				);
-				return $this->redirect($this->generateUrl('teachingunit_show', array('id' => $entity->getId())));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teachingunit_new').'?gsmode=true&promotionId='.$promotionId);
+				}			
+				else
+				{
+					return $this->redirect($this->generateUrl('teachingunit_show', array('id' => $entity->getId())));
+				}			
 			}			
             else
 			{
@@ -73,7 +95,14 @@ class TeachingUnitController extends Controller
 					'failure',
 					'L\'UE existe déjà !'
 				);
-				return $this->redirect($this->generateUrl('teachingunit_new'));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teachingunit_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teachingunit_new'));
+				}				
 			}  
         }
 
@@ -116,17 +145,15 @@ class TeachingUnitController extends Controller
 		$request->getPathInfo();
 		$id=$request->query->get('id');
 		
-		if($id != null) {  
-			$em = $this->getDoctrine()->getManager();
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Container')->find($id);
-			$entity->setContainer($entity2);
-		}
-		
+		$em = $this->getDoctrine()->getManager();
+		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findAll();
+				
         $form   = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 

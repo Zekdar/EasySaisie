@@ -40,6 +40,22 @@ class DocumentController extends Controller
 			$entity->upload();
 			$inputFileName=$entity->getAbsolutePath();
 			
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+			
 			$promotionId=null;
 			
 			if($entity->getPromotion()!=null)
@@ -68,18 +84,17 @@ class DocumentController extends Controller
 				
 				if($student == null) //if student doesn't exist
 				{
-					$entity = new Student();
-					$entity->setNumber($number);
-					$entity->setLastName($lastName);
-					$entity->setFirstName($firstName);
-					$em->persist($entity);
+					$student = new Student();
+					$student->setNumber($number);
+					$student->setLastName($lastName);
+					$student->setFirstName($firstName);
+					$em->persist($student);
 					$em->flush();
 					$nbStudent++;
 				}
 				
 				if($promotionId != null)
 				{				
-					$student = $em->getRepository('C2JEasySaisieBundle:Student')->findOneByNumber($number);
 					$studentId = $student->getId();
 					$studentPromotion = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $studentId, 'promotion' => $promotionId));
 					if($studentPromotion == null) //if studentPromotion doesn't exist
@@ -104,8 +119,15 @@ class DocumentController extends Controller
 					'success',
 					$nbStudentPromotion." ".'étudiant(s) affecté(s) à une promotion !'
 				);
-		
-		return $this->redirect($this->generateUrl('student'));
+				
+		if($gsmode)
+		{
+			return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+		}			
+		else
+		{
+			return $this->redirect($this->generateUrl('student'));
+		}
     }
 	
     /**
@@ -138,10 +160,7 @@ class DocumentController extends Controller
     {
         $entity = new Document();
         $form   = $this->createCreateForm($entity);
-				
-		$em = $this->getDoctrine()->getManager();
-		$promotion = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAll();
-	
+
         return array(
             'entity' 	=> $entity,
             'form'   	=> $form->createView(),

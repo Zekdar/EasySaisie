@@ -16,14 +16,18 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
+						<th>Numéro étudiant</th>
                         <th>Nom</th>
+						<th>Prénoms</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for entity in entities %}
                     <tr>
+						<td>{{ entity.number }}</td>
                         <td>{{ entity.lastName }}</td>
+						<td>{{ entity.firstName }}</td>
                         <td>
                             <div class="btn-group">
                                 <a href="{{ path('student_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>

@@ -53,8 +53,18 @@ class ContainerController extends Controller
 			
 			$name=$entity->getName();
 			$promotionId=$entity->getPromotion()->getId();
+			
+			$gsmode=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+			}
 
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Container')->findBy(array('name' => $name, 'promotion' => $promotionId));
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Container')->findOneBy(array('name' => $name, 'promotion' => $promotionId));
 			
 			if($entity2 == null)
 			{
@@ -64,7 +74,14 @@ class ContainerController extends Controller
 					'success',
 					'Le conteneur a été créé avec succès !'
 				);
-				return $this->redirect($this->generateUrl('container_show', array('id' => $entity->getId())));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('container_new').'?gsmode=true&promotionId='.$promotionId);
+				}			
+				else
+				{
+					return $this->redirect($this->generateUrl('container_show', array('id' => $entity->getId())));
+				}
 			}			
             else
 			{
@@ -72,7 +89,14 @@ class ContainerController extends Controller
 					'failure',
 					'Le conteneur existe déjà !'
 				);
-				return $this->redirect($this->generateUrl('container_new'));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('container_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('container_new'));
+				}				
 			}  
         }
 
@@ -115,8 +139,12 @@ class ContainerController extends Controller
 		$request->getPathInfo();
 		$promotionId=$request->query->get('promotionId');
 		
+		$em = $this->getDoctrine()->getManager();
+		$entities = null;
+			
 		if($promotionId != null) {  
 			$em = $this->getDoctrine()->getManager();
+			$entities = $em->getRepository('C2JEasySaisieBundle:Container')->findBy(array('promotion' => $promotionId));
 			$entity2 = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
 			$entity->setPromotion($entity2);
 		}
@@ -126,6 +154,7 @@ class ContainerController extends Controller
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 

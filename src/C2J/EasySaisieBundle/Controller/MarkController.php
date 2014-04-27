@@ -84,16 +84,16 @@ class MarkController extends Controller
         $em = $this->getDoctrine()->getManager();
         // if($studentsList)
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
-        $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
+        $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTucsByContainerByPromotionByYear($promotion_id, $year);
         //var_dump($promotions);exit;
         
 		$colspans = [];	
 		if(count($promotions) >= 1) {			
 			foreach ($promotions[0]->getContainers() as $container) {
 				$containersColspan = 0; 
-				foreach ($container->getTeachingUnits() as $tu) {
+				foreach ($container->getTeachingUnitContainers() as $tuc) {
 					$containersColspan++; // +1 for the average column
-					foreach ($tu->getTeachingUnitSubjects() as $subject) {
+					foreach ($tuc->getTeachingUnitContainerSubjects() as $subject) {
 						$containersColspan++;
 					}
 				}
@@ -101,28 +101,28 @@ class MarkController extends Controller
 			}   
 		}
 
-		$subjectsByTu = array();
+		$subjectsByTuc = array();
         if(count($promotions) >= 1) {
             $containers = $promotions[0]->getContainers();
             $minAvgToValidate = $promotions[0]->getMinAverageToValidate();
             
             $sumCoeffs = array();
             foreach ($containers as $container) {
-                foreach ($container->getTeachingUnits() as $tu) {
+                foreach ($container->getTeachingUnitContainers() as $tuc) {
                     $sum = 0;
-                    foreach ($tu->getTeachingUnitSubjects() as $tus) {
-                        $subjectsByTu[$tu->getCode()][] = array(
-                            'isCompensable' => $tu->getIsCompensable(),
-                            'tusId' => $tus->getId(),
+                    foreach ($tuc->getTeachingUnitContainerSubjects() as $tucs) {
+                        $subjectsByTuc[$tuc->getTeachingUnit()->getCode()][] = array(
+                            'isCompensable' => $tuc->getTeachingUnit()->getIsCompensable(),
+                            'tucsId' => $tucs->getId(),
                             'container' => $container->getName(),
                             'subject'           => array(
-                                'id'            => $tus->getSubject()->getId(),
-                                'name'          => $tus->getSubject()->getName(),
-                                'abbreviation'  => $tus->getSubject()->getAbbreviation(),
-                                'coeff'         => $tus->getCoeff()
+                                'id'            => $tucs->getSubject()->getId(),
+                                'name'          => $tucs->getSubject()->getName(),
+                                'abbreviation'  => $tucs->getSubject()->getAbbreviation(),
+                                'coeff'         => $tucs->getCoeff()
                             )
                         );
-                        $sum += $tus->getCoeff();
+                        $sum += $tucs->getCoeff();
                     }
                     $sumCoeffs[] = $sum;
                 }
@@ -142,7 +142,7 @@ class MarkController extends Controller
             'studentPromotions' => $studentPromotions,
             'containers' => $containers,
             'containersColspan' => $colspans,
-            'subjectsByTu' => $subjectsByTu
+            'subjectsByTuc' => $subjectsByTuc
         );
     }
 
@@ -378,18 +378,19 @@ class MarkController extends Controller
                 }
             } 
             // Else ==> insert
-            else {
-                $tus = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->find($request->request->get('tusid'));
+            else {				
+				//var_dump($request->request->get('tucsid'));exit;
+                $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($request->request->get('tucsid'));
                 $sp = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->find($request->request->get('spid'));
 
-                if (!$tus) {
-                    throw $this->createNotFoundException('Unable to find TeachingUnitSubject entity.');
+                if (!$tucs) {
+                    throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
                 }
                 if (!$sp) {
                     throw $this->createNotFoundException('Unable to find StudentPromotion entity.');
                 }
                 $mark = new Mark();
-                $mark   -> setTeachingUnitSubject($tus)
+                $mark   -> setTeachingUnitContainerSubject($tucs)
                         -> setStudentPromotion($sp);
             }
 

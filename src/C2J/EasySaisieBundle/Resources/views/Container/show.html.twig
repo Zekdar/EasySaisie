@@ -2,12 +2,7 @@
 
 {% block body %}
     {{ parent() }}
-	{% for flashMessage in app.session.flashbag.get('success') %}
-		<div class="flash-notice">
-			<font color="green">{{ flashMessage }}</font>
-		</div>
-	{% endfor %}
-    
+
     <h1 class="page-header">Conteneur d'UEs - {{ entity.name }}</h1>
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover ">
@@ -36,8 +31,6 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('container') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('container_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Créer un autre conteneur</a>
-			<a href="{{ path('subject_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Passer à l'étape suivante</a>
         </p>
     </div>
 	

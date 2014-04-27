@@ -7,7 +7,7 @@
 		studentPromotions is not empty 
 		and containers is not empty 
 		and containersColspan is not empty 
-		and subjectsByTu is not empty 
+		and subjectsByTuc is not empty 
 	%}
         <div>
             <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].promotion.year}}</h1>
@@ -68,15 +68,15 @@
                     <tr>
                         <th data-sorter="false"></th>
                         <th data-sorter="false"></th>
-                        {% for container in containers %}
-                            {% for tu in container.teachingUnits %} 
+                        {% for container in containers %}							
+                            {% for tuc in container.teachingUnitContainers %} 
                                 {# +1 to take in account the avg column #}
                                 <th 
                                     data-sorter="false" 
-                                    colspan="{{ tu.teachingUnitSubjects | length + 1}}" 
-                                    data-iscompensable="{{ tu.isCompensable ? 1 : 0 }}"
-                                    data-tucode="{{ tu.code }}">
-                                    {{ tu.code }} {{ tu.name }}
+                                    colspan="{{ tuc.teachingUnitContainerSubjects | length + 1}}" 
+                                    data-iscompensable="{{ tuc.teachingUnit.isCompensable ? 1 : 0 }}"
+                                    data-tucode="{{ tuc.teachingUnit.code }}">
+                                    {{ tuc.teachingUnit.code }} {{ tuc.teachingUnit.name }}
                                 </th>
                             {% endfor %}
                         {% endfor %}
@@ -85,10 +85,10 @@
                         <th>Num. Etudiant</th>
                         <th>Etudiant</th>
                         {% for container in containers %}
-                            {% for tu in container.teachingUnits %}
+                            {% for tuc in container.teachingUnitContainers %}
                                 <th class="tuAvg"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /></th>
-                                {% for tus in tu.teachingUnitSubjects %}
-                                    <th class="subject">{{ tus.subject.abbreviation }}</th>
+                                {% for tucs in tuc.teachingUnitContainerSubjects %}
+                                    <th class="subject">{{ tucs.subject.abbreviation }}</th>
                                 {% endfor %}
                             {% endfor %}
                         {% endfor %}
@@ -97,9 +97,9 @@
                         <th data-sorter="false"></th>
                         <th data-sorter="false"></th>
                         {% for container in containers %}
-                            {% for tu in container.teachingUnits %}
+                            {% for tuc in container.teachingUnitContainers %}
                                 <th></th>
-                                {% for tus in tu.teachingUnitSubjects %}
+                                {% for tucs in tuc.teachingUnitContainerSubjects %}
                                     <th data-sorter="false"><a href=""><span class="glyphicon glyphicon-plus purple"></span></a></th>
                                 {% endfor %}
                             {% endfor %}
@@ -113,7 +113,7 @@
                             <td class="studentNumber">{{ sp.student.number }}</td>
                             <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                             
-                            {% for tuCode,tu in subjectsByTu %}
+                            {% for tuCode,tu in subjectsByTuc %}
                                 <td class="tuAvg" data-coeff="{{ sumCoeffs[loop.index0] }}" data-iscompensable="{{ tu[0].isCompensable ? 1 : 0 }}" data-containername="{{ tu[0].container }}"></td>
 
                                 {% for tuId in tu %}
@@ -123,7 +123,7 @@
                                 
                                     {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                     {% for mark in sp.marks if continue %}
-                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
+                                        {% if mark.teachingUnitContainerSubject.subject.id == tuId.subject.id %}
                                             {% if session == 1 %}
                                                 {% set markValue = mark.valueS1 %}
                                             {% else %}
@@ -133,8 +133,7 @@
                                             {% set markId = mark.id %}
                                             {% set continue = false %}
                                         {% endif %}
-                                    {% endfor %}
-
+                                    {% endfor %} 		
                                     <td class="tdMark">
                                         <a 
                                             href="" 
@@ -145,7 +144,7 @@
                                             data-coeff="{{ tuId.subject.coeff }}"
                                             data-pk="{{ markId }}"
                                             data-spid="{{ spId }}"
-                                            data-tusid="{{ tuId.tusId }}" 
+                                            data-tucsid="{{ tuId.tucsId }}" 											
                                             data-type="text" 
                                             data-url="{{ path('mark_persist_ajax') }}">
                                             {{ markValue }}

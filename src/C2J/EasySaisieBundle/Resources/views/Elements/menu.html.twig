@@ -23,11 +23,10 @@
                         <li><a href="{{ path('subject') }}">MATIÈRES</a></li>
 						<li><a href="{{ path('teacher') }}">PROFESSEURS</a></li>
                         <li><a href="{{ path('promotion') }}">PROMOTIONS</a></li>
-                        <li><a href="{{ path('rule') }}">RÈGLES</a></li>
                         <li><a href="{{ path('teachingunit') }}">UEs</a></li>
                     </ul>
                 </li>
-				<li><a href="{{ path('formation_new') }}"><span class="glyphicon glyphicon-play purple"></span> Get Started</a></li>
+				<li><a href="{{ path('formation_new', { 'gsmode': "true" }) }}"><span class="glyphicon glyphicon-play purple"></span> Get Started</a></li>
             </ul>
             <form class="navbar-form navbar-right" role="form">
                 <div class="form-group">

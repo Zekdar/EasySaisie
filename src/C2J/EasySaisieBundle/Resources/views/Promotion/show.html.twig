@@ -2,11 +2,6 @@
 
 {% block body %}
     {{ parent() }}
-	{% for flashMessage in app.session.flashbag.get('success') %}
-		<div class="flash-notice">
-			<font color="green">{{ flashMessage }}</font>
-		</div>
-	{% endfor %}
 
     <h1 class="page-header">Promotion - {{ entity.name }}</h1>
     <div class="table-responsive">
@@ -36,7 +31,6 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('promotion') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('container_new', { 'promotionId': entity.id }) }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Passer à l'étape suivante</a>
         </p>
     </div>
 	
