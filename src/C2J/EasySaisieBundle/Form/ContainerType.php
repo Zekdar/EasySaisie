@@ -17,9 +17,9 @@ class ContainerType extends AbstractType
         $builder
             ->add('name', 'text', array('label' => 'Nom du bloc'))
             ->add('promotion')
-			->add('areTeachingUnitsCompensable', 'checkbox', array(
+			->add('isCompensable', 'checkbox', array(
 				'required'  => false,
-				'label' => 'Est-ce que les UEs du conteneur sont compensables entre elles ?'))
+				'label' => 'Le conteneur est-il compensable ?'))
 			->add('minMark', 'text', array('label' => 'Note minimale'))
 			->add('minAverage', 'text', array('label' => 'Moyenne minimale'))
         ;
