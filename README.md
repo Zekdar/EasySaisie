@@ -34,3 +34,15 @@ Then, you need to create some subjects, teaching units and affect them to your p
 To finish, you have to create students and affect them to your promotion.
 
 Once this is done, you have the miminum to start using the application.
+
+3) Create An User
+----------------------------------
+Using the FOSUserBundle
+Create the first Administrateur
+	
+	php app/console fos:user:create
+
+Promote an user as Admin
+
+	php app/console fos:user:promote  (enter 'ROLE_ADMIN' as role)
+

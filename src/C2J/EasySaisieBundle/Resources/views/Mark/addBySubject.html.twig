@@ -4,9 +4,10 @@
 {% block body %}
     {{ parent() }}
         
-    <h1 class="page-header">Veuillez saisir les notes pour la matière {{ subject }}</h1>
+    <h1 class="page-header">Veuillez saisir les notes pour la matière {{ tucs.subject.name }}</h1>
 
-    <form method="post" action="#">
+    <form method="post" action="{{ path('mark_add_by_subject_execute') }}">
+
 	    <table class="table table-bordered table-bordered">
 		    <thead>
 		    	<th>Num. Etudiant</th>
@@ -18,8 +19,19 @@
 		            <tr>
 		                <td>{{ sp.student.number }}</td>
 		                <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
-		                <td><input type="text" name="mark-{{i}}" /></td>
+		                
+		                {% if sp.marks|length > 0 %}
+		                	{% for mark in sp.marks %}
+		                		<td><input type="text" name="mark-{{i}}" value="{{ mark.valueS1 }}" /></td>
+		                		<input type="hidden" name="markid" value="{{ mark.id }}" />
+		                	{% endfor %}
+	                	{% else %}
+	                		<td><input type="text" name="mark-{{i}}" /></td>
+                		{% endif %}
 		            </tr>
+		            <input type="hidden" name="spid" value="{{ sp.id }}" />
+		            <input type="hidden" name="promotion_id" value="{{ sp.promotion.id }}" />
+					<input type="hidden" name="year" value="{{ sp.promotion.year }}" />
 		        {% endfor %}
 			</tbody>
 		</table>
@@ -27,8 +39,14 @@
 		<hr />
 
 		<div clas="center">
-			<input type="submit" class="btn btn-purple" value="Enregistrer les notes" />	
+			<input type="submit" name="submit" class="btn btn-purple" value="Enregistrer les notes" />	
 		</div>
+
+		<input type="hidden" name="tucsId" value="{{ tucs.id }}" />
+		<input type="hidden" name="session" value="{{ session }}" />
+		<input type="hidden" name="subjectId" value="{{ subject }}" />
+		<input type="hidden" name="marksCount" value="{{ studentPromotions|length }}" />
+
 	</form>
 {% endblock %}
     

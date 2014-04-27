@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use C2J\EasySaisieBundle\Entity\Mark;
 use C2J\EasySaisieBundle\Form\MarkType;
+use C2J\EasySaisieBundle\Form\StudentPromotionMarksType;
 use Doctrine\Common\Util\Debug;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -43,12 +44,12 @@ class MarkController extends Controller
     /**
      * Adds marks for a given subject
      *
-     * @Route("/addBySubject/{subjectName}/{year}/{promotion_id}", name="mark_add_by_subject")
+     * @Route("/addBySubject/{tucsId}/{subjectId}/{year}/{promotion_id}/{session}", name="mark_add_by_subject")
      * @Method("GET")
      * @Secure(roles="ROLE_PROF")
      * @Template()
      */    
-    public function addBySubjectAction($subjectName, $year, $promotion_id) 
+    public function addBySubjectAction($tucsId, $subjectId, $year, $promotion_id, $session) 
     {
         // $mark = new Mark();
         // $form = $this->createFormBuilder($mark)
@@ -66,12 +67,49 @@ class MarkController extends Controller
             // return $this->redirect($this->generateUrl('container_show', array('id' => $entity->getId())));
         // }
 
+
         $em = $this->getDoctrine()->getManager();
-        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year,20);
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year,$subjectId);
+        $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($tucsId);
 
         return array(
             'studentPromotions' => $studentPromotions,
-            'subject' => $subjectName
+            'subject' => $subjectId,
+            'session' => $session,
+            'tucs' => $tucs,
+        );
+    }
+
+    /**
+     * Adds marks for a given subject
+     *
+     * @Route("/addBySubject/", name="mark_add_by_subject_execute")
+     * @Method("POST")
+     * @Secure(roles="ROLE_PROF")
+     * @Template()
+     */    
+    public function addBySubjectExecuteAction() 
+    {
+        
+        if(isset($_POST['submit'])){
+            for ($i=0; $i < $_POST['marksCount'] ; $i++) { 
+           /*     var_dump( $_POST['mark-'.$i]);
+                var_dump( $_POST['tucsId']);
+                var_dump( $_POST['markid']);
+
+                var_dump( $_POST['spid']);
+                exit;
+*/
+                $this->persistMark($_POST['markid'], $_POST['tucsId'], $_POST['spid'], $_POST['mark-'.$i], $_POST['session']);
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($_POST['promotion_id'], $_POST['year'],$_POST['subjectId']);
+
+        return array(
+            'studentPromotions' => $studentPromotions,
+            'subject' => $subjectName,
         );
     }
 
@@ -450,5 +488,81 @@ class MarkController extends Controller
         else {
             throw new HttpException(403, "Forbidden");
         }
+    }
+
+
+
+    /**
+     * AJAX - Updates or Inserts a Mark in DB.
+     *
+     * @Route("/", name="mark_persist")
+     * @Method("PUT")
+     */    
+    public function persistMark($id = null, $tucsid = null, $spid = null, $value, $session) 
+    {
+        $request = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+        
+        // If mark exists ==> update
+        
+        if ($id != null) {
+            var_dump($id);
+            $mark = $em->getRepository('C2JEasySaisieBundle:Mark')->find($id);
+
+            if (!$mark) {
+                throw $this->createNotFoundException('Unable to find Mark entity.');
+            }
+        } 
+        // Else ==> insert
+        else {              
+            //var_dump($request->request->get('tucsid'));exit;
+            $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($tucsid);
+            $sp = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->find($spid);
+
+            if (!$tucs) {
+                throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
+            }
+            if (!$sp) {
+                throw $this->createNotFoundException('Unable to find StudentPromotion entity.');
+            }
+            $mark = new Mark();
+            $mark   -> setTeachingUnitContainerSubject($tucs)
+                    -> setStudentPromotion($sp);
+        }
+
+        // If the new value is not empty : set the mark value
+        //$session = $request->request->get('session');
+        //$value = $request->request->get('value');
+        if($value != '') {
+            if($session == 1)
+                $mark->setValueS1($value);
+            else
+                $mark->setValueS2($value);
+
+            $em->persist($mark);
+        } 
+        // Otherwise the mark needs to be deleted from the DB : delete
+        // Session1
+        elseif ($session == 1) {
+            $em->remove($mark);
+        }
+        // Session2
+        else {
+            if($mark->getValueS1() == '') {
+                $em->remove($mark); // S1 == '' ==> delete
+            }
+            else { // S1 != '' && S2 == '' ==> update to null
+                // Update 
+                $mark->setValueS2(null);
+            }
+        }
+
+        $em->flush();
+
+        $response = new Response(json_encode(array('markId' => $mark->getId())));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    
+        
     }
 }
