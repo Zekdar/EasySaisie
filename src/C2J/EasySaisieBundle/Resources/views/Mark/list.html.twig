@@ -13,16 +13,35 @@
             <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].promotion.year}}</h1>
         </div>
 
+        <div class="btn-group" id="btns_session">
+            {% set promotion_id = studentPromotions[0].promotion.id %}
+            {% set year = studentPromotions[0].promotion.year %}
+            <a 
+                href="{{ path('mark_list', { 'year': year, 'promotion_id': promotion_id, 'session' : 1 }) }}" 
+                class="btn btn-default btn-xs sessionPicker" 
+                id="btn_session1">
+                Session 1
+            </a>     
+            <a 
+                href="{{ path('mark_list', { 'year':year, 'promotion_id': promotion_id, 'session' : 2 }) }}" 
+                class="btn btn-default btn-xs sessionPicker" 
+                id="btn_session2">
+                Session 2
+            </a>    
+            <a 
+                href="{{ path('mark_list', { 'year':year, 'promotion_id': promotion_id, 'session' : 3 }) }}" 
+                class="btn btn-default btn-xs sessionPicker" 
+                id="btn_pvFinal">
+                PV Final
+            </a> 
+            <a href="#" class="btn btn-success btn-xs" id="btnExport">Export Excel</a>  
+        </div>
+
+        <hr />
+
         <div>
             <a href="#displayMarks" class="btn btn-default" id="switchDisplayMarks"><span class="glyphicon glyphicon-list purple"></span> Notes</a>
             <a href="#displayContainersAvg" class="btn btn-default" id="switchDisplayContainersAvg"><span class="glyphicon glyphicon-sort-by-attributes purple"></span> Moyennes générales</a>
-        </div>
-
-        <div class="btn-group">
-            <a href="#" class="btn btn-info btn-xs" id="btn_session1">Session 1</a>    
-            <a href="#" class="btn btn-default btn-xs" id="btn_session2">Session 2</a>    
-            <a href="#" class="btn btn-default btn-xs" id="btn_pvFinal">PV Final</a>
-			<a href="#" class="btn btn-success btn-xs" id="btnExport">Export Excel</a>  
         </div>
 
         <hr />
@@ -104,8 +123,13 @@
                                 
                                     {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                     {% for mark in sp.marks if continue %}
-                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id and mark.session == session %}
-                                            {% set markValue = mark.value %}
+                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
+                                            {% if session == 1 %}
+                                                {% set markValue = mark.valueS1 %}
+                                            {% else %}
+                                                {% set markValue = mark.valueS2 %}
+                                            {% endif %}
+
                                             {% set markId = mark.id %}
                                             {% set continue = false %}
                                         {% endif %}
@@ -225,6 +249,8 @@
     <script type="text/javascript">
         var promotion = {};
         promotion.minAvgToValidate = {{ minAvgToValidate|json_encode|raw }}
+
+        var session = {{ session }}
     </script>
     <script type="text/javascript" src="{{ asset('bundles/c2jeasysaisie/js/marks.js') }}"></script>
 {% endblock %}

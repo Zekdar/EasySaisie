@@ -21,18 +21,18 @@ class Mark
   private $id;
 
   /**
-   * @var float $value
+   * @var float $valueS1
    *
-   * @ORM\Column(name="value", type="float")
+   * @ORM\Column(name="valueS1", type="float")
    */
-  private $value;
-  
+  private $valueS1;
+
   /**
-   * @var float $value
+   * @var float $valueS2
    *
-   * @ORM\Column(name="session", type="integer")
+   * @ORM\Column(name="valueS2", type="float", nullable=true)
    */
-  private $session;
+  private $valueS2 = null;
   
   /**
    * @ORM\ManyToOne(targetEntity="C2J\EasySaisieBundle\Entity\TeachingUnitSubject", inversedBy="marks")
@@ -102,48 +102,48 @@ class Mark
     }
 
     /**
-     * Set value
+     * Set valueS1
      *
-     * @param float $value
+     * @param float $valueS1
      * @return Mark
      */
-    public function setValue($value)
+    public function setValueS1($valueS1)
     {
-        $this->value = $value;
+        $this->valueS1 = $valueS1;
     
         return $this;
     }
 
     /**
-     * Get value
+     * Get valueS1
      *
      * @return float 
      */
-    public function getValue()
+    public function getValueS1()
     {
-        return $this->value;
+        return $this->valueS1;
     }
-	
-	/**
-     * Set value
+  
+    /**
+     * Set valueS2
      *
-     * @param integer $session
+     * @param float $valueS2
      * @return Mark
      */
-    public function setSession($session)
+    public function setValueS2($valueS2)
     {
-        $this->session = $session;
+        $this->valueS1 = $valueS2;
     
         return $this;
     }
 
     /**
-     * Get value
+     * Get valueS2
      *
-     * @return integer 
+     * @return float 
      */
-    public function getSession()
+    public function getValueS2()
     {
-        return $this->session;
+        return $this->valueS2;
     }
 }

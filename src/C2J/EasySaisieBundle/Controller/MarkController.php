@@ -79,9 +79,10 @@ class MarkController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function listAction($year, $promotion_id, $session) 
+    public function listAction($year, $promotion_id, $session, $studentsList = null) 
     {
         $em = $this->getDoctrine()->getManager();
+        // if($studentsList)
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
         //var_dump($promotions);exit;
@@ -393,12 +394,14 @@ class MarkController extends Controller
             }
 
             // If the new value is not empty : set the mark value
-            $value = $request->request->get('value');
             $session = $request->request->get('session');
-            
+            $value = $request->request->get('value');
             if($value != '') {
-                $mark->setValue($value);
-                $mark->setSession($session);
+                if($session == 1)
+                    $mark->setValueS1($value);
+                else
+                    $mark->setValueS2($value);
+
                 $em->persist($mark);
             } 
             // Otherwise the mark needs to be deleted from the DB : delete

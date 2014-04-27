@@ -554,7 +554,6 @@ var tableToExcel = (function() {
 })()
 */
 
-
 /***** WINDOW INIT *****/
 $(document).ready(function() {
 	$('#switchDisplayMarks, #switchDisplayContainersAvg').on('click', function(event) {
@@ -595,35 +594,66 @@ $(document).ready(function() {
 		//tableToExcel(id);
 	});
 
-	$('#btn_session2').on('click', function(event) {
-		displayLoadingWheel(true);
+	// Handles the active class for the session buttons
+	$('#btns_session').find('a.sessionPicker').each(function() {
+		// get the session from the url
+		var url = window.location.pathname.split('/');
 		
-		var studentsSession2 = getStudentsGoingToSession2();
-		var studentMarksToTransmit = {};
-		var content;
-		if(studentsSession2.length > 0) {
-			for(var i = 0; i < studentsSession2.length; i++) {
-				studentMarksToTransmit[studentsSession2[i]] = {};
-				for(var j in containersInfo) {
-					$('#marksTable tbody tr:contains(' + studentsSession2[i] + ')').find('td.tdMark a[data-containername="' + j + '"]').each(function() {
-						content = $(this).text().trim();
-						
-						if(content < containersInfo[j].minMark)
-							content = '';
-						
-						// studentMarksToTransmit[studentsSession2[i]][] = content;
-					});				
-				}
-			}
+		if(url != '')
+			var sessionParam = url[url.length-1]
 
-			console.log(studentsSession2);
+		if(sessionParam != '') {
+			if(sessionParam == 1) {
+				$('#btn_session1').addClass('active');
+				$('#btn_session2').removeClass('active');
+				$('#btn_pvFinal').removeClass('active');
+			}
+			else if(sessionParam == 2) {
+				$('#btn_session2').addClass('active');
+				$('#btn_session1').removeClass('active');
+				$('#btn_pvFinal').removeClass('active');	
+			}
+			else {
+				$('#btn_pvFinal').addClass('active');		
+				$('#btn_session1').removeClass('active');
+				$('#btn_session2').removeClass('active');
+			}
 		}
-		else {
-			alert('Aucun élève n\'est encore aux rattrapages');
-		}
-		
-		displayLoadingWheel(false);
+	});
+
+	$('#btns_session').find('a.sessionPicker').on('click', function(event) {
 		event.preventDefault();
+		
+		if($(this).attr('id') == '#btn_session2') {
+			var studentsSession2 = getStudentsGoingToSession2();
+			var studentMarksToTransmit = {};
+			var content;
+			if(studentsSession2.length > 0) {
+				for(var i = 0; i < studentsSession2.length; i++) {
+					studentMarksToTransmit[studentsSession2[i]] = {};
+					for(var j in containersInfo) {
+						$('#marksTable tbody tr:contains(' + studentsSession2[i] + ')').find('td.tdMark a[data-containername="' + j + '"]').each(function() {
+							content = $(this).text().trim();
+							
+							if(content < containersInfo[j].minMark)
+								content = '';
+							
+							// studentMarksToTransmit[studentsSession2[i]][] = content;
+						});				
+					}
+				}
+
+				console.log(studentsSession2);
+			}
+			else {
+				alert('Aucun élève n\'est encore aux rattrapages.');
+			}
+		}
+
+		var url = window.location.pathname;
+		var href = $(this).attr('href');
+		if(href != '' && url != '' && url != href)
+			window.location = href;
 	});
 
 	/**
@@ -646,7 +676,8 @@ $(document).ready(function() {
 		    params.spid = $(this).data('spid');
 		    params.tusid = $(this).data('tusid');
 		    params.pk = $(this).data('pk');
-		    params.session = $(this).data('session');
+		    params.session = session;
+
 		    return params;
 		},
 		success: function(response, newValue) {
