@@ -3,7 +3,7 @@
 
 {% block body %}
     {{ parent() }}
-    {{dump(studentPromotions)}}
+    
     {% if 
 		studentPromotions is not empty 
 		and (containers is not empty 
@@ -122,17 +122,32 @@
                                 <td class="tuAvg" data-coeff="{{ sumCoeffs[loop.index0] }}" data-iscompensable="{{ tu[0].isCompensable ? 1 : 0 }}" data-containername="{{ tu[0].container }}"></td>
 
                                 {% for tuId in tu %}
-                                    {% set markId = '' %} {# declared here to use it after the for loop #}
-                                    {% set tusId = '' %} {# declared here to use it after the for loop #}
+                                    {% set markId = '' %} {# declared here to use it after the loops #}
+                                    {% set tusId = '' %} {# declared here to use it after the loops #}
                                     {% set markValue = '' %}
-                                
+
                                     {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                     {% for mark in sp.marks if continue %}
                                         {% if mark.teachingUnitContainerSubject.subject.id == tuId.subject.id %}
+                                            {# session1 #}
                                             {% if session == 1 %}
                                                 {% set markValue = mark.valueS1 %}
-                                            {% else %}
-                                                {% set markValue = mark.valueS2 %}
+
+                                            {# session2 #}
+                                            {% else %} 
+                                                {% if mark.valueS2 is not null %}  {# if the session2 mark is not null, let's display it #}
+                                                    {% set markValue = mark.valueS2 %}                                                    
+                                                {% else %} {# else let's check if the session1 mark fits our requirements #}
+                                                    {% for container in containers %} {# Let's check the minMark for each container. If current mark >= minMark then display it, else display '' #}
+                                                        {% if container.id == mark.teachingUnitContainerSubject.teachingUnitContainer.container.id %}
+                                                            {% if mark.valueS1 > container.minMark %}
+                                                                {% set markValue = mark.valueS1 %}
+                                                            {% else %}
+                                                                {% set markValue = '' %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}                                                    
+                                                {% endif %}
                                             {% endif %}
 
                                             {% set markId = mark.id %}

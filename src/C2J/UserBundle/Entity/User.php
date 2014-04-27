@@ -23,7 +23,7 @@ class User extends BaseUser
   /**
    * @var string $myRoles
    *
-   * @ORM\Column(name="myRoles", type="string", length=255)
+   * @ORM\Column(name="myRoles", type="string", nullable=true, length=255)
    */
   private $myRoles;
 
