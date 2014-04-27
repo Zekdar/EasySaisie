@@ -132,7 +132,7 @@ class Mark
      */
     public function setValueS2($valueS2)
     {
-        $this->valueS1 = $valueS2;
+        $this->valueS2 = $valueS2;
     
         return $this;
     }

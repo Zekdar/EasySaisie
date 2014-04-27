@@ -1,0 +1,17 @@
+{% extends 'C2JEasySaisieBundle::base.html.twig' %}
+
+
+{% block body %}
+    {{ parent() }}
+    <h1>User Registration</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('user') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
