@@ -5,8 +5,7 @@ security:
     role_hierarchy:
         ROLE_STUD:        ROLE_USER
         ROLE_PROF:        ROLE_USER
-        ROLE_RESP:        [ROLE_STUD,ROLE_PROF,ROLE_USER]
-        ROLE_ADMIN:       [ROLE_STUD,ROLE_PROF,ROLE_USER,ROLE_RESP]
+        ROLE_ADMIN:       [ROLE_STUD,ROLE_PROF,ROLE_USER]
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
@@ -29,4 +28,11 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
-        - { path: ^/user$, role: ROLE_RESP }
+        - { path: ^/user$, role: ROLE_ADMIN }
+        - { path: ^/easysaisie/formation, role: ROLE_ADMIN }
+        - { path: ^/easysaisie/promotion, role: ROLE_ADMIN }
+        - { path: ^/easysaisie/container, role: ROLE_ADMIN }
+        - { path: ^/easysaisie/subject, role: ROLE_ADMIN }
+        - { path: ^/easysaisie/teachingunit, role: ROLE_ADMIN }
+        - { path: ^/easysaisie/student, role: ROLE_ADMIN }
+        - { path: ^/easysaisie/rule, role: ROLE_ADMIN }

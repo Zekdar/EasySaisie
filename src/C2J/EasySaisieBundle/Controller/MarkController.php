@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use C2J\EasySaisieBundle\Entity\Mark;
 use C2J\EasySaisieBundle\Form\MarkType;
 use Doctrine\Common\Util\Debug;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Mark controller.
@@ -25,6 +26,7 @@ class MarkController extends Controller
      *
      * @Route("/", name="mark")
      * @Method("GET")
+     * @Secure(roles="ROLE_ADMIN")
      * @Template()
      */
     public function indexAction()
@@ -43,6 +45,7 @@ class MarkController extends Controller
      *
      * @Route("/addBySubject/{subjectName}/{year}/{promotion_id}", name="mark_add_by_subject")
      * @Method("GET")
+     * @Secure(roles="ROLE_PROF")
      * @Template()
      */    
     public function addBySubjectAction($subjectName, $year, $promotion_id) 
@@ -64,7 +67,7 @@ class MarkController extends Controller
         // }
 
         $em = $this->getDoctrine()->getManager();
-        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year,20);
 
         return array(
             'studentPromotions' => $studentPromotions,
@@ -76,6 +79,7 @@ class MarkController extends Controller
      * Lists all marks for every students from a promotion for the specified year.
      *
      * @Route("/list/{year}/{promotion_id}/{session}", name="mark_list")
+     * @Secure(roles="ROLE_ADMIN")
      * @Method("GET")
      * @Template()
      */
@@ -140,6 +144,7 @@ class MarkController extends Controller
      *
      * @Route("/", name="mark_create")
      * @Method("POST")
+     * @Secure(roles="ROLE_PROF")
      * @Template("C2JEasySaisieBundle:Mark:new.html.twig")
      */
     public function createAction(Request $request)
@@ -186,6 +191,7 @@ class MarkController extends Controller
      *
      * @Route("/new", name="mark_new")
      * @Method("GET")
+     * @Secure(roles="ROLE_PROF")
      * @Template()
      */
     public function newAction()
@@ -204,6 +210,7 @@ class MarkController extends Controller
      *
      * @Route("/{id}", name="mark_show")
      * @Method("GET")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function showAction($id)
@@ -229,6 +236,7 @@ class MarkController extends Controller
      *
      * @Route("/{id}/edit", name="mark_edit")
      * @Method("GET")
+     * @Secure(roles="ROLE_PROF")
      * @Template()
      */
     public function editAction($id)
@@ -274,6 +282,7 @@ class MarkController extends Controller
      *
      * @Route("/{id}", name="mark_update")
      * @Method("PUT")
+     * @Secure(roles="ROLE_PROF")
      * @Template("C2JEasySaisieBundle:Mark:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -306,6 +315,7 @@ class MarkController extends Controller
      * Deletes a Mark entity.
      *
      * @Route("/{id}", name="mark_delete")
+     * @Secure(roles="ROLE_ADMIN")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

@@ -26,20 +26,6 @@ class User extends BaseUser
    * @ORM\Column(name="myRoles", type="string", length=255)
    */
   private $myRoles;
-    
-  /**
-   * @var string $lastName
-   *
-   * @ORM\Column(name="lastName", type="string", length=255)
-   */
-  private $lastName;
-
-  /**
-   * @var string $firstName
-   *
-   * @ORM\Column(name="firstName", type="string", length=255)
-   */
-  private $firstName;
 
   /**
    * @var string $student
@@ -55,51 +41,6 @@ class User extends BaseUser
    */
   private $teacher;
 
-    /**
-     * Set lastName
-     *
-     * @param string $lastName
-     * @return Student
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-    
-        return $this;
-    }
-
-    /**
-     * Get lastName
-     *
-     * @return string 
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * Set firstName
-     *
-     * @param string $firstName
-     * @return Student
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-    
-        return $this;
-    }
-
-    /**
-     * Get firstName
-     *
-     * @return string 
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
 
     /**
      * Get id
