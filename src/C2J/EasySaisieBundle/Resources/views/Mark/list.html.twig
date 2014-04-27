@@ -19,9 +19,9 @@
         </div>
 
         <div class="btn-group">
-            <a href="#" class="btn btn-info btn-xs" id="">Session 1</a>    
-            <a href="#" class="btn btn-default btn-xs" id="">Session 2</a>    
-            <a href="#" class="btn btn-default btn-xs" id="">PV Final</a>
+            <a href="#" class="btn btn-info btn-xs" id="btn_session1">Session 1</a>    
+            <a href="#" class="btn btn-default btn-xs" id="btn_session2">Session 2</a>    
+            <a href="#" class="btn btn-default btn-xs" id="btn_pvFinal">PV Final</a>
 			<a href="#" class="btn btn-success btn-xs" id="btnExport">Export Excel</a>  
         </div>
 
@@ -38,7 +38,7 @@
                         {% for container in containers %}
                             <th 
                                 data-sorter="false" 
-                                data-aretuscompensable="{{ container.iscompensable ? 1 : 0 }}"
+                                data-iscompensable="{{ container.isCompensable ? 1 : 0 }}"
                                 data-minmark="{{ container.minMark }}"
                                 data-minavg="{{ container.minAverage }}"                                
                                 colspan="{{ containersColspan[loop.index - 1] }}">
@@ -92,12 +92,12 @@
                         {% set spId = sp.id %} {# declared here to use it after the for loop #}
                         <tr>
                             <td>{{ sp.student.number }}</td>
-                            <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>   							
-							{% for tuCode,tu in subjectsByTuc %}	
-							
-							
-                                <td class="tuAvg" data-coeff="{{ sumCoeffs[loop.index0] }}" data-containername="{{ tu[0].container }}"></td>
-                                {% for tuId in tu %}									
+                            <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                            
+                            {% for tuCode,tu in subjectsByTuc %}
+                                <td class="tuAvg" data-coeff="{{ sumCoeffs[loop.index0] }}" data-iscompensable="{{ tu[0].isCompensable ? 1 : 0 }}" data-containername="{{ tu[0].container }}"></td>
+
+                                {% for tuId in tu %}
                                     {% set markId = '' %} {# declared here to use it after the for loop #}
                                     {% set tusId = '' %} {# declared here to use it after the for loop #}
                                     {% set markValue = '' %}
@@ -221,5 +221,9 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript">
+        var promotion = {};
+        promotion.minAvgToValidate = {{ minAvgToValidate|json_encode|raw }}
+    </script>
     <script type="text/javascript" src="{{ asset('bundles/c2jeasysaisie/js/marks.js') }}"></script>
 {% endblock %}

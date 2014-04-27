@@ -16,7 +16,7 @@ class ContainerType extends AbstractType
     {
         $builder           
             ->add('promotion')
-			->add('name', 'text', array('label' => 'Nom du bloc'))
+			->add('name', 'text', array('label' => 'Nom du conteneur'))
 			->add('isCompensable', 'checkbox', array(
 				'required'  => false,
 				'label' => 'Le conteneur est-il compensable ?'))

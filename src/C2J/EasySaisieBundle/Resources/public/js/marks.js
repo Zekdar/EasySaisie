@@ -1,6 +1,7 @@
 var studentMarksTable = {};
 var containersInfo = {};
 var teachingUnitsInfo = {};
+// var promotion = {};
 
 function getAvg(marks, withCoeff) {	
 	var sum = 0.0;
@@ -122,7 +123,7 @@ function getNotationSystemRules() {
 		var container = {};
 		
 		containersInfo[$(this).text().trim()] = {
-			areTusCompensable : $(this).data('aretuscompensable'),
+			isCompensable : $(this).data('iscompensable'),
 			minMark : $(this).data('minmark'),
 			minAvg : $(this).data('minavg')			
 		}
@@ -239,9 +240,6 @@ function refreshAvg(toggleLoader) {
 
 	// General averages table
 	refreshGeneralAvgs(students);
-	
-	// Checks if there are new students going to session 2
-	refreshStudentsGoingToSession2();
 
 	if(toggleLoader)
 		displayLoadingWheel(false);
@@ -378,82 +376,91 @@ function refreshGeneralAvgs(students) {
 	});
 }
 
-function refreshStudentsGoingToSession2() {
+function getStudentsGoingToSession2() {
 	var studentsNumbers = [];
 	var goToSession2 = [];
 	var currentStudent;
 	var content;
 	var missingMark;
 
-	// Gets students number
-	$('#marksTable tbody tr td:nth-child(1)').each(function() {
-		studentsNumbers.push($(this).text().trim());
-	});
-
-	// Gets students marks by their number
-	var stop = false;
-	for(var i = 0; i < studentsNumbers.length && !stop; i++) {
-		currentStudent = $('#marksTable tbody tr:contains(' + studentsNumbers[i] + ')');
-
-		// Rule minMark
-		missingMark = false;
-		$(currentStudent).find('td.tdMark a').each(function() {
-			content = $(this).text().trim();
-
-			if(!$.isEmptyObject(containersInfo) && !$.isEmptyObject(teachingUnitsInfo)) {
-				if(content != 'Empty' && content < containersInfo[$(this).data('containername')].minMark) {
-					goToSession2.push(studentsNumbers[i]);
-					return false;
-				}
-				if(content == 'Empty') {
-					missingMark = true;
-				}
-			}
-			else {
-				alert('Il y a un problème de paramétrages au niveau des règles de validation. \nMerci de contacter l\'administrateur d\'EasySaisie en lui donnant cette erreur : \n"containersInfo == [] || teachingUnitsInfo == []"');
-				stop = true;
-				return false;
-			}
+	if(!$.isEmptyObject(containersInfo) && !$.isEmptyObject(teachingUnitsInfo)) {
+		// Gets students number
+		$('#marksTable tbody tr td:nth-child(1)').each(function() {
+			studentsNumbers.push($(this).text().trim());
 		});
-		
-		// Checks for missing marks for each container
-		var containers = {};
-		for(var j in containersInfo) {
-			containers[j] = {
-				isFullyFilled : true
-			}
 
-			// Search marks by containers
-			$(currentStudent).find('td.tdMark a[data-containername="' + j + '"]').each(function() {
-				content = $(this).text().trim();
+		// Gets students marks by their number
+		for(var i = 0; i < studentsNumbers.length; i++) {
+			var stop = false; 
 
-				if(content == 'Empty') {
-					containers[j] = {
-						isFullyFilled : false
-					}
-					return false; // break the loop
-				}
-			});			
-		}
-		
-		for(var j in containers) {
-			// If alls marks are filled in this container, let's check the minAvgToValidate
-			if(containers[j].isFullyFilled) {
-				var marks = [];
+			currentStudent = $('#marksTable tbody tr:contains(' + studentsNumbers[i] + ')');
 
-				$('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.avg[data-containername="' + j + '"]').each(function() {
+			// Checks for missing marks for each container
+			var containersFullyFilled = true;
+			for(var j in containersInfo) {
+				// Search marks by containers
+				$(currentStudent).find('td.tdMark a').each(function() {
 					content = $(this).text().trim();
 
-					if(content != '' && content < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
-						if(containersInfo[j].areTusCompensable) // TODO
-							goToSession2.push(studentsNumbers[i]);
+					if(content == 'Empty') {
+						containersFullyFilled = false;
+						return false; // break the loop
 					}
-				});
+				});			
+			}
+
+			if(containersFullyFilled) {
+				for(var j in containersInfo) {
+					// foreach container marks
+					var containerMarks = $(currentStudent).find('td.tdMark a[data-containername="' + j + '"]').each(function() {
+						content = $(this).text().trim();
+			
+						if(content != 'Empty' && content < containersInfo[$(this).data('containername')].minMark && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+							goToSession2.push(studentsNumbers[i]);
+							stop = true;
+							return false; // stop looping because this student has already an eliminatory mark 
+						}
+					});
+				}
+			}
+			
+			// !stop means that this student doesn't have any eliminatory mark
+			if(!stop) {
+				var generalAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.generalAvg')[0]).text().trim();
+				if(generalAvg != '' && generalAvg != 'Toutes les notes n\'ont pas encore été remplies.') {
+					for(var j in containersInfo) {
+						var containerAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.avg[data-containername="' + j + '"]')[0]).text().trim();
+
+						if(!containersInfo[j].isCompensable && containerAvg != '' && containerAvg < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+							goToSession2.push(studentsNumbers[i]);
+							stop = true;
+						}
+					}
+				}
+			}
+
+			if(!stop) {
+				var containername;
+				for(var j in containersInfo) {
+					$(currentStudent).find('td.tuAvg[data-containername="' + j + '"]').each(function() {
+						content = $(this).text().trim();
+						isCompensable = $(this).data('iscompensable');
+
+						if(content != '' && containername != '' && !isCompensable && content < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+							goToSession2.push(studentsNumbers[i]);
+						}
+					});
+				}
 			}
 		}
+		return goToSession2;
 	}
-	console.log(goToSession2);
-	return goToSession2;
+
+	else {
+		alert('Il y a un problème de paramétrages au niveau des règles de validation. \nMerci de contacter l\'administrateur d\'EasySaisie en lui donnant cette erreur : \n"containersInfo == [] || teachingUnitsInfo == []"');
+		stop = true;
+		return false;
+	}
 }
 
 function refreshAvgTableWidth() {
@@ -553,7 +560,7 @@ $(document).ready(function() {
 	$('#switchDisplayMarks, #switchDisplayContainersAvg').on('click', function(event) {
 		switchTables($(this).attr('href'), event);
 	});
-	
+
 	$('#btnExport').on('click', function(event) {
 		var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
 		excelFile += "<head>";
@@ -587,7 +594,74 @@ $(document).ready(function() {
 		//var id = $('.exportable:visible').attr('id');
 		//tableToExcel(id);
 	});
+
+	$('#btn_session2').on('click', function(event) {
+		displayLoadingWheel(true);
 		
+		var studentsSession2 = getStudentsGoingToSession2();
+		var studentMarksToTransmit = {};
+		var content;
+		if(studentsSession2.length > 0) {
+			for(var i = 0; i < studentsSession2.length; i++) {
+				studentMarksToTransmit[studentsSession2[i]] = {};
+				for(var j in containersInfo) {
+					$('#marksTable tbody tr:contains(' + studentsSession2[i] + ')').find('td.tdMark a[data-containername="' + j + '"]').each(function() {
+						content = $(this).text().trim();
+						
+						if(content < containersInfo[j].minMark)
+							content = '';
+						
+						// studentMarksToTransmit[studentsSession2[i]][] = content;
+					});				
+				}
+			}
+
+			console.log(studentsSession2);
+		}
+		else {
+			alert('Aucun élève n\'est encore aux rattrapages');
+		}
+		
+		displayLoadingWheel(false);
+		event.preventDefault();
+	});
+
+	/**
+	*	Handle X-Editable plugin
+	**/
+	var pattern = new RegExp("^[0-9]{1,2}\.?[0-9]{0,2}$");
+	$('.mark').editable({
+		title : "Entrez une note (entre 0.00 - 20.00)",
+		validate: function(value) {
+			value = $.trim(value);
+
+			if(value && (!pattern.test(value) || value < 0 || value > 20)) {
+				return 'La note doit être comprise entre 0.00 - 20.00';
+			}
+		},
+		ajaxOptions: {
+		    type: 'put'
+		},
+		params: function(params) {
+		    params.spid = $(this).data('spid');
+		    params.tusid = $(this).data('tusid');
+		    params.pk = $(this).data('pk');
+		    params.session = $(this).data('session');
+		    return params;
+		},
+		success: function(response, newValue) {
+	        if(response.status == 'error') 
+	        	console.log(response.msg);
+
+	        $(this).data('pk', response.markId);
+	        $(this).editable('setValue', newValue); // Needed to update the value in html before calling refreshAvg(), otherwise the update is done last
+	        refreshAvg(true);
+	    },
+		error: function(response, newValue) {
+	        console.log(response.responseText);	
+		}
+	});	
+	
 	// try {
 		var startStopWatch = (new Date()).getTime();
 
