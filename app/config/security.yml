@@ -36,3 +36,4 @@ security:
         - { path: ^/easysaisie/teachingunit, role: ROLE_ADMIN }
         - { path: ^/easysaisie/student, role: ROLE_ADMIN }
         - { path: ^/easysaisie/rule, role: ROLE_ADMIN }
+        - { path: ^/easysaisie, role: ROLE_USER }
