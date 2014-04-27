@@ -18,8 +18,8 @@
                     <td>{{ entity.teachingUnitContainer }} {{ entity.subject }} {{ entity.coeff }} {{ entity.teachingUnitContainer.container.promotion }} {{ entity.teachingUnitContainer.container }}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{ path('rule_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
-                            <a href="{{ path('rule_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
+                            <a href="{{ path('teachingunitcontainersubject_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+                            <a href="{{ path('teachingunitcontainersubject_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
                         </div>
                     </td>
                 </tr>
@@ -31,10 +31,7 @@
     
     <div class="row">
         <p class="center">            
-            <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('student_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span>
-				Passer à l'étape suivante
-			</a>
+            <a href="{{ path('teachingunitcontainersubject') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
 		</a>
         </p>
     </div>
