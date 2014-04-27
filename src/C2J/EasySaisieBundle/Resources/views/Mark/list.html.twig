@@ -3,11 +3,12 @@
 
 {% block body %}
     {{ parent() }}
+    {{dump(studentPromotions)}}
     {% if 
 		studentPromotions is not empty 
-		and containers is not empty 
-		and containersColspan is not empty 
-		and subjectsByTuc is not empty 
+		and (containers is not empty 
+		or containersColspan is not empty 
+		or subjectsByTuc is not empty)
 	%}
         <div>
             <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].promotion.year}}</h1>
@@ -231,7 +232,9 @@
             </table>
         </div>
     {% else %}
-        <p class="center no-reccords-to-display">Il n'y a pas de notes à afficher pour cette promotion.</p>
+        <hr />
+
+        <p class="center no-reccords-to-display">Il n'y a rien à afficher pour cette promotion actuellement.</p>
     {% endif %}
 
     <hr />
