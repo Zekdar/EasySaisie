@@ -91,8 +91,8 @@
                     {% for sp in studentPromotions %}
                         {% set spId = sp.id %} {# declared here to use it after the for loop #}
                         <tr>
-                            <td>{{ sp.student.number }}</td>
-                            <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                            <td class="studentNumber">{{ sp.student.number }}</td>
+                            <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                             
                             {% for tuCode,tu in subjectsByTuc %}
                                 <td class="tuAvg" data-coeff="{{ sumCoeffs[loop.index0] }}" data-iscompensable="{{ tu[0].isCompensable ? 1 : 0 }}" data-containername="{{ tu[0].container }}"></td>

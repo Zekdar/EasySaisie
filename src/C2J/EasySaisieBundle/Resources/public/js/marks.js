@@ -107,14 +107,14 @@ function getTuCodes() {
 	return tuCodes;
 }
 
-function getStudentsName() {
-	var names = [];
+function getStudentsNumber() {
+	var numbers = [];
 
-	$('#marksTable tbody td.studentName').each(function() {
-		names.push($(this).text().trim());
+	$('#marksTable tbody td.studentNumber').each(function() {
+		numbers.push($(this).text().trim());
 	});
 
-	return names;
+	return numbers;
 }
 
 function getNotationSystemRules() {
@@ -147,7 +147,7 @@ function refreshAvg(toggleLoader) {
 	var sum = 0; var avg = {};
 	var studentMarks = []; 
 	var tableAvg;
-	var students = getStudentsName();
+	var students = getStudentsNumber();
 	var content;
 	var coeff;
 
