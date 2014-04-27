@@ -3,7 +3,7 @@
 
 {% block body %}
     {{ parent() }}
-    
+
     {% if 
 		studentPromotions is not empty 
 		and (containers is not empty 
@@ -94,6 +94,7 @@
                             {% endfor %}
                         {% endfor %}
                     </tr>
+                    {% if session != 3 %}
                     <tr>
                         <th data-sorter="false"></th>
                         <th data-sorter="false"></th>
@@ -110,6 +111,7 @@
                             {% endfor %}
                         {% endfor %}
                     </tr>
+                    {% endif %}
                 </thead>
                 <tbody>
                     {% for sp in studentPromotions %}
@@ -134,7 +136,7 @@
                                                 {% set markValue = mark.valueS1 %}
 
                                             {# session2 #}
-                                            {% else %} 
+                                            {% elseif session == 2 %} 
                                                 {% if mark.valueS2 is not null %}  {# if the session2 mark is not null, let's display it #}
                                                     {% set markValue = mark.valueS2 %}                                                    
                                                 {% else %} {# else let's check if the session1 mark fits our requirements #}
@@ -147,6 +149,13 @@
                                                             {% endif %}
                                                         {% endif %}
                                                     {% endfor %}                                                    
+                                                {% endif %}
+                                            {# session3 (PV Final) #}
+                                            {% else %}
+                                                {% if mark.valueS2 is not null %}  {# if the session2 mark is not null, let's display it #}
+                                                    {% set markValue = mark.valueS2 %}                                                    
+                                                {% else %} {# else let's check if the session1 mark fits our requirements #}
+                                                    {% set markValue = mark.valueS1 %}
                                                 {% endif %}
                                             {% endif %}
 

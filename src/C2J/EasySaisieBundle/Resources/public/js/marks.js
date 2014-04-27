@@ -603,6 +603,7 @@ $(document).ready(function() {
 				$('#btn_pvFinal').addClass('active');		
 				$('#btn_session1').removeClass('active');
 				$('#btn_session2').removeClass('active');
+				$('#btn_session2').attr('disabled', true);
 			}
 		}
 	});
@@ -612,6 +613,7 @@ $(document).ready(function() {
 		
 		var url = window.location.pathname;
 		var href = $(this).attr('href');
+		var hrefToCompareWith = href;
 		var stop = false;
 
 		var studentsNumberToTransmit = []; // used if btn_session2 is clicked
@@ -630,7 +632,7 @@ $(document).ready(function() {
 			}
 		}		
 		
-		if(!stop && href != '' && url != '' && url != href)
+		if(!stop && href != '' && url != '' && url != hrefToCompareWith)
 			window.location = href;
 	});
 
@@ -670,7 +672,7 @@ $(document).ready(function() {
 	        console.log(response.responseText);	
 		}
 	});	
-	
+
 	// try {
 		var startStopWatch = (new Date()).getTime();
 
