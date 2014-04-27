@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use C2J\EasySaisieBundle\Entity\Student;
 use C2J\EasySaisieBundle\Form\StudentType;
+use C2J\EasySaisieBundle\Entity\StudentPromotion;
+use C2J\EasySaisieBundle\Form\StudentPromotionType;
 
 /**
  * Student controller.
@@ -48,12 +50,84 @@ class StudentController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        if ($form->isValid()) {		
+					
+			$number=$entity->getNumber();	
+			$lastName=$entity->getLastName();
+			$firstName=$entity->getFirstName();
+			
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+			
+			$em = $this->getDoctrine()->getManager();
+			$student = $em->getRepository('C2JEasySaisieBundle:Student')->findOneByNumber($number);
 
-            return $this->redirect($this->generateUrl('student_show', array('id' => $entity->getId())));
+			if($student == null) //if student doesn't exist
+			{
+				$student = new Student();
+				$student->setNumber($number);
+				$student->setLastName($lastName);
+				$student->setFirstName($firstName);
+				$em->persist($student);
+				$em->flush();
+			}
+			
+			if($promotionId != null)
+			{				
+				$studentId = $student->getId();
+				$studentPromotion = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $studentId, 'promotion' => $promotionId));
+				if($studentPromotion == null) //if studentPromotion doesn't exist
+				{
+					$promotion = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
+				
+					$entity = new StudentPromotion();
+					$entity->setStudent($student);
+					$entity->setPromotion($promotion);
+					$em->persist($entity);
+					$em->flush();
+
+					$this->get('session')->getFlashBag()->add(
+						'success',
+						'L\'étudiant a été ajouté dans la promotion créé avec succès !'
+					);
+					if($gsmode)
+					{
+						return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+					}			
+					else
+					{
+						return $this->redirect($this->generateUrl('student_show', array('id' => $entity->getId())));
+					}
+				}
+				else
+				{
+					$this->get('session')->getFlashBag()->add(
+						'failure',
+						'L\'étudiant existe déjà la promotion !'
+					);
+					if($gsmode)
+					{
+						return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+					}
+					else
+					{
+						return $this->redirect($this->generateUrl('student_new'));
+					}
+				}
+			}
         }
 
         return array(
@@ -92,10 +166,21 @@ class StudentController extends Controller
     {
         $entity = new Student();
         $form   = $this->createCreateForm($entity);
+		$request = Request::createFromGlobals();
+		$request->getPathInfo();
+		$promotionId=$request->query->get('promotionId');
+		
+		$entities = null;
+		
+		if($promotionId != null) { 
+			$em = $this->getDoctrine()->getManager();
+			$entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array("promotion" => $promotionId));
+		}
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 
@@ -111,6 +196,7 @@ class StudentController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:Student')->find($id);
+		$entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Student entity.');
@@ -121,6 +207,7 @@ class StudentController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+			'entities'      => $entities,
         );
     }
 

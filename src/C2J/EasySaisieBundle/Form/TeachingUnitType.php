@@ -17,7 +17,6 @@ class TeachingUnitType extends AbstractType
         $builder
             ->add('name', 'text', array('label' => 'Nom de l\'UE'))
             ->add('code', 'text', array('label' => 'Code UE'))
-            ->add('container', null, array('label' => 'Bloc'))
 			->add('isCompensable', 'checkbox', array(
 				'required'  => false,
 				'label'		=> 'L\'UE est-elle compensable ?'))

@@ -5,7 +5,7 @@ Welcome to the EasySaisie - It's a webapp that allows universities to note their
 
 1) Installing EasySaisie
 ----------------------------------
-EasySaisie is built on Symfony2 framework, whick works with composer to manage vendors.
+EasySaisie is built on Symfony2 framework, which works with composer to manage vendors.
 
 Run theses command lines to updates your vendors 
 

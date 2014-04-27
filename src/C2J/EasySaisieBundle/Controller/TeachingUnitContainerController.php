@@ -7,21 +7,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use C2J\EasySaisieBundle\Entity\TeachingUnit;
-use C2J\EasySaisieBundle\Form\TeachingUnitType;
+use C2J\EasySaisieBundle\Entity\TeachingUnitContainer;
+use C2J\EasySaisieBundle\Form\TeachingUnitContainerType;
 
 /**
- * TeachingUnit controller.
+ * TeachingUnitContainer controller.
  *
- * @Route("/teachingunit")
+ * @Route("/teachingunitcontainer")
  */
-class TeachingUnitController extends Controller
+class TeachingUnitContainerController extends Controller
 {
 
     /**
-     * Lists all TeachingUnit entities.
+     * Lists all TeachingUnitContainer entities.
      *
-     * @Route("/", name="teachingunit")
+     * @Route("/", name="teachingunitcontainer")
      * @Method("GET")
      * @Template()
      */
@@ -29,22 +29,22 @@ class TeachingUnitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findAll();
+        $entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new TeachingUnit entity.
+     * Creates a new TeachingUnitContainer entity.
      *
-     * @Route("/", name="teachingunit_create")
+     * @Route("/", name="teachingunitcontainer_create")
      * @Method("POST")
-     * @Template("C2JEasySaisieBundle:TeachingUnit:new.html.twig")
+     * @Template("C2JEasySaisieBundle:TeachingUnitContainer:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new TeachingUnit();
+        $entity = new TeachingUnitContainer();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -53,24 +53,9 @@ class TeachingUnitController extends Controller
 			
 			$name=$entity->getName();
 			$code=$entity->getCode();
-					
-			$gsmode=null;
-			$promotionId=null;
-			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
-			if($queries != null)
-			{
-				if($queries['gsmode']!=null)
-				{
-					$gsmode=$queries['gsmode'];
-				}
-				
-				if($queries['promotionId']!=null)
-				{
-					$promotionId=$queries['promotionId'];
-				}
-			}
-				
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findBy(array('name' => $name, 'code' => $code));
+			$containerId=$entity->getContainer()->getId();
+			
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findBy(array('name' => $name, 'code' => $code, 'container' => $containerId));
 			
 			if($entity2 == null)
 			{
@@ -80,14 +65,7 @@ class TeachingUnitController extends Controller
 					'success',
 					'L\'UE a été créée avec succès !'
 				);
-				if($gsmode)
-				{
-					return $this->redirect($this->generateUrl('teachingunit_new').'?gsmode=true&promotionId='.$promotionId);
-				}			
-				else
-				{
-					return $this->redirect($this->generateUrl('teachingunit_show', array('id' => $entity->getId())));
-				}			
+				return $this->redirect($this->generateUrl('teachingunitcontainer_show', array('id' => $entity->getId())));
 			}			
             else
 			{
@@ -95,14 +73,7 @@ class TeachingUnitController extends Controller
 					'failure',
 					'L\'UE existe déjà !'
 				);
-				if($gsmode)
-				{
-					return $this->redirect($this->generateUrl('teachingunit_new').'?gsmode=true&promotionId='.$promotionId);
-				}
-				else
-				{
-					return $this->redirect($this->generateUrl('teachingunit_new'));
-				}				
+				return $this->redirect($this->generateUrl('teachingunitcontainer_new'));
 			}  
         }
 
@@ -113,16 +84,16 @@ class TeachingUnitController extends Controller
     }
 
     /**
-    * Creates a form to create a TeachingUnit entity.
+    * Creates a form to create a TeachingUnitContainer entity.
     *
-    * @param TeachingUnit $entity The entity
+    * @param TeachingUnitContainer $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm(TeachingUnit $entity)
+    private function createCreateForm(TeachingUnitContainer $entity)
     {
-        $form = $this->createForm(new TeachingUnitType(), $entity, array(
-            'action' => $this->generateUrl('teachingunit_create'),
+        $form = $this->createForm(new TeachingUnitContainerType(), $entity, array(
+            'action' => $this->generateUrl('teachingunitcontainer_create'),
             'method' => 'POST',
         ));
 
@@ -132,35 +103,37 @@ class TeachingUnitController extends Controller
     }
 
     /**
-     * Displays a form to create a new TeachingUnit entity.
+     * Displays a form to create a new TeachingUnitContainer entity.
      *
-     * @Route("/new", name="teachingunit_new")
+     * @Route("/new", name="teachingunitcontainer_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new TeachingUnit();
+        $entity = new TeachingUnitContainer();
 		$request = Request::createFromGlobals();
 		$request->getPathInfo();
 		$id=$request->query->get('id');
 		
-		$em = $this->getDoctrine()->getManager();
-		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findAll();
-				
+		if($id != null) {  
+			$em = $this->getDoctrine()->getManager();
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Container')->find($id);
+			$entity->setContainer($entity2);
+		}
+		
         $form   = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-			'entities' => $entities,
         );
     }
 
     /**
-     * Finds and displays a TeachingUnit entity.
+     * Finds and displays a TeachingUnitContainer entity.
      *
-     * @Route("/{id}", name="teachingunit_show")
+     * @Route("/{id}", name="teachingunitcontainer_show")
      * @Method("GET")
      * @Template()
      */
@@ -168,11 +141,11 @@ class TeachingUnitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($id);
-		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->findBy(array('teachingUnit' => $id));
+        $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->find($id);
+		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findBy(array('teachingUnitContainer' => $id));
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find TeachingUnit entity.');
+            throw $this->createNotFoundException('Unable to find TeachingUnitContainer entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -185,9 +158,9 @@ class TeachingUnitController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing TeachingUnit entity.
+     * Displays a form to edit an existing TeachingUnitContainer entity.
      *
-     * @Route("/{id}/edit", name="teachingunit_edit")
+     * @Route("/{id}/edit", name="teachingunitcontainer_edit")
      * @Method("GET")
      * @Template()
      */
@@ -195,10 +168,10 @@ class TeachingUnitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($id);
+        $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find TeachingUnit entity.');
+            throw $this->createNotFoundException('Unable to find TeachingUnitContainer entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -212,16 +185,16 @@ class TeachingUnitController extends Controller
     }
 
     /**
-    * Creates a form to edit a TeachingUnit entity.
+    * Creates a form to edit a TeachingUnitContainer entity.
     *
-    * @param TeachingUnit $entity The entity
+    * @param TeachingUnitContainer $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(TeachingUnit $entity)
+    private function createEditForm(TeachingUnitContainer $entity)
     {
-        $form = $this->createForm(new TeachingUnitType(), $entity, array(
-            'action' => $this->generateUrl('teachingunit_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new TeachingUnitContainerType(), $entity, array(
+            'action' => $this->generateUrl('teachingunitcontainer_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -230,20 +203,20 @@ class TeachingUnitController extends Controller
         return $form;
     }
     /**
-     * Edits an existing TeachingUnit entity.
+     * Edits an existing TeachingUnitContainer entity.
      *
-     * @Route("/{id}", name="teachingunit_update")
+     * @Route("/{id}", name="teachingunitcontainer_update")
      * @Method("PUT")
-     * @Template("C2JEasySaisieBundle:TeachingUnit:edit.html.twig")
+     * @Template("C2JEasySaisieBundle:TeachingUnitContainer:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($id);
+        $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find TeachingUnit entity.');
+            throw $this->createNotFoundException('Unable to find TeachingUnitContainer entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -253,7 +226,7 @@ class TeachingUnitController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('teachingunit_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('teachingunitcontainer_edit', array('id' => $id)));
         }
 
         return array(
@@ -263,9 +236,9 @@ class TeachingUnitController extends Controller
         );
     }
     /**
-     * Deletes a TeachingUnit entity.
+     * Deletes a TeachingUnitContainer entity.
      *
-     * @Route("/{id}", name="teachingunit_delete")
+     * @Route("/{id}", name="teachingunitcontainer_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -275,21 +248,21 @@ class TeachingUnitController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($id);
+            $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find TeachingUnit entity.');
+                throw $this->createNotFoundException('Unable to find TeachingUnitContainer entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('teachingunit'));
+        return $this->redirect($this->generateUrl('teachingunitcontainer'));
     }
 
     /**
-     * Creates a form to delete a TeachingUnit entity by id.
+     * Creates a form to delete a TeachingUnitContainer entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -298,7 +271,7 @@ class TeachingUnitController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('teachingunit_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('teachingunitcontainer_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()

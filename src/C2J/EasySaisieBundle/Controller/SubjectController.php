@@ -48,12 +48,63 @@ class SubjectController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$name=$entity->getName();
+			$abbreviation=$entity->getAbbreviation();
 
-            return $this->redirect($this->generateUrl('subject_show', array('id' => $entity->getId())));
+			$checkName = $em->getRepository('C2JEasySaisieBundle:Subject')->findByName($name);
+			$checkAbbreviation = $em->getRepository('C2JEasySaisieBundle:Subject')->findByAbbreviation($abbreviation);
+			
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+			
+			if($checkName == null && $checkAbbreviation == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'La matière a été créée avec succès !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('subject_new').'?gsmode=true&promotionId='.$promotionId);
+				}			
+				else
+				{
+					return $this->redirect($this->generateUrl('subject_show', array('id' => $entity->getId())));
+				}		
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'La matière existe déjà !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('subject_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('subject_new'));
+				}			
+			}  
         }
 
         return array(
@@ -92,10 +143,14 @@ class SubjectController extends Controller
     {
         $entity = new Subject();
         $form   = $this->createCreateForm($entity);
+		
+		$em = $this->getDoctrine()->getManager();
+		$entities = $em->getRepository('C2JEasySaisieBundle:Subject')->findAll();
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 
@@ -212,6 +267,8 @@ class SubjectController extends Controller
     {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
+		var_dump($request);
+		exit;
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

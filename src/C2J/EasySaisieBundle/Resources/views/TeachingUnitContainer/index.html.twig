@@ -4,7 +4,7 @@
 {% block body %}
     {{ parent() }}
     
-    <h1 class="page-header">Liste des règles</h1>
+    <h1 class="page-header">Liste des UEs</h1>
 
     {% if entities is not empty %}
         <div class="table-responsive">
@@ -21,9 +21,9 @@
                         <td>{{ entity.name }}</td>
                         <td>
                             <div class="btn-group">
-                                <a href="{{ path('rule_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>
-                                <a href="{{ path('rule_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
-                                <a href="{{ path('rule_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
+                                <a href="{{ path('teachingunit_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>
+                                <a href="{{ path('teachingunit_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+                                <a href="{{ path('teachingunit_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
                             </div>
                         </td>
                     </tr>
@@ -38,7 +38,7 @@
         
         <div class="row">
             <p class="center">
-                <a href="{{ path('rule_new') }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> Ajouter</a>
+                <a href="{{ path('teachingunit_new') }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> Ajouter</a>
             </p>
         </div>
 {% endblock %}

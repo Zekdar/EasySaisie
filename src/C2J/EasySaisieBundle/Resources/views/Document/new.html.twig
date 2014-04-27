@@ -10,9 +10,19 @@
 
     <hr />
     
-    <div class="row">
-        <p class="center">            
-            <a href="{{ path('student') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste des étudiants</a>
+	<div class="row">
+        <p class="center">
+			{% if(app.request.query.get('gsmode') or app.request.query.get('promotionId') is not null) %}
+				{% if app.request.query.get('promotionId') is not null %}
+					<a href="{{ path('student_new') }}?gsmode=true&promotionId={{ app.request.query.get('promotionId')}}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+				{% else %}
+					<a href="{{ path('student_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+				{% endif %}
+			{% endif %}
+			
+			{% if app.request.query.get('gsmode') is null %}
+				<a href="{{ path('student') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			{% endif %}
         </p>
     </div>
 </ul>

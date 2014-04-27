@@ -3,26 +3,46 @@
 
 {% block body %}
     {{ parent() }}
+    {{dump(studentPromotions)}}
     {% if 
 		studentPromotions is not empty 
-		and containers is not empty 
-		and containersColspan is not empty 
-		and subjectsByTu is not empty 
+		and (containers is not empty 
+		or containersColspan is not empty 
+		or subjectsByTuc is not empty)
 	%}
         <div>
             <h1 class="page-header">Notes des étudiants de {{studentPromotions[0].promotion }} {{ studentPromotions[0].promotion.year}}</h1>
         </div>
 
+        <div class="btn-group" id="btns_session">
+            {% set promotion_id = studentPromotions[0].promotion.id %}
+            {% set year = studentPromotions[0].promotion.year %}
+            <a 
+                href="{{ path('mark_list', { 'year': year, 'promotion_id': promotion_id, 'session' : 1 }) }}" 
+                class="btn btn-default btn-xs sessionPicker" 
+                id="btn_session1">
+                Session 1
+            </a>     
+            <a 
+                href="{{ path('mark_list', { 'year':year, 'promotion_id': promotion_id, 'session' : 2 }) }}" 
+                class="btn btn-default btn-xs sessionPicker" 
+                id="btn_session2">
+                Session 2
+            </a>    
+            <a 
+                href="{{ path('mark_list', { 'year':year, 'promotion_id': promotion_id, 'session' : 3 }) }}" 
+                class="btn btn-default btn-xs sessionPicker" 
+                id="btn_pvFinal">
+                PV Final
+            </a> 
+            <a href="#" class="btn btn-success btn-xs" id="btnExport">Export Excel</a>  
+        </div>
+
+        <hr />
+
         <div>
             <a href="#displayMarks" class="btn btn-default" id="switchDisplayMarks"><span class="glyphicon glyphicon-list purple"></span> Notes</a>
             <a href="#displayContainersAvg" class="btn btn-default" id="switchDisplayContainersAvg"><span class="glyphicon glyphicon-sort-by-attributes purple"></span> Moyennes générales</a>
-        </div>
-
-        <div class="btn-group">
-            <a href="#" class="btn btn-info btn-xs" id="">Session 1</a>    
-            <a href="#" class="btn btn-default btn-xs" id="">Session 2</a>    
-            <a href="#" class="btn btn-default btn-xs" id="">PV Final</a>
-			<a href="#" class="btn btn-success btn-xs" id="btnExport">Export Excel</a>  
         </div>
 
         <hr />
@@ -36,16 +56,29 @@
                         <th data-sorter="false"></th>
                         <th data-sorter="false"></th>
                         {% for container in containers %}
-                            <th data-sorter="false" colspan="{{ containersColspan[loop.index - 1] }}">{{ container.name }}</th>
+                            <th 
+                                data-sorter="false" 
+                                data-iscompensable="{{ container.isCompensable ? 1 : 0 }}"
+                                data-minmark="{{ container.minMark }}"
+                                data-minavg="{{ container.minAverage }}"                                
+                                colspan="{{ containersColspan[loop.index - 1] }}">
+                                {{ container.name }}
+                            </th>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th data-sorter="false"></th>
                         <th data-sorter="false"></th>
-                        {% for container in containers %}
-                            {% for tu in container.teachingUnits %} 
+                        {% for container in containers %}							
+                            {% for tuc in container.teachingUnitContainers %} 
                                 {# +1 to take in account the avg column #}
-                                <th data-sorter="false" colspan="{{ tu.teachingUnitSubjects | length + 1}}" data-tucode="{{ tu.code }}">{{ tu.code }} {{ tu.name }}</th>
+                                <th 
+                                    data-sorter="false" 
+                                    colspan="{{ tuc.teachingUnitContainerSubjects | length + 1}}" 
+                                    data-iscompensable="{{ tuc.teachingUnit.isCompensable ? 1 : 0 }}"
+                                    data-tucode="{{ tuc.teachingUnit.code }}">
+                                    {{ tuc.teachingUnit.code }} {{ tuc.teachingUnit.name }}
+                                </th>
                             {% endfor %}
                         {% endfor %}
                     </tr>
@@ -53,10 +86,10 @@
                         <th>Num. Etudiant</th>
                         <th>Etudiant</th>
                         {% for container in containers %}
-                            {% for tu in container.teachingUnits %}
+                            {% for tuc in container.teachingUnitContainers %}
                                 <th class="tuAvg"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /></th>
-                                {% for tus in tu.teachingUnitSubjects %}
-                                    <th class="subject">{{ tus.subject.abbreviation }}</th>
+                                {% for tucs in tuc.teachingUnitContainerSubjects %}
+                                    <th class="subject">{{ tucs.subject.abbreviation }}</th>
                                 {% endfor %}
                             {% endfor %}
                         {% endfor %}
@@ -65,9 +98,9 @@
                         <th data-sorter="false"></th>
                         <th data-sorter="false"></th>
                         {% for container in containers %}
-                            {% for tu in container.teachingUnits %}
+                            {% for tuc in container.teachingUnitContainers %}
                                 <th></th>
-                                {% for tus in tu.teachingUnitSubjects %}
+                                {% for tucs in tuc.teachingUnitContainerSubjects %}
                                     <th data-sorter="false"><a href=""><span class="glyphicon glyphicon-plus purple"></span></a></th>
                                 {% endfor %}
                             {% endfor %}
@@ -78,35 +111,41 @@
                     {% for sp in studentPromotions %}
                         {% set spId = sp.id %} {# declared here to use it after the for loop #}
                         <tr>
-                            <td>{{ sp.student.number }}</td>
-                            <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
+                            <td class="studentNumber">{{ sp.student.number }}</td>
+                            <td><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
                             
-                            {% for tuCode,tu in subjectsByTu %}
-                                <td class="tuAvg" data-container="{{ tu[0].container }}"></td>
+                            {% for tuCode,tu in subjectsByTuc %}
+                                <td class="tuAvg" data-coeff="{{ sumCoeffs[loop.index0] }}" data-iscompensable="{{ tu[0].isCompensable ? 1 : 0 }}" data-containername="{{ tu[0].container }}"></td>
 
                                 {% for tuId in tu %}
-                                {% set markId = '' %} {# declared here to use it after the for loop #}
-                                {% set tusId = '' %} {# declared here to use it after the for loop #}
-                                {% set markValue = '' %}
+                                    {% set markId = '' %} {# declared here to use it after the for loop #}
+                                    {% set tusId = '' %} {# declared here to use it after the for loop #}
+                                    {% set markValue = '' %}
                                 
                                     {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                     {% for mark in sp.marks if continue %}
-                                        {% if mark.teachingUnitSubject.subject.id == tuId.subject.id %}
-                                            {% set markValue = mark.value %}
+                                        {% if mark.teachingUnitContainerSubject.subject.id == tuId.subject.id %}
+                                            {% if session == 1 %}
+                                                {% set markValue = mark.valueS1 %}
+                                            {% else %}
+                                                {% set markValue = mark.valueS2 %}
+                                            {% endif %}
+
                                             {% set markId = mark.id %}
                                             {% set continue = false %}
                                         {% endif %}
-                                    {% endfor %}
+                                    {% endfor %} 		
                                     <td class="tdMark">
                                         <a 
                                             href="" 
                                             class="mark"
+                                            data-containername="{{ tu[0].container }}"
                                             data-session="{{ session }}"
                                             data-tucode="{{ tuCode }}" 
                                             data-coeff="{{ tuId.subject.coeff }}"
                                             data-pk="{{ markId }}"
                                             data-spid="{{ spId }}"
-                                            data-tusid="{{ tuId.tusId }}" 
+                                            data-tucsid="{{ tuId.tucsId }}" 											
                                             data-type="text" 
                                             data-url="{{ path('mark_persist_ajax') }}">
                                             {{ markValue }}
@@ -147,8 +186,9 @@
                         <tr>
                             <td>{{ sp.student.number }}</td>
                             <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
-                            <td class="avg"></td>
-                            <td class="avg"></td>
+                            {% for container in containers %}
+                                <td class="avg" data-containername="{{ container }}"></td>
+                            {% endfor %}
                             <td class="generalAvg"></td>
                         </tr> 
                     {% endfor %} 
@@ -192,7 +232,9 @@
             </table>
         </div>
     {% else %}
-        <p class="center no-reccords-to-display">Il n'y a pas de notes à afficher pour cette promotion.</p>
+        <hr />
+
+        <p class="center no-reccords-to-display">Il n'y a rien à afficher pour cette promotion actuellement.</p>
     {% endif %}
 
     <hr />
@@ -206,5 +248,11 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript">
+        var promotion = {};
+        promotion.minAvgToValidate = {{ minAvgToValidate|json_encode|raw }}
+
+        var session = {{ session }}
+    </script>
     <script type="text/javascript" src="{{ asset('bundles/c2jeasysaisie/js/marks.js') }}"></script>
 {% endblock %}

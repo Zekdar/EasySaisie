@@ -40,7 +40,24 @@ class DocumentController extends Controller
 			$entity->upload();
 			$inputFileName=$entity->getAbsolutePath();
 			
+			$gsmode=null;
 			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+			
+			$promotionId=null;
+			
 			if($entity->getPromotion()!=null)
 			{
 				$promotionId=$entity->getPromotion()->getId();
@@ -50,6 +67,8 @@ class DocumentController extends Controller
 			$sheet = $objPHPExcel->getSheet(0);
 			$highestRow = $sheet->getHighestRow(); 
 			$highestColumn = "C"; // C column
+			$nbStudent=0;
+			$nbStudentPromotion=0;
 			
 			for ($row = 1; $row <= $highestRow; $row++){ 
 				$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -57,25 +76,28 @@ class DocumentController extends Controller
 												TRUE,
 												FALSE);
 												
-				$number=trim($rowData[0][0]);
-				$lastName=trim(strtoupper($rowData[0][1]));
-				$firstName=trim(strtolower(ucwords($rowData[0][2])));
+				$number = trim($rowData[0][0]);
+				$lastName = trim(strtoupper($rowData[0][1]));
+				$firstName = trim(strtolower(ucwords($rowData[0][2])));
 				$em = $this->getDoctrine()->getManager();
 				$student = $em->getRepository('C2JEasySaisieBundle:Student')->findOneByNumber($number);
 				
 				if($student == null) //if student doesn't exist
 				{
-					$entity = new Student();
-					$entity->setNumber($number);
-					$entity->setLastName($lastName);
-					$entity->setFirstName($firstName);
-					$em->persist($entity);
+					$student = new Student();
+					$student->setNumber($number);
+					$student->setLastName($lastName);
+					$student->setFirstName($firstName);
+					$em->persist($student);
 					$em->flush();
+					$nbStudent++;
 				}
 				
 				if($promotionId != null)
-				{					
-					if($student != null) //if student exists
+				{				
+					$studentId = $student->getId();
+					$studentPromotion = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $studentId, 'promotion' => $promotionId));
+					if($studentPromotion == null) //if studentPromotion doesn't exist
 					{
 						$promotion = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
 					
@@ -84,11 +106,28 @@ class DocumentController extends Controller
 						$entity->setPromotion($promotion);
 						$em->persist($entity);
 						$em->flush();
+						$nbStudentPromotion++;
 					}
 				}
 			}
 		}
-		return $this->redirect($this->generateUrl('student'));
+		$this->get('session')->getFlashBag()->add(
+					'success',
+					$nbStudent." ".'étudiant(s) importé(s) !'
+				);
+		$this->get('session')->getFlashBag()->add(
+					'success',
+					$nbStudentPromotion." ".'étudiant(s) affecté(s) à une promotion !'
+				);
+				
+		if($gsmode)
+		{
+			return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+		}			
+		else
+		{
+			return $this->redirect($this->generateUrl('student'));
+		}
     }
 	
     /**
@@ -121,10 +160,7 @@ class DocumentController extends Controller
     {
         $entity = new Document();
         $form   = $this->createCreateForm($entity);
-				
-		$em = $this->getDoctrine()->getManager();
-		$promotion = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAll();
-	
+
         return array(
             'entity' 	=> $entity,
             'form'   	=> $form->createView(),

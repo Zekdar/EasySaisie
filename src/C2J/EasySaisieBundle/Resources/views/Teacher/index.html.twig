@@ -12,6 +12,7 @@
                 <thead>
                     <tr>
                         <th>Nom</th>
+						<th>Prénom</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -19,6 +20,7 @@
                 {% for entity in entities %}
                     <tr>
                         <td>{{ entity.lastName }}</td>
+						<td>{{ entity.firstName }}</td>
                         <td>
                             <div class="btn-group">
                                 <a href="{{ path('teacher_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>

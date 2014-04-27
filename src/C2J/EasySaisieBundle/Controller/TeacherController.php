@@ -48,12 +48,62 @@ class TeacherController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        if ($form->isValid()) {		
+			$em = $this->getDoctrine()->getManager();
+			
+			$lastName=$entity->getLastName();
+			$firstName=$entity->getFirstName();
+			
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
 
-            return $this->redirect($this->generateUrl('teacher_show', array('id' => $entity->getId())));
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Teacher')->findBy(array('lastName' => $lastName, 'firstName' => $firstName));
+			
+			if($entity2 == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'Le professeur a été créé avec succès !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
+				}			
+				else
+				{
+					return $this->redirect($this->generateUrl('teacher_show', array('id' => $entity->getId())));
+				}			
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'Le professeur existe déjà !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teacher_new'));
+				}				
+			}  
         }
 
         return array(
@@ -92,10 +142,14 @@ class TeacherController extends Controller
     {
         $entity = new Teacher();
         $form   = $this->createCreateForm($entity);
+		
+		$em = $this->getDoctrine()->getManager();
+		$entities = $em->getRepository('C2JEasySaisieBundle:Teacher')->findAll();
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 

@@ -15,7 +15,6 @@ class TeacherType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-			->add('login', 'text', array('label' => 'Login'))
             ->add('lastName', 'text', array('label' => 'Nom'))
             ->add('firstName', 'text', array('label' => 'Prénom'))
         ;

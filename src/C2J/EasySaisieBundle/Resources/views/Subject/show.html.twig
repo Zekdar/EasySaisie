@@ -2,7 +2,7 @@
 
 {% block body %}
     {{ parent() }}
-    
+
     <h1 class="page-header">Matière - {{ entity.name }}</h1>
 
     <div class="table-responsive">
@@ -32,7 +32,6 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('subject') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('teachingunit_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Créer une UE</a>
         </p>
     </div>
     {% endblock %}

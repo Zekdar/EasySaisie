@@ -47,13 +47,60 @@ class FormationController extends Controller
         $entity = new Formation();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('formation_show', array('id' => $entity->getId())));
+		
+        if ($form->isValid()) {		
+			$gsmode=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+			}
+			
+			$em = $this->getDoctrine()->getManager();
+			
+			$name=$entity->getName();
+			$type=$entity->getType();
+			
+			$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->findOneBy(array('name' => $name, 'type' => $type));
+			
+			if($entity2 == null)
+			{
+				$em->persist($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'La formation a été créée avec succès !'
+				);
+				
+				if($gsmode)
+				{
+					$entity2 = $em->getRepository('C2JEasySaisieBundle:Formation')->findOneBy(array('name' => $name, 'type' => $type));
+					$formationId=$entity2->getId();
+					return $this->redirect($this->generateUrl('promotion_new').'?gsmode=true&formationId='.$formationId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('formation_show', array('id' => $entity->getId())));
+				}
+			}			
+            else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'La formation existe déjà !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('formation_new').'?gsmode=true');
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('formation_new'));
+				}
+			}  
         }
 
         return array(
@@ -92,10 +139,14 @@ class FormationController extends Controller
     {
         $entity = new Formation();
         $form   = $this->createCreateForm($entity);
+		
+		$em = $this->getDoctrine()->getManager();
+		$entities = $em->getRepository('C2JEasySaisieBundle:Formation')->findAll();
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 
@@ -111,6 +162,7 @@ class FormationController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:Formation')->find($id);
+		$entities = $em->getRepository('C2JEasySaisieBundle:Promotion')->findBy(array('formation' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Formation entity.');
@@ -121,6 +173,7 @@ class FormationController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+			'entities' => $entities,
         );
     }
 

@@ -83,20 +83,21 @@ class MarkController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function listAction($year, $promotion_id, $session) 
+    public function listAction($year, $promotion_id, $session, $studentsList = null) 
     {
         $em = $this->getDoctrine()->getManager();
+        // if($studentsList)
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYear($promotion_id, $year);
-        $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year);
+        $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllSubjectsByTucsByContainerByPromotionByYear($promotion_id, $year);
         //var_dump($promotions);exit;
-		
+        
 		$colspans = [];	
 		if(count($promotions) >= 1) {			
 			foreach ($promotions[0]->getContainers() as $container) {
 				$containersColspan = 0; 
-				foreach ($container->getTeachingUnits() as $tu) {
+				foreach ($container->getTeachingUnitContainers() as $tuc) {
 					$containersColspan++; // +1 for the average column
-					foreach ($tu->getTeachingUnitSubjects() as $subject) {
+					foreach ($tuc->getTeachingUnitContainerSubjects() as $subject) {
 						$containersColspan++;
 					}
 				}
@@ -104,38 +105,48 @@ class MarkController extends Controller
 			}   
 		}
 
-		$subjectsByTu = array();
+		$subjectsByTuc = array();
         if(count($promotions) >= 1) {
             $containers = $promotions[0]->getContainers();
-
+            $minAvgToValidate = $promotions[0]->getMinAverageToValidate();
+            
+            $sumCoeffs = array();
             foreach ($containers as $container) {
-                foreach ($container->getTeachingUnits() as $tu) {
-                    foreach ($tu->getTeachingUnitSubjects() as $tus) {
-                        $subjectsByTu[$tu->getCode()][] = array(
-                            'tusId' => $tus->getId(),
+                foreach ($container->getTeachingUnitContainers() as $tuc) {
+                    $sum = 0;
+                    foreach ($tuc->getTeachingUnitContainerSubjects() as $tucs) {
+                        $subjectsByTuc[$tuc->getTeachingUnit()->getCode()][] = array(
+                            'isCompensable' => $tuc->getTeachingUnit()->getIsCompensable(),
+                            'tucsId' => $tucs->getId(),
                             'container' => $container->getName(),
                             'subject'           => array(
-                                'id'            => $tus->getSubject()->getId(),
-                                'name'          => $tus->getSubject()->getName(),
-                                'abbreviation'  => $tus->getSubject()->getAbbreviation(),
-                                'coeff'         => $tus->getCoeff()
+                                'id'            => $tucs->getSubject()->getId(),
+                                'name'          => $tucs->getSubject()->getName(),
+                                'abbreviation'  => $tucs->getSubject()->getAbbreviation(),
+                                'coeff'         => $tucs->getCoeff()
                             )
                         );
+                        $sum += $tucs->getCoeff();
                     }
+                    $sumCoeffs[] = $sum;
                 }
             }
         }
         else {
             $containers = array();
+            $minAvgToValidate = '';
+            $sumCoeffs = array();
         }
         // asort($subjectsByTu); // Sort is necessary to display marks in the correct order in the view
         // var_dump($subjectsByTu['72m']);
         return array(
+            'sumCoeffs' => $sumCoeffs,
+            'minAvgToValidate' => $minAvgToValidate,
             'session' => $session,
             'studentPromotions' => $studentPromotions,
             'containers' => $containers,
             'containersColspan' => $colspans,
-            'subjectsByTu' => $subjectsByTu
+            'subjectsByTuc' => $subjectsByTuc
         );
     }
 
@@ -377,28 +388,31 @@ class MarkController extends Controller
                 }
             } 
             // Else ==> insert
-            else {
-                $tus = $em->getRepository('C2JEasySaisieBundle:TeachingUnitSubject')->find($request->request->get('tusid'));
+            else {				
+				//var_dump($request->request->get('tucsid'));exit;
+                $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($request->request->get('tucsid'));
                 $sp = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->find($request->request->get('spid'));
 
-                if (!$tus) {
-                    throw $this->createNotFoundException('Unable to find TeachingUnitSubject entity.');
+                if (!$tucs) {
+                    throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
                 }
                 if (!$sp) {
                     throw $this->createNotFoundException('Unable to find StudentPromotion entity.');
                 }
                 $mark = new Mark();
-                $mark   -> setTeachingUnitSubject($tus)
+                $mark   -> setTeachingUnitContainerSubject($tucs)
                         -> setStudentPromotion($sp);
             }
 
             // If the new value is not empty : set the mark value
-            $value = $request->request->get('value');
             $session = $request->request->get('session');
-            
+            $value = $request->request->get('value');
             if($value != '') {
-                $mark->setValue($value);
-                $mark->setSession($session);
+                if($session == 1)
+                    $mark->setValueS1($value);
+                else
+                    $mark->setValueS2($value);
+
                 $em->persist($mark);
             } 
             // Otherwise the mark needs to be deleted from the DB : delete

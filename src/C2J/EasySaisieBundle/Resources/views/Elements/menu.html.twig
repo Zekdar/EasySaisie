@@ -23,15 +23,22 @@
                             <li><a href="{{ path('student') }}">ÉTUDIANTS</a></li>
                             <li><a href="{{ path('formation') }}">FORMATIONS</a></li>
                             <li><a href="{{ path('subject') }}">MATIÈRES</a></li>
+    						<li><a href="{{ path('teacher') }}">PROFESSEURS</a></li>
                             <li><a href="{{ path('promotion') }}">PROMOTIONS</a></li>
-                            <li><a href="{{ path('rule') }}">RÈGLES</a></li>
                             <li><a href="{{ path('teachingunit') }}">UEs</a></li>
-                            <li><a href="{{ path('user') }}">Utilisateurs</a></li>
+                            <li><a href="{{ path('user') }}">UTILISATEURS</a></li>
                         </ul>
                     </li>
+    				<li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog purple"></span> PAR PROMOTION <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+    						<li><a href="{{ path('studentpromotion') }}">ETUDIANTS</a></li>
+    						<li><a href="{{ path('teachingunitcontainersubject') }}">MATIERES ET UEs</a></li>
+                        </ul>
+                    </li>
+    				<li><a href="{{ path('formation_new', { 'gsmode': "true" }) }}"><span class="glyphicon glyphicon-play purple"></span> Get Started</a></li>
                 {% endif %}
 
-				<li><a href="{{ path('formation_new') }}"><span class="glyphicon glyphicon-play purple"></span> Get Started</a></li>
             </ul>
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                 <div class="navbar-form navbar-right">

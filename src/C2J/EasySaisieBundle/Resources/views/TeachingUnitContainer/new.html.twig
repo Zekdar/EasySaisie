@@ -3,17 +3,12 @@
 
 {% block body %}
     {{ parent() }}
-	{% for flashMessage in app.session.flashbag.get('success') %}
-		<div class="flash-notice">
-			<font color="green">{{ flashMessage }}</font>
-		</div>
-	{% endfor %}
 	{% for flashMessage in app.session.flashbag.get('failure') %}
 		<div class="flash-notice">
 			<font color="red">{{ flashMessage }}</font>
 		</div>
 	{% endfor %}
-    <h1>Ajout d'un étudiant dans une promotion</h1>
+    <h1>Créer une UE</h1>
 
     {{ form(form) }}
 
@@ -21,7 +16,7 @@
     
     <div class="row">
         <p class="center">            
-			<a href="{{ path('studentpromotion') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			<a href="{{ path('teachingunit') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
         </p>
     </div>
 </ul>
