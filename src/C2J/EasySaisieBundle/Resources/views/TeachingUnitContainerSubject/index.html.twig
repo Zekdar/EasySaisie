@@ -33,6 +33,7 @@
 						<td>{{ entity.teachingUnitContainer.teachingUnit.code ~ ' ' ~ entity.teachingUnitContainer.teachingUnit.name }}</td>
                         <td>
                             <div class="btn-group">
+								<a href="{{ path('teachingunitcontainersubject_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>
                                 <a href="{{ path('teachingunitcontainersubject_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
                             </div>
                         </td>

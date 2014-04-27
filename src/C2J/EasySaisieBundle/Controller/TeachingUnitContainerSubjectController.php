@@ -203,16 +203,18 @@ class TeachingUnitContainerSubjectController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($id);
-
+	
+		$containerId = $entity->getTeachingUnitContainer()->getContainer()->getId();
+		$container = $em->getRepository('C2JEasySaisieBundle:Container')->find($containerId);
+	
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
         }
-
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
-
         return array(
             'entity'      => $entity,
+			'container'	  => $container,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -258,7 +260,35 @@ class TeachingUnitContainerSubjectController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+			$teachingUnitId=$entity->getTeachingUnit()->getId();
+			$containerId=$entity->getContainer()->getId();
+	
+			$em = $this->getDoctrine()->getManager();		
+			$entityTuc = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findOneBy(array(
+																							'teachingUnit' => $teachingUnitId, 
+																							'container' => $containerId));
+			if($entityTuc == null)
+			{
+				$entityContainer = $em->getRepository('C2JEasySaisieBundle:Container')->find($containerId);
+				$entityTu = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($teachingUnitId);
+				
+				$entityTuc=new TeachingUnitContainer();
+				$entityTuc->setTeachingUnit($entityTu);
+				$entityTuc->setContainer($entityContainer);				
+				$em->persist($entityTuc);
+				$em->flush();
+			}
+			$entitySubject=$entity->getSubject();
+			$entityTeacher=$entity->getTeacher();
+			
+			$entity->setTeachingUnitContainer($entityTuc);
+			$entity->setSubject($entitySubject);
+			if($entityTeacher != null)
+			{
+				$entity->setTeacher($entityTeacher);
+			}
+			$em->persist($entity);
+			$em->flush();
 
             return $this->redirect($this->generateUrl('teachingunitcontainersubject_edit', array('id' => $id)));
         }
