@@ -44,7 +44,7 @@ class StudentPromotionRepository extends EntityRepository
 					->getResult();
 	}
 
-	public function findAllStudentsInPromotionByYearBySubject($promotion_id, $year,$subject_id) 
+	public function findAllStudentsInPromotionByYearBySubject($promotion_id, $year, $subject_id) 
 	{
 		$qb = $this ->createQueryBuilder('sp')
 					->join('sp.student', 's')

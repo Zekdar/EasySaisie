@@ -45,71 +45,27 @@ class MarkController extends Controller
      * Adds marks for a given subject
      *
      * @Route("/addBySubject/{tucsId}/{subjectId}/{year}/{promotion_id}/{session}", name="mark_add_by_subject")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Secure(roles="ROLE_PROF")
      * @Template()
      */    
     public function addBySubjectAction($tucsId, $subjectId, $year, $promotion_id, $session) 
     {
-        // $mark = new Mark();
-        // $form = $this->createFormBuilder($mark)
-        //             ->add('value', 'text')
-        //             ->add('session', 'text')
-        //             ->add('save', 'submit')
-        //         ->getForm();
-
-        // return array('form' => $form->createView());
-        // if ($form->isValid()) {
-            // $em = $this->getDoctrine()->getManager();
-            // $em->persist($entity);
-            // $em->flush();
-
-            // return $this->redirect($this->generateUrl('container_show', array('id' => $entity->getId())));
-        // }
-
-
-        $em = $this->getDoctrine()->getManager();
-        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year,$subjectId);
-        $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($tucsId);
-
-        return array(
-            'studentPromotions' => $studentPromotions,
-            'subject' => $subjectId,
-            'session' => $session,
-            'tucs' => $tucs,
-        );
-    }
-
-    /**
-     * Adds marks for a given subject
-     *
-     * @Route("/addBySubject/", name="mark_add_by_subject_execute")
-     * @Method("POST")
-     * @Secure(roles="ROLE_PROF")
-     * @Template()
-     */    
-    public function addBySubjectExecuteAction() 
-    {
-        
         if(isset($_POST['submit'])){
-            for ($i=0; $i < $_POST['marksCount'] ; $i++) { 
-           /*     var_dump( $_POST['mark-'.$i]);
-                var_dump( $_POST['tucsId']);
-                var_dump( $_POST['markid']);
-
-                var_dump( $_POST['spid']);
-                exit;
-*/
+            for ($i = 0; $i < $_POST['marksCount']; $i++) { 
                 $this->persistMark($_POST['markid'], $_POST['tucsId'], $_POST['spid'], $_POST['mark-'.$i], $_POST['session']);
             }
         }
-
+        
         $em = $this->getDoctrine()->getManager();
-        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($_POST['promotion_id'], $_POST['year'],$_POST['subjectId']);
-
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year, $subjectId);
+        $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($tucsId);
+        
         return array(
             'studentPromotions' => $studentPromotions,
-            'subject' => $subjectName,
+            'subjectId' => $subjectId,
+            'session' => $session,
+            'tucs' => $tucs,
         );
     }
 
@@ -490,11 +446,7 @@ class MarkController extends Controller
         }
     }
 
-
-
     /**
-     * AJAX - Updates or Inserts a Mark in DB.
-     *
      * @Route("/", name="mark_persist")
      * @Method("PUT")
      */    
@@ -506,8 +458,8 @@ class MarkController extends Controller
         // If mark exists ==> update
         
         if ($id != null) {
-            var_dump($id);
             $mark = $em->getRepository('C2JEasySaisieBundle:Mark')->find($id);
+
 
             if (!$mark) {
                 throw $this->createNotFoundException('Unable to find Mark entity.');
@@ -557,12 +509,10 @@ class MarkController extends Controller
             }
         }
 
-        $em->flush();
+        // $em->flush();
 
         $response = new Response(json_encode(array('markId' => $mark->getId())));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-    
-        
     }
 }

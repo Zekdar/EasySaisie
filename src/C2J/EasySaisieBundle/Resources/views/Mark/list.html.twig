@@ -103,7 +103,13 @@
                                 <th></th>
                                 {% for tucs in tuc.teachingUnitContainerSubjects %}
                                     <th data-sorter="false">
-                                        <a href="{{ path('mark_add_by_subject', { 'tucsId': tucs.id ,'subjectId': tucs.subject.id , 'year': year, 'promotion_id': promotion_id, 'session' : 1 }) }}">
+                                        <a 
+                                            href="{{ path('mark_add_by_subject', {
+                                                'tucsId': tucs.id ,
+                                                'subjectId': tucs.subject.id , 
+                                                'year': year, 'promotion_id': promotion_id, 
+                                                'session' : 1 
+                                            })}}">
                                             <span class="glyphicon glyphicon-plus purple"></span>
                                         </a>
                                     </th>

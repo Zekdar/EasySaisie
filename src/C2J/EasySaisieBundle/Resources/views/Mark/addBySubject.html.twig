@@ -6,7 +6,7 @@
         
     <h1 class="page-header">Veuillez saisir les notes pour la matière {{ tucs.subject.name }}</h1>
 
-    <form method="post" action="{{ path('mark_add_by_subject_execute') }}">
+    <form method="post" action="#">
 
 	    <table class="table table-bordered table-bordered">
 		    <thead>
@@ -20,10 +20,13 @@
 		                <td>{{ sp.student.number }}</td>
 		                <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
 		                
-		                {% if sp.marks|length > 0 %}
+		                {% if sp.marks|length > 0 %}{{dump(sp.marks|length)}}
 		                	{% for mark in sp.marks %}
-		                		<td><input type="text" name="mark-{{i}}" value="{{ mark.valueS1 }}" /></td>
-		                		<input type="hidden" name="markid" value="{{ mark.id }}" />
+		                		{# {% if session %} #}
+
+		                		
+			                		<td><input type="text" name="mark-{{ i }}" value="{{ mark.valueS1 }}" /></td>
+			                		<td><input type="hidden" name="markid-{{ i }}" value="{{ mark.id }}" /></td>
 		                	{% endfor %}
 	                	{% else %}
 	                		<td><input type="text" name="mark-{{i}}" /></td>
@@ -44,9 +47,8 @@
 
 		<input type="hidden" name="tucsId" value="{{ tucs.id }}" />
 		<input type="hidden" name="session" value="{{ session }}" />
-		<input type="hidden" name="subjectId" value="{{ subject }}" />
+		<input type="hidden" name="subjectId" value="{{ subjectId }}" />
 		<input type="hidden" name="marksCount" value="{{ studentPromotions|length }}" />
-
 	</form>
 {% endblock %}
     
