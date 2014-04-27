@@ -3,12 +3,17 @@
 
 {% block body %}
     {{ parent() }}
+	{% for flashMessage in app.session.flashbag.get('success') %}
+		<div class="flash-notice">
+			<font color="green">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
 	{% for flashMessage in app.session.flashbag.get('failure') %}
 		<div class="flash-notice">
 			<font color="red">{{ flashMessage }}</font>
 		</div>
 	{% endfor %}
-    <h1>Ajout d'une matière dans une UE</h1>
+    <h1>Ajout de matière(s) dans des UEs pour une promotion</h1>
 
     {{ form(form) }}
 
@@ -16,10 +21,12 @@
     
     <div class="row">
         <p class="center">            
-            <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('teachingunitcontainer_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
-			<a href="{{ path('student_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Sauter cette étape</a>
+			{% if(app.request.query.get('gsmode')) %}
+				<a href="{{ path('teachingunitcontainer_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
+				<a href="{{ path('student_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Sauter cette étape</a>
+			{% else %}
+				<a href="{{ path('teachingunitcontainersubject') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			{% endif %}
         </p>
     </div>
-</ul>
 {% endblock %}

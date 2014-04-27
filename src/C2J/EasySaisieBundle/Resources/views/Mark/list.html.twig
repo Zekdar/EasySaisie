@@ -38,7 +38,7 @@
                         {% for container in containers %}
                             <th 
                                 data-sorter="false" 
-                                data-aretuscompensable="{{ container.areteachingunitscompensable ? 1 : 0 }}"
+                                data-aretuscompensable="{{ container.iscompensable ? 1 : 0 }}"
                                 data-minmark="{{ container.minMark }}"
                                 data-minavg="{{ container.minAverage }}"                                
                                 colspan="{{ containersColspan[loop.index - 1] }}">

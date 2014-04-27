@@ -94,7 +94,7 @@ class TeachingUnitContainer
 	
 	public function __toString()
     {
-        return $this->name;
+        return $this->getTeachingUnit()->getName();
     }
 
     /**

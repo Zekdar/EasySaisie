@@ -3,6 +3,11 @@
 
 {% block body %}
     {{ parent() }}
+	{% for flashMessage in app.session.flashbag.get('success') %}
+		<div class="flash-notice">
+			<font color="green">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
 	{% for flashMessage in app.session.flashbag.get('failure') %}
 		<div class="flash-notice">
 			<font color="red">{{ flashMessage }}</font>
@@ -15,13 +20,47 @@
     <hr />
     
     <div class="row">
-        <p class="center">            
-            <a href="{{ path('promotion') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			{% if app.request.get('formationId') is null %}
-				<a href="{{ path('formation_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
-			{% endif %}
-			<a href="{{ path('container_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Sauter cette étape</a>
+        <p class="center">           
+			{% if(app.request.query.get('gsmode')) %}
+				<a href="{{ path('formation_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
+				<a href="{{ path('container_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Passer à l'étape suivante</a>
+			{% else %}
+				<a href="{{ path('promotion') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			{% endif %}	
         </p>
     </div>
-</ul>
+	
+	<hr />
+	
+	{% if entity.formation is not null %}
+		<h1 class="page-header">Liste des promotions existantes pour cette formation</h1>
+		{% if entities is not empty %}		
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered table-hover ">
+					<thead>
+						<tr>
+							<th>Nom</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for entity in entities %}
+						<tr>
+							<td>{{ entity.name }}</td>
+							<td>
+								<div class="btn-group">
+									<a href="{{ path('promotion_show', { 'id': entity.id }) }}"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span> Voir</a>
+									<a href="{{ path('promotion_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									<a href="{{ path('promotion_delete', { 'id': entity.id }) }}"  class="btn btn-danger btn-xs delete-entry"><span class="glyphicon glyphicon-trash"></span> Supprimer</a>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>               
+		{% else %}
+			<p class="center no-reccords-to-display">Aucun enregistrement à afficher.</p>
+		{% endif %}
+	{% endif %}
 {% endblock %}

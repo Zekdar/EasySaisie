@@ -26,7 +26,7 @@ class TeachingUnitContainerType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'C2J\EasySaisieBundle\Entity\TeachingUnit'
+            'data_class' => 'C2J\EasySaisieBundle\Entity\TeachingUnitContainer'
         ));
     }
 
@@ -35,6 +35,6 @@ class TeachingUnitContainerType extends AbstractType
      */
     public function getName()
     {
-        return 'c2j_easysaisiebundle_teachingunit';
+        return 'c2j_easysaisiebundle_teachingunitcontainer';
     }
 }

@@ -54,6 +54,8 @@ class TeachingUnitContainerSubject
    */
   private $marks;
   
+  private $container;
+  private $teachingUnit;
   
 
     /**
@@ -224,5 +226,51 @@ class TeachingUnitContainerSubject
     public function getMarks()
     {
         return $this->marks;
+    }
+	
+	/**
+     * Set container
+     *
+     * @param \C2J\EasySaisieBundle\Entity\Container $container
+     * @return TeachingUnitContainerSubject
+     */
+    public function setContainer(\C2J\EasySaisieBundle\Entity\Container $container)
+    {
+        $this->container = $container;
+    
+        return $this;
+    }
+
+    /**
+     * Get container
+     *
+     * @return \C2J\EasySaisieBundle\Entity\Container 
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+	
+	/**
+     * Set teachingUnit
+     *
+     * @param \C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnit
+     * @return TeachingUnitContainerSubject
+     */
+    public function setTeachingUnit(\C2J\EasySaisieBundle\Entity\TeachingUnit $teachingUnit)
+    {
+        $this->teachingUnit = $teachingUnit;
+    
+        return $this;
+    }
+
+    /**
+     * Get teachingUnit
+     *
+     * @return \C2J\EasySaisieBundle\Entity\TeachingUnit 
+     */
+    public function getTeachingUnit()
+    {
+        return $this->teachingUnit;
     }
 }

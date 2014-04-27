@@ -53,6 +53,22 @@ class TeacherController extends Controller
 			
 			$lastName=$entity->getLastName();
 			$firstName=$entity->getFirstName();
+			
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
 
 			$entity2 = $em->getRepository('C2JEasySaisieBundle:Teacher')->findBy(array('lastName' => $lastName, 'firstName' => $firstName));
 			
@@ -64,7 +80,14 @@ class TeacherController extends Controller
 					'success',
 					'Le professeur a été créé avec succès !'
 				);
-				return $this->redirect($this->generateUrl('teacher_show', array('id' => $entity->getId())));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
+				}			
+				else
+				{
+					return $this->redirect($this->generateUrl('teacher_show', array('id' => $entity->getId())));
+				}			
 			}			
             else
 			{
@@ -72,7 +95,14 @@ class TeacherController extends Controller
 					'failure',
 					'Le professeur existe déjà !'
 				);
-				return $this->redirect($this->generateUrl('teacher_new'));
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teacher_new'));
+				}				
 			}  
         }
 
@@ -112,10 +142,14 @@ class TeacherController extends Controller
     {
         $entity = new Teacher();
         $form   = $this->createCreateForm($entity);
+		
+		$em = $this->getDoctrine()->getManager();
+		$entities = $em->getRepository('C2JEasySaisieBundle:Teacher')->findAll();
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 

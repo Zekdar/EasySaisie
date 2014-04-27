@@ -12,4 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class ContainerRepository extends EntityRepository
 {
+	public function getContainers($promotionId = null)
+	{	
+		$queryBuilder = $this->createQueryBuilder('c');
+        if($promotionId != null)
+        {
+            $queryBuilder->andWhere('c.promotion = :promotionId')
+            ->setParameter('promotionId', $promotionId);
+        }
+        return $queryBuilder;
+	}
 }

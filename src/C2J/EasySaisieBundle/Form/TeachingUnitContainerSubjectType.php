@@ -5,6 +5,7 @@ namespace C2J\EasySaisieBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class TeachingUnitContainerSubjectType extends AbstractType
 {
@@ -14,13 +15,27 @@ class TeachingUnitContainerSubjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+		$promotionId=null;
+		if(isset($_GET['promotionId']))
+		{
+			$promotionId=$_GET['promotionId'];
+		}
         $builder
-            ->add('coeff')
-			->add('ects')
-            ->add('teachingUnitContainer')
-            ->add('subject')
-			->add('teacher')
-        ;
+			->add('subject', null, array('label' => 'Matière'))
+            ->add('coeff', 'text', array('label' => 'Coefficient'))
+			->add('ects', 'text', array('label' => 'Nombre d\'ECTS'))
+            ->add('teachingUnit', 'entity', array(
+				'class' => 'C2J\EasySaisieBundle\Entity\TeachingUnit',
+				'label' => 'UE'
+			))
+			->add('teacher', null, array('label' => 'Professeur'))
+			->add('container', 'entity', array(
+				'class' => 'C2J\EasySaisieBundle\Entity\Container',
+				'query_builder' => function(EntityRepository $er) use ($promotionId)
+					{    
+						return $er->getContainers( $promotionId ); },
+				'label' => 'Conteneur'))
+		;
     }
     
     /**

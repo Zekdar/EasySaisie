@@ -16,8 +16,12 @@
     
     <div class="row">
         <p class="center">            
-            <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="{{ path('student_new') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
+			{% if(app.request.query.get('gsmode')) %}
+				<a href="{{ path('student_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Revenir à l'étape précédente</a>
+				<a href="{{ path('homepage') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Terminer</a>
+			{% else %}
+				<a href="{{ path('studentpromotion') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			{% endif %}
         </p>
     </div>
 </ul>

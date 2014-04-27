@@ -126,6 +126,11 @@ class TeachingUnit
     {
         return $this->isCompensable;
     }
+	
+	public function __toString()
+	{
+		return $this->name;
+	}
 
     /**
      * Constructor

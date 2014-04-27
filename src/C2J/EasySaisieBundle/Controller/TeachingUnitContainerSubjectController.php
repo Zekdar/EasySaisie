@@ -128,6 +128,9 @@ class TeachingUnitContainerSubjectController extends Controller
 			$entity->setSubject($entity2);
 		}
 		
+		$em = $this->getDoctrine()->getManager();
+		$container = $em->getRepository('C2JEasySaisieBundle:Container')->findAll();
+		
 		$form   = $this->createCreateForm($entity);
 
         return array(
