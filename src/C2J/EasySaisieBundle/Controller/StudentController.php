@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use C2J\EasySaisieBundle\Entity\Student;
 use C2J\EasySaisieBundle\Form\StudentType;
+use C2J\EasySaisieBundle\Entity\StudentPromotion;
+use C2J\EasySaisieBundle\Form\StudentPromotionType;
 
 /**
  * Student controller.
@@ -49,30 +51,83 @@ class StudentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {		
+					
+			$number=$entity->getNumber();	
+			$lastName=$entity->getLastName();
+			$firstName=$entity->getFirstName();
+			
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+			
 			$em = $this->getDoctrine()->getManager();
-			
-			$number=$entity->getNumber();
+			$student = $em->getRepository('C2JEasySaisieBundle:Student')->findOneByNumber($number);
 
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Student')->findByNumber($number);
-			
-			if($entity2 == null)
+			if($student == null) //if student doesn't exist
 			{
-				$em->persist($entity);
+				$student = new Student();
+				$student->setNumber($number);
+				$student->setLastName($lastName);
+				$student->setFirstName($firstName);
+				$em->persist($student);
 				$em->flush();
-				$this->get('session')->getFlashBag()->add(
-					'success',
-					'L\'étudiant a été créé avec succès !'
-				);
-				return $this->redirect($this->generateUrl('student_show', array('id' => $entity->getId())));
-			}			
-            else
-			{
-				$this->get('session')->getFlashBag()->add(
-					'failure',
-					'L\'étudiant existe déjà !'
-				);
-				return $this->redirect($this->generateUrl('student_new'));
-			}  
+			}
+			
+			if($promotionId != null)
+			{				
+				$studentId = $student->getId();
+				$studentPromotion = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student' => $studentId, 'promotion' => $promotionId));
+				if($studentPromotion == null) //if studentPromotion doesn't exist
+				{
+					$promotion = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
+				
+					$entity = new StudentPromotion();
+					$entity->setStudent($student);
+					$entity->setPromotion($promotion);
+					$em->persist($entity);
+					$em->flush();
+
+					$this->get('session')->getFlashBag()->add(
+						'success',
+						'L\'étudiant a été ajouté dans la promotion créé avec succès !'
+					);
+					if($gsmode)
+					{
+						return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+					}			
+					else
+					{
+						return $this->redirect($this->generateUrl('student_show', array('id' => $entity->getId())));
+					}
+				}
+				else
+				{
+					$this->get('session')->getFlashBag()->add(
+						'failure',
+						'L\'étudiant existe déjà la promotion !'
+					);
+					if($gsmode)
+					{
+						return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+					}
+					else
+					{
+						return $this->redirect($this->generateUrl('student_new'));
+					}
+				}
+			}
         }
 
         return array(
@@ -111,10 +166,21 @@ class StudentController extends Controller
     {
         $entity = new Student();
         $form   = $this->createCreateForm($entity);
+		$request = Request::createFromGlobals();
+		$request->getPathInfo();
+		$promotionId=$request->query->get('promotionId');
+		
+		$entities = null;
+		
+		if($promotionId != null) { 
+			$em = $this->getDoctrine()->getManager();
+			$entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array("promotion" => $promotionId));
+		}
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 

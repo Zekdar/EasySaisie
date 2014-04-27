@@ -39,6 +39,17 @@ class PromotionRepository extends EntityRepository
 					->getResult();
 					
 	}
+	
+	public function getPromotions($promotionId = null)
+	{	
+		$queryBuilder = $this->createQueryBuilder('p');
+        if($promotionId != null)
+        {
+            $queryBuilder->andWhere('p.id = :promotionId')
+            ->setParameter('promotionId', $promotionId);
+        }
+        return $queryBuilder;
+	}
 	/*
 	public function findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year) 
 	{

@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use C2J\EasySaisieBundle\Entity\TeachingUnitContainerSubject;
 use C2J\EasySaisieBundle\Form\TeachingUnitContainerSubjectType;
+use C2J\EasySaisieBundle\Entity\TeachingUnitContainer;
+use C2J\EasySaisieBundle\Form\TeachingUnitContainerType;
 
 /**
  * TeachingUnitContainerSubject controller.
@@ -48,32 +50,65 @@ class TeachingUnitContainerSubjectController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {		
-			$em = $this->getDoctrine()->getManager();
+        if ($form->isValid()) {				
+			$teachingUnitId=$entity->getTeachingUnit()->getId();
+			$containerId=$entity->getContainer()->getId();
 			
-			$teachingUnitContainerId=$entity->getTeachingUnitContainer()->getId();
-			$subjectId=$entity->getSubject()->getId();
-			
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findBy(array('teachingUnitContainer' => $teachingUnitContainerId, 'subject' => $subjectId));
-			
-			if($entity2 == null)
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
 			{
-				$em->persist($entity);
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+		
+			$em = $this->getDoctrine()->getManager();		
+			$entityTuc = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findOneBy(array(
+																							'teachingUnit' => $teachingUnitId, 
+																							'container' => $containerId));
+			if($entityTuc == null)
+			{
+				$entityContainer = $em->getRepository('C2JEasySaisieBundle:Container')->find($containerId);
+				$entityTu = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($teachingUnitId);
+				
+				$entityTuc=new TeachingUnitContainer();
+				$entityTuc->setTeachingUnit($entityTu);
+				$entityTuc->setContainer($entityContainer);				
+				$em->persist($entityTuc);
 				$em->flush();
-				$this->get('session')->getFlashBag()->add(
-					'success',
-					'La matière a été ajoutée dans l\'UE avec succès !'
-				);
-				return $this->redirect($this->generateUrl('teachingunitcontainersubject_show', array('id' => $entity->getId())));
-			}			
-            else
+			}
+			$entitySubject=$entity->getSubject();
+			$entityTeacher=$entity->getTeacher();
+			
+			$entity->setTeachingUnitContainer($entityTuc);
+			$entity->setSubject($entitySubject);
+			if($entityTeacher != null)
 			{
-				$this->get('session')->getFlashBag()->add(
-					'failure',
-					'La matière existe déjà dans l\'UE !'
-				);
-				return $this->redirect($this->generateUrl('teachingunitcontainersubject_new'));
-			}  
+				$entity->setTeacher($entityTeacher);
+			}
+			$em->persist($entity);
+			$em->flush();
+			$this->get('session')->getFlashBag()->add(
+					'success',
+					'La matière a été affectée à la promotion !'
+			);
+			
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('teachingunitcontainersubject_new').'?gsmode=true&promotionId='.$promotionId);
+			}			
+			else
+			{
+				return $this->redirect($this->generateUrl('teachingunitcontainersubject_show', array('id' => $entity->getId())));
+			}	
         }
 
         return array(
@@ -113,29 +148,21 @@ class TeachingUnitContainerSubjectController extends Controller
         $entity = new TeachingUnitContainerSubject();
 		$request = Request::createFromGlobals();
 		$request->getPathInfo();
-		$teachingUnitContainerId=$request->query->get('teachingUnitContainerId');
-		$subjectId=$request->query->get('subjectId');
-        
-		if($teachingUnitContainerId != null) {  
+		$promotionId=$request->query->get('promotionId');
+		
+		$entities = null;
+		
+		if($promotionId != null) { 
 			$em = $this->getDoctrine()->getManager();
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->find($teachingUnitContainerId);
-			$entity->setTeachingUnitContainer($entity2);
+			$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findAllTucsByPromotionId($promotionId);
 		}
-		
-		if($subjectId != null) {  
-			$em = $this->getDoctrine()->getManager();
-			$entity2 = $em->getRepository('C2JEasySaisieBundle:Subject')->find($subjectId);
-			$entity->setSubject($entity2);
-		}
-		
-		$em = $this->getDoctrine()->getManager();
-		$container = $em->getRepository('C2JEasySaisieBundle:Container')->findAll();
-		
+			
 		$form   = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'entities' => $entities,
         );
     }
 

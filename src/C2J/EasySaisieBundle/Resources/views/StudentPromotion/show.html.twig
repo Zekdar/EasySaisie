@@ -2,12 +2,7 @@
 
 {% block body %}
     {{ parent() }}
-	{% for flashMessage in app.session.flashbag.get('success') %}
-		<div class="flash-notice">
-			<font color="green">{{ flashMessage }}</font>
-		</div>
-	{% endfor %}
-    
+  
     <h1 class="page-header">Règle {{ entity.id }}</h1>
 
     <div class="table-responsive">
@@ -37,8 +32,6 @@
     <div class="row">
         <p class="center">            
             <a href="{{ path('rule') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-			<a href="#" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Gérer les notes de cet étudiant</a>
-			<a href="{{ path('mark') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-plus"></span> Gérer les notes d'une promotion</a>
         </p>
     </div>
     {% endblock %}
