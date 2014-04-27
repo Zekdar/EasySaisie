@@ -70,12 +70,13 @@ class MarkController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year,$subjectId);
-        $teachingUnitContainerSubjects = $em->getRepository('');
+        $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($tucsId);
 
         return array(
             'studentPromotions' => $studentPromotions,
-            'subject' => $subjectName,
+            'subject' => $subjectId,
             'session' => $session,
+            'tucs' => $tucs,
         );
     }
 
@@ -92,15 +93,19 @@ class MarkController extends Controller
         
         if(isset($_POST['submit'])){
             for ($i=0; $i < $_POST['marksCount'] ; $i++) { 
-                var_dump( $_POST['mark-'.$i]);
-                var_dump( $_POST['promotion_id']);
+           /*     var_dump( $_POST['mark-'.$i]);
+                var_dump( $_POST['tucsId']);
+                var_dump( $_POST['markid']);
 
-                //$this->persistMark();
+                var_dump( $_POST['spid']);
+                exit;
+*/
+                $this->persistMark($_POST['markid'], $_POST['tucsId'], $_POST['spid'], $_POST['mark-'.$i], $_POST['session']);
             }
         }
 
         $em = $this->getDoctrine()->getManager();
-        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year,19);
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($_POST['promotion_id'], $_POST['year'],$_POST['subjectId']);
 
         return array(
             'studentPromotions' => $studentPromotions,
@@ -493,16 +498,15 @@ class MarkController extends Controller
      * @Route("/", name="mark_persist")
      * @Method("PUT")
      */    
-    public function persistMark($id = null) 
+    public function persistMark($id = null, $tucsid = null, $spid = null, $value, $session) 
     {
         $request = $this->getRequest();
-
-        var_dump($request);exit;
         $em = $this->getDoctrine()->getManager();
         
         // If mark exists ==> update
-        $id = $request->request->get('pk');
-        if (!empty($id)) {
+        
+        if ($id != null) {
+            var_dump($id);
             $mark = $em->getRepository('C2JEasySaisieBundle:Mark')->find($id);
 
             if (!$mark) {
@@ -512,8 +516,8 @@ class MarkController extends Controller
         // Else ==> insert
         else {              
             //var_dump($request->request->get('tucsid'));exit;
-            $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($request->request->get('tucsid'));
-            $sp = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->find($request->request->get('spid'));
+            $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($tucsid);
+            $sp = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->find($spid);
 
             if (!$tucs) {
                 throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
@@ -527,8 +531,8 @@ class MarkController extends Controller
         }
 
         // If the new value is not empty : set the mark value
-        $session = $request->request->get('session');
-        $value = $request->request->get('value');
+        //$session = $request->request->get('session');
+        //$value = $request->request->get('value');
         if($value != '') {
             if($session == 1)
                 $mark->setValueS1($value);
@@ -538,8 +542,19 @@ class MarkController extends Controller
             $em->persist($mark);
         } 
         // Otherwise the mark needs to be deleted from the DB : delete
-        else { 
+        // Session1
+        elseif ($session == 1) {
             $em->remove($mark);
+        }
+        // Session2
+        else {
+            if($mark->getValueS1() == '') {
+                $em->remove($mark); // S1 == '' ==> delete
+            }
+            else { // S1 != '' && S2 == '' ==> update to null
+                // Update 
+                $mark->setValueS2(null);
+            }
         }
 
         $em->flush();
@@ -547,6 +562,7 @@ class MarkController extends Controller
         $response = new Response(json_encode(array('markId' => $mark->getId())));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    
         
     }
 }

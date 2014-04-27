@@ -20,3 +20,13 @@ Install the assets
   
     php app/console asset:install web
 
+3) Create An User
+----------------------------------
+Using the FOSUserBundle
+Create the first Administrateur
+	
+	php app/console fos:user:create
+
+Promote an user as Admin
+
+	php app/console fos:user:promote  (enter 'ROLE_ADMIN' as role)
