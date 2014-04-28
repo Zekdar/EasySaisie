@@ -49,12 +49,14 @@ class StudentController extends Controller
         $entity = new Student();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
+		$promotion=null;
 
         if ($form->isValid()) {		
 					
 			$number=$entity->getNumber();	
 			$lastName=$entity->getLastName();
 			$firstName=$entity->getFirstName();
+			$flagCreated=false;
 			
 			$gsmode=null;
 			$promotionId=null;
@@ -83,6 +85,11 @@ class StudentController extends Controller
 				$student->setFirstName($firstName);
 				$em->persist($student);
 				$em->flush();
+				$flagCreated=true;
+				$this->get('session')->getFlashBag()->add(
+						'success',
+						'L\'étudiant a été créé avec succès !'
+					);
 			}
 			
 			if($promotionId != null)
@@ -101,7 +108,7 @@ class StudentController extends Controller
 
 					$this->get('session')->getFlashBag()->add(
 						'success',
-						'L\'étudiant a été ajouté dans la promotion créé avec succès !'
+						'L\'étudiant a été ajouté dans la promotion avec succès !'
 					);
 					if($gsmode)
 					{
@@ -129,10 +136,15 @@ class StudentController extends Controller
 				}
 			}
         }
-
+		if($flagCreated)
+		{
+			return $this->redirect($this->generateUrl('student_show', array('id' => $student->getId())));
+		}
+		
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+			'promotion' => $promotion,
         );
     }
 
@@ -169,18 +181,21 @@ class StudentController extends Controller
 		$request = Request::createFromGlobals();
 		$request->getPathInfo();
 		$promotionId=$request->query->get('promotionId');
+		$promotion=null;
 		
 		$entities = null;
 		
 		if($promotionId != null) { 
 			$em = $this->getDoctrine()->getManager();
 			$entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array("promotion" => $promotionId));
+			$promotion = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($promotionId);
 		}
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
 			'entities' => $entities,
+			'promotion' => $promotion,
         );
     }
 

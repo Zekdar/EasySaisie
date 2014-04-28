@@ -39,6 +39,7 @@
         </p>
     </div>
 	
+	{% if promotion is not null %}
 	<h1 class="page-header">Liste des étudiants affectés à la promotion </h1>
 		{% if entities is not empty %}		
 			<div class="table-responsive">
@@ -59,7 +60,9 @@
 							<td>{{ entity.student.firstName }}</td>
 							<td>
 								<div class="btn-group">
-									<a href="{{ path('studentpromotion_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% if(app.request.query.get('gsmode')) %}
+										<a href="{{ path('student_edit', { 'id': entity.student.id }) }}?gsmode=true&promotionId={{ app.request.query.get('promotionId')}}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% endif%}									
 								</div>
 							</td>
 						</tr>
@@ -70,4 +73,5 @@
 		{% else %}
 			<p class="center no-reccords-to-display">Aucun enregistrement à afficher.</p>
 		{% endif %}
+	{% endif %}
 {% endblock %}

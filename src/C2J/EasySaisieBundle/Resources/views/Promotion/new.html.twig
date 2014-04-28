@@ -32,7 +32,7 @@
 	<hr />
 	{% if entity.formation is not null %}
 		{% if(app.request.query.get('gsmode')) %}
-			<h1 class="page-header">Choix d'une promotion existante de formation {{ entity.formation.name ~ " " ~ entity.formation.type }}</h1>
+			<h1 class="page-header">Choisir une promotion existante de formation {{ entity.formation.name ~ " " ~ entity.formation.type }}</h1>
 		{% else %}
 			<h1 class="page-header">Liste des promotions existantes pour la formation {{ entity.formation.name ~ " " ~ entity.formation.type }}</h1>
 		{% endif %}
