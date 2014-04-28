@@ -42,7 +42,7 @@
             </ul>
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                 <div class="navbar-form navbar-right">
-                    <p>Connecté en tant que {{ app.user.username }} <a class="btn btn-purple" href="{{ path('fos_user_security_logout') }}">Déconnexion</a></p>
+                    <p>Connecté en tant que <b>{{ app.user.username }}</b> <a class="btn btn-purple" href="{{ path('fos_user_security_logout') }}">Déconnexion</a></p>
                 </div>
             {% endif %}
         </nav>
