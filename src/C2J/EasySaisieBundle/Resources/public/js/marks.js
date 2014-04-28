@@ -464,23 +464,23 @@ function getStudentsGoingToSession2() {
 	}
 }
 
-function refreshAvgTableWidth() {
-	var markWidths = $('#marksTable tbody tr:first td');
-	var avgWidths = $('#avgTable tbody tr:first td');
-	var avgTable = $('#avgTable');
+// function refreshAvgTableWidth() {
+// 	var markWidths = $('#marksTable tbody tr:first td');
+// 	var avgWidths = $('#avgTable tbody tr:first td');
+// 	var avgTable = $('#avgTable');
 	
-	$(avgTable).width($('#marksTable').width());
-	$(avgTable).css('margin-left', $(markWidths[0]).outerWidth(true));
+// 	$(avgTable).width($('#marksTable').width());
+// 	$(avgTable).css('margin-left', $(markWidths[0]).outerWidth(true));
 
-	for(var i = 1; i < avgWidths.length; i++) 
-		$(avgWidths[i-1]).width($(markWidths[i]).width());
-}
+// 	for(var i = 1; i < avgWidths.length; i++) 
+// 		$(avgWidths[i-1]).width($(markWidths[i]).width());
+// }
 
 function createAvgTable() {
 	var marksTableFirstRow = $('#marksTable tbody tr:first td').splice(2);
 	var rows = '';	
 
-	rows += '<tr><td></td>';
+	rows += '<thead><tr><th></th>';
 		var subjectsList = $('#marksTable thead tr:nth-child(3) th').splice(2);
 		var content;
 
@@ -489,9 +489,9 @@ function createAvgTable() {
 				content = '<img src="/EasySaisie/web/bundles/c2jeasysaisie/img/xbar.png">';
 			else 
 				content = $(this).text();
-			rows += '<td>' + content + '</td>';
+			rows += '<th>' + content + '</th>';
 		});
-	rows += '</tr>';
+	rows += '</tr></thead>';
 
 	var rowTitles = ['Moyenne', 'Min', 'Max'];
 	for(var i = 0; i < 3; i++) {
@@ -674,7 +674,7 @@ $(document).ready(function() {
 		}
 	});	
 
-	// try {
+	try {
 		var startStopWatch = (new Date()).getTime();
 
 		displayLoadingWheel(true);
@@ -686,14 +686,14 @@ $(document).ready(function() {
 		createAvgTable();
 		getNotationSystemRules();
 		refreshAvg();
-		refreshAvgTableWidth();
+		// refreshAvgTableWidth();
 
 		displayLoadingWheel(false);
 
 		var totalTime = (new Date()).getTime() - startStopWatch;
 		console.log('Generated in : ' + totalTime + 'ms');
-	// }
-	// catch(e) {
-		// console.error('/!\\ Exception : ' + e.message);
-	// }
+	}
+	catch(e) {
+		console.error('/!\\ Exception : ' + e.message);
+	}
 });

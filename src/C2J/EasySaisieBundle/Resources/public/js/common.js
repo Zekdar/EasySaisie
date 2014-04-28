@@ -37,7 +37,7 @@ $(document).ready(function() {
 		});
 
 		// call the tablesorter plugin and apply the uitheme widget
-		$("table").tablesorter({
+		$("#marksTable, #containersAvgTable").tablesorter({
 			// this will apply the bootstrap theme if "uitheme" widget is included
 			// the widgetOptions.uitheme is no longer required to be set
 			theme : "bootstrap",
