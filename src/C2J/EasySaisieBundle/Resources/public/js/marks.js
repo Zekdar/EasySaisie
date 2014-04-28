@@ -652,6 +652,7 @@ $(document).ready(function() {
 		ajaxOptions: {
 		    type: 'put'
 		},
+		emptyclass : 'emptyClass',
 		params: function(params) {
 		    params.spid = $(this).data('spid');
 		    params.tucsid = $(this).data('tucsid');

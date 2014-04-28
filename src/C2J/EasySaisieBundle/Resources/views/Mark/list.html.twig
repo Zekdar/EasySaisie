@@ -105,8 +105,9 @@
                                     <th data-sorter="false">
                                         <a 
                                             href="{{ path('mark_add_by_subject', {
-                                                'tucsId': tucs.id ,
-                                                'subjectId': tucs.subject.id , 
+                                                'tucId': tuc.id,
+                                                'tucsId': tucs.id,
+                                                'subjectId': tucs.subject.id, 
                                                 'year': year, 'promotion_id': promotion_id, 
                                                 'session' : 1 
                                             })}}">
@@ -133,6 +134,8 @@
                                     {% set markId = '' %} {# declared here to use it after the loops #}
                                     {% set tusId = '' %} {# declared here to use it after the loops #}
                                     {% set markValue = '' %}
+                                    {% set markSession = '' %}
+                                    {% set markClass = '' %}
 
                                     {% set continue = true %} {# used to simulate a break in php because it's not available in Twig #}
                                     {% for mark in sp.marks if continue %}
@@ -140,6 +143,13 @@
                                             {# session1 #}
                                             {% if session == 1 %}
                                                 {% set markValue = mark.valueS1 %}
+                                                {% for container in containers %} 
+                                                    {% if container.id == mark.teachingUnitContainerSubject.teachingUnitContainer.container.id %}
+                                                        {% if mark.valueS1 < container.minMark %}
+                                                            {% set markClass = 'markEliminatory' %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}           
 
                                             {# session2 #}
                                             {% elseif session == 2 %} 
@@ -148,7 +158,7 @@
                                                 {% else %} {# else let's check if the session1 mark fits our requirements #}
                                                     {% for container in containers %} {# Let's check the minMark for each container. If current mark >= minMark then display it, else display '' #}
                                                         {% if container.id == mark.teachingUnitContainerSubject.teachingUnitContainer.container.id %}
-                                                            {% if mark.valueS1 > container.minMark %}
+                                                            {% if mark.valueS1 >= container.minMark %}
                                                                 {% set markValue = mark.valueS1 %}
                                                             {% else %}
                                                                 {% set markValue = '' %}
@@ -159,8 +169,9 @@
                                             {# session3 (PV Final) #}
                                             {% else %}
                                                 {% if mark.valueS2 is not null %}  {# if the session2 mark is not null, let's display it #}
-                                                    {% set markValue = mark.valueS2 %}                                                    
-                                                {% else %} {# else let's check if the session1 mark fits our requirements #}
+                                                    {% set markValue = mark.valueS2 %}
+                                                    {% set markSession = 'markS2' %}                                                    
+                                                {% else %}
                                                     {% set markValue = mark.valueS1 %}
                                                 {% endif %}
                                             {% endif %}
@@ -169,10 +180,10 @@
                                             {% set continue = false %}
                                         {% endif %}
                                     {% endfor %} 		
-                                    <td class="tdMark">
+                                    <td class="tdMark {{ markSession }}">
                                         <a 
                                             href="" 
-                                            class="mark"
+                                            class="mark {{ markClass }}"
                                             data-containername="{{ tu[0].container }}"
                                             data-session="{{ session }}"
                                             data-tucode="{{ tuCode }}" 

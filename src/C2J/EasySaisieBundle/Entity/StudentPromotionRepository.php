@@ -44,7 +44,7 @@ class StudentPromotionRepository extends EntityRepository
 					->getResult();
 	}
 
-	public function findAllStudentsInPromotionByYearBySubject($promotion_id, $year, $subject_id) 
+	public function findAllStudentsInPromotionByYearBySubject($promotion_id, $year, $subject_id, $tuc_id, $tucs_id) 
 	{
 		$qb = $this ->createQueryBuilder('sp')
 					->join('sp.student', 's')
@@ -63,10 +63,14 @@ class StudentPromotionRepository extends EntityRepository
 						->addSelect('sub')
 					->where('sp.promotion = :promotion_id')
 						->setParameter('promotion_id', $promotion_id)
-					->andWhere('sub.id = :sub_id')
-						->setParameter('sub_id', $subject_id)
-					->andWhere('p.year = :year') 
-						->setParameter('year', $year)
+					// ->andWhere('sub.id = :sub_id')
+					// 	->setParameter('sub_id', $subject_id)
+					// ->andWhere('p.year = :year') 
+					// 	->setParameter('year', $year)
+					->andWhere('tucs.subject = :subject_id')
+						->setParameter('subject_id', $subject_id)
+					// ->andWhere('tucs.teachingUnitContainer = :tuc_id')
+					// 	->setParameter('tuc_id', $tuc_id)
 					->addOrderBy('s.lastName', 'ASC');
 		
 		return $qb 	->getQuery()

@@ -44,12 +44,12 @@ class MarkController extends Controller
     /**
      * Adds marks for a given subject
      *
-     * @Route("/addBySubject/{tucsId}/{subjectId}/{year}/{promotion_id}/{session}", name="mark_add_by_subject")
+     * @Route("/addBySubject/{tucId}/{tucsId}/{subjectId}/{year}/{promotion_id}/{session}", name="mark_add_by_subject")
      * @Method({"GET", "POST"})
      * @Secure(roles="ROLE_PROF")
      * @Template()
      */    
-    public function addBySubjectAction($tucsId, $subjectId, $year, $promotion_id, $session) 
+    public function addBySubjectAction($tucId, $tucsId, $subjectId, $year, $promotion_id, $session) 
     {
         if(isset($_POST['submit'])){
             for ($i = 0; $i < $_POST['marksCount']; $i++) { 
@@ -58,7 +58,7 @@ class MarkController extends Controller
         }
         
         $em = $this->getDoctrine()->getManager();
-        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year, $subjectId);
+        $studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllStudentsInPromotionByYearBySubject($promotion_id, $year, $subjectId, $tucId, $tucsId);
         $tucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($tucsId);
         
         return array(
@@ -66,6 +66,7 @@ class MarkController extends Controller
             'subjectId' => $subjectId,
             'session' => $session,
             'tucs' => $tucs,
+            'tucId' => $tucId
         );
     }
 
@@ -499,14 +500,9 @@ class MarkController extends Controller
             $em->remove($mark);
         }
         // Session2
-        else {
-            if($mark->getValueS1() == '') {
-                $em->remove($mark); // S1 == '' ==> delete
-            }
-            else { // S1 != '' && S2 == '' ==> update to null
-                // Update 
-                $mark->setValueS2(null);
-            }
+        else {            
+            // Update 
+            $mark->setValueS2(null);
         }
 
         // $em->flush();

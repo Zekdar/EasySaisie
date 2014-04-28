@@ -89,6 +89,18 @@ h1, h2 {
 	font-weight: bold;
 }
 
+.markS2 {
+	background-color: rgba(85, 9, 155, 0.29) !important;
+}
+
+.markEliminatory {
+	color: red !important;
+}
+
+.emptyClass {
+	color: #C7C3C3 !important;
+}
+
 /* form-signin */
 .form-signin {
 	max-width: 330px;
