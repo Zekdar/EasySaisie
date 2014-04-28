@@ -667,6 +667,13 @@ $(document).ready(function() {
 
 	        $(this).data('pk', response.markId);
 	        $(this).editable('setValue', newValue); // Needed to update the value in html before calling refreshAvg(), otherwise the update is done last
+
+	        var containername = $(this).data('containername');
+	        if(newValue < containersInfo[containername].minMark)
+	        	$(this).addClass('markEliminatory');
+	        else
+	        	$(this).removeClass('markEliminatory');
+
 	        refreshAvg(true);
 	    },
 		error: function(response, newValue) {
