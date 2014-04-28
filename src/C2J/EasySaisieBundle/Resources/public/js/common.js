@@ -33,7 +33,8 @@ $(document).ready(function() {
 			hover      : '', // use custom css here - bootstrap class may not override it
 			filterRow  : '', // filter row class
 			even       : '', // odd row zebra striping
-			odd        : ''  // even row zebra striping
+			odd        : '',  // even row zebra striping
+			placeholder : {search : 'Chercher...'}
 		});
 
 		// call the tablesorter plugin and apply the uitheme widget
