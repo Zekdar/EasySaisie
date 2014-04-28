@@ -21,7 +21,9 @@ class TeachingUnitContainerSubjectType extends AbstractType
 			$promotionId=$_GET['promotionId'];
 		}
         $builder
-			->add('subject', null, array('label' => 'Matière'))
+			->add('subject', null, array(
+				'label' => 'Matière',
+				'required' => true))
             ->add('coeff', 'text', array('label' => 'Coefficient'))
 			->add('ects', 'text', array('label' => 'Nombre d\'ECTS'))
             ->add('teachingUnit', 'entity', array(

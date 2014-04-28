@@ -15,7 +15,8 @@ class ContainerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder           
-            ->add('promotion')
+            ->add('promotion', null, array(
+				'required' => true))
 			->add('name', 'text', array('label' => 'Nom du conteneur'))
 			->add('isCompensable', 'checkbox', array(
 				'required'  => false,

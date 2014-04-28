@@ -8,10 +8,14 @@
     {{ form(edit_form) }}
 
         <ul class="record_actions">
-    <li>
-        <a href="{{ path('formation') }}">
-            Back to the list
-        </a>
+    <li>       
+		{% if(app.request.query.get('gsmode')) %}
+			<a href="{{ path('formation_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+		{% else %}
+			<a href="{{ path('formation') }}">
+				Back to the list
+			</a>
+		{% endif %}
     </li>
     <li>{{ form(delete_form) }}</li>
 </ul>

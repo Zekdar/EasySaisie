@@ -57,7 +57,6 @@ class TeachingUnitContainerSubject
   private $container;
   private $teachingUnit;
   
-
     /**
      * Set coeff
      *
