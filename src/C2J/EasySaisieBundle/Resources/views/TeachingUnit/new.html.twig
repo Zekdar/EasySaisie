@@ -57,7 +57,11 @@
 							<td>{% if(entity.isCompensable) %} Oui {% else %} Non {% endif %}</td>
 							<td>
 								<div class="btn-group">
-									<a href="{{ path('teachingunit_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% if(app.request.query.get('gsmode')) %}
+										<a href="{{ path('teachingunit_edit', { 'id': entity.id }) }}?gsmode=true&promotionId={{ app.request.query.get('promotionId')}}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% else %}
+										<a href="{{ path('teachingunit_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% endif%}
 								</div>
 							</td>
 						</tr>

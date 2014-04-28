@@ -67,9 +67,11 @@
 								<td>{% if entity.teacher is not null %}{{ entity.id }}{% endif%}</td>
 								<td>{{ entity.teachingUnitContainer.container.name }}</td>
 								<td>
-									<div class="btn-group">
+									{% if(app.request.query.get('gsmode')) %}
+										<a href="{{ path('teachingunitcontainersubject_edit', { 'id': entity.id }) }}?gsmode=true&promotionId={{ app.request.query.get('promotionId')}}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% else %}
 										<a href="{{ path('teachingunitcontainersubject_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
-									</div>
+									{% endif%}
 								</td>
 							</tr>
 						{% endfor %}

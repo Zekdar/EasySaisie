@@ -28,14 +28,16 @@
     <hr />
 	
 	<div class="row">
-        <p class="center"> 
-            {% if(app.request.query.get('gsmode')) %}
-                <a href="{{ path('promotion_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
-            {% else %}   
-                <a href="{{ path('formation') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
-            {% endif %}
-        </p>
-    </div>
+
+		<p class="center"> 
+			{% if(app.request.query.get('gsmode')) %}
+				<a href="{{ path('promotion_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+			{% else %}			
+				<a href="{{ path('formation') }}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour à la liste</a>
+			{% endif %}
+		</p>
+	</div>
+
 	<hr />
 	
 	<h1 class="page-header">Liste des promotions affectées à cette formation</h1>

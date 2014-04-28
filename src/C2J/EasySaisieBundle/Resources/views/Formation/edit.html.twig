@@ -18,10 +18,14 @@
         <hr />
         
         <div>
-            <a class="btn btn-purple btn-sm" href="{{ path('formation') }}">
-                <span class="glyphicon glyphicon-hand-left" />
-                Retour
-            </a>
+            {% if(app.request.query.get('gsmode')) %}
+                <a href="{{ path('formation_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+            {% else %}
+                <a class="btn btn-purple btn-sm" href="{{ path('formation') }}">
+                    <span class="glyphicon glyphicon-hand-left" />
+                    Retour
+                </a>
+            {% endif %}
             <div style="float:right">
                 {{ form_start(delete_form) }}
                     

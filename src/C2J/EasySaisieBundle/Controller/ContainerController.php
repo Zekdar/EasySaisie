@@ -167,11 +167,10 @@ class ContainerController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-
+        $em = $this->getDoctrine()->getManager();		
         $entity = $em->getRepository('C2JEasySaisieBundle:Container')->find($id);
-		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->findBy(array('container' => $id));
-
+		$entities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findBy(array('container' => $id));
+		
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Container entity.');
         }

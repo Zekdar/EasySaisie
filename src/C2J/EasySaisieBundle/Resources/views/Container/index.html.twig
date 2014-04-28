@@ -22,7 +22,7 @@
                 <tbody>
                 {% for entity in entities %}
                     <tr>
-						<td>{{ entity.promotion.year }} {{ entity.promotion.name }} {{ entity.promotion.formation.name }}  {{ entity.promotion.formation.type }}</td>
+						<td>{{ entity.promotion.name }} {{ entity.promotion.formation.name }}  {{ entity.promotion.formation.type }} {{ entity.promotion.year }}</td>
                         <td>{{ entity.name }}</td>
 						<td>{% if(entity.isCompensable) %} Oui {% else %} Non {% endif %}</td>
 						<td>{{ entity.minMark }}</td>

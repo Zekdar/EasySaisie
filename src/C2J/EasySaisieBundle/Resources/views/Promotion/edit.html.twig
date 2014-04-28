@@ -21,10 +21,18 @@
         <hr />
         
         <div>
-            <a class="btn btn-purple btn-sm" href="{{ path('promotion') }}">
-                <span class="glyphicon glyphicon-hand-left" />
-                Retour
-            </a>
+            {% if(app.request.query.get('gsmode') or app.request.query.get('formationId') is not null) %}
+                {% if app.request.query.get('formationId') is not null %}
+                    <a href="{{ path('promotion_new') }}?gsmode=true&formationId={{ app.request.query.get('formationId')}}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+                {% else %}
+                    <a href="{{ path('promotion_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+                {% endif %}
+            {% else %}
+                <a class="btn btn-purple btn-sm" href="{{ path('promotion') }}">
+                    <span class="glyphicon glyphicon-hand-left" />
+                    Retour
+                </a>
+            {% endif %}
             <div style="float:right">
                 {{ form_start(delete_form) }}
                     

@@ -48,7 +48,7 @@ class PromotionRepository extends EntityRepository
             $queryBuilder->andWhere('p.id = :promotionId')
             ->setParameter('promotionId', $promotionId);
         }
-        return $queryBuilder;
+        return $queryBuilder;;
 	}
 	/*
 	public function findAllSubjectsByTusByContainerByPromotionByYear($promotion_id, $year) 
