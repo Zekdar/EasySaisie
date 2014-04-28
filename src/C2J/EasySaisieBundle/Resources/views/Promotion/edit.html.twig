@@ -3,15 +3,23 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Rule edit</h1>
+    <h1>Editer une promotion</h1>
 
     {{ form(edit_form) }}
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('promotion') }}">
-            Back to the list
-        </a>
+		{% if(app.request.query.get('gsmode') or app.request.query.get('formationId') is not null) %}
+			{% if app.request.query.get('formationId') is not null %}
+				<a href="{{ path('promotion_new') }}?gsmode=true&formationId={{ app.request.query.get('formationId')}}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+			{% else %}
+				<a href="{{ path('promotion_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+			{% endif %}
+		{% else %}
+			<a href="{{ path('promotion') }}">
+				Back to the list
+			</a>
+		{% endif %}
     </li>
     <li>{{ form(delete_form) }}</li>
 </ul>

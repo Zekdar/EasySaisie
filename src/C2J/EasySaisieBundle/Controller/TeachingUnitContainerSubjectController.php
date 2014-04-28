@@ -206,15 +206,12 @@ class TeachingUnitContainerSubjectController extends Controller
 	
 		$containerId = $entity->getTeachingUnitContainer()->getContainer()->getId();
 		$container = $em->getRepository('C2JEasySaisieBundle:Container')->find($containerId);
-		
-		var_dump($entity->getTeachingUnitContainer());
-		exit;
+	
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
         }
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
-		
         return array(
             'entity'      => $entity,
 			'container'	  => $container,

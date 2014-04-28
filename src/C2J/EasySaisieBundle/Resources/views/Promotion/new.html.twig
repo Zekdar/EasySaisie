@@ -54,7 +54,12 @@
 							<td>{{ entity.minAverageToValidate }}</td>
 							<td>
 								<div class="btn-group">
-									<a href="{{ path('promotion_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% if(app.request.query.get('gsmode')) %}
+										<a href="{{ path('promotion_edit', { 'id': entity.id }) }}?gsmode=true&formationId={{ app.request.query.get('formationId')}}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% else %}
+										<a href="{{ path('promotion_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+									{% endif%}
+									
 									{% if(app.request.query.get('gsmode')) %}
 										<a href="{{ path('container_new') }}?gsmode=true&promotionId={{entity.id}}"  class="btn btn-purple btn-xs"><span class="glyphicon glyphicon-hand-right"></span> Go</a>
 									{% endif %}
