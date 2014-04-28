@@ -3,20 +3,36 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>Editer une formation</h1>
+    <div class="form-edit">
+        <h1>Editer une formation</h1>
+        <hr />
 
-    {{ form(edit_form) }}
-
-        <ul class="record_actions">
-    <li>       
-		{% if(app.request.query.get('gsmode')) %}
-			<a href="{{ path('formation_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
-		{% else %}
-			<a href="{{ path('formation') }}">
-				Back to the list
-			</a>
-		{% endif %}
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+        {{ form_start(edit_form) }}
+            {{ form_row(edit_form.name) }}
+            {{ form_row(edit_form.type) }}
+            <div style="float:right;margin-top:15px;">
+                {{ form_widget(edit_form.submit, { 'attr': {'class': 'btn btn-sm btn-primary '} }) }}
+            </div>
+        {{ form_end(edit_form) }}
+        <div class="clear"></div>
+        <hr />
+        
+        <div>
+            {% if(app.request.query.get('gsmode')) %}
+                <a href="{{ path('formation_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+            {% else %}
+                <a class="btn btn-purple btn-sm" href="{{ path('formation') }}">
+                    <span class="glyphicon glyphicon-hand-left" />
+                    Retour
+                </a>
+            {% endif %}
+            <div style="float:right">
+                {{ form_start(delete_form) }}
+                    
+                    {{ form_widget(delete_form.submit, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                {{ form_end(delete_form) }}
+            </div>
+        </div>
+        
+    </div>
 {% endblock %}
