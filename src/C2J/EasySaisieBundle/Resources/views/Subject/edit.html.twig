@@ -7,12 +7,20 @@
 
     {{ form(edit_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('subject') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <ul class="record_actions">
+		<li>
+			{% if(app.request.query.get('gsmode') or app.request.query.get('promotionId') is not null) %}
+				{% if app.request.query.get('promotionId') is not null %}
+					<a href="{{ path('subject_new') }}?gsmode=true&promotionId={{ app.request.query.get('promotionId')}}" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+				{% else %}
+					<a href="{{ path('subject_new') }}?gsmode=true" class="btn btn-purple btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Retour</a>
+				{% endif %}
+			{% else %}
+				<a href="{{ path('subject') }}">
+					Back to the list
+				</a>
+			{% endif %}
+		</li>
+		<li>{{ form(delete_form) }}</li>
+	</ul>
 {% endblock %}

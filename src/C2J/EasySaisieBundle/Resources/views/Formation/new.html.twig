@@ -49,7 +49,7 @@
 						<td>{{ entity.name ~" "~ entity.type}}</td>
 						<td>
 							<div class="btn-group">
-								<a href="{{ path('formation_edit', { 'id': entity.id }) }}"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
+								<a href="{{ path('formation_edit', { 'id': entity.id }) }}?gsmode=true"  class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit"></span> Éditer</a>
 								{% if(app.request.query.get('gsmode')) %}
 									<a href="{{ path('promotion_new') }}?gsmode=true&formationId={{entity.id}}"  class="btn btn-purple btn-xs"><span class="glyphicon glyphicon-hand-right"></span> Go</a>
 								{% endif %}

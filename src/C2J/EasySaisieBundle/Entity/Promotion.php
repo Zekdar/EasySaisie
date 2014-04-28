@@ -139,7 +139,7 @@ class Promotion
 
 	public function __toString()
 	{
-		return $this->name." ".$this->getFormation();
+		return $this->name." ".$this->getFormation()->getName()." ".$this->getFormation()->getType()." ".$this->year;
 	}
 
     /**

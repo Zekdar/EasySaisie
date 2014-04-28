@@ -250,6 +250,7 @@ class TeachingUnitContainerSubjectController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($id);
+		$oldTucId = $entity->getTeachingUnitContainer()->getId();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
@@ -262,13 +263,15 @@ class TeachingUnitContainerSubjectController extends Controller
         if ($editForm->isValid()) {
 			$teachingUnitId=$entity->getTeachingUnit()->getId();
 			$containerId=$entity->getContainer()->getId();
-	
+				
 			$em = $this->getDoctrine()->getManager();		
 			$entityTuc = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findOneBy(array(
 																							'teachingUnit' => $teachingUnitId, 
 																							'container' => $containerId));
+
 			if($entityTuc == null)
 			{
+				$id;
 				$entityContainer = $em->getRepository('C2JEasySaisieBundle:Container')->find($containerId);
 				$entityTu = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($teachingUnitId);
 				
@@ -276,7 +279,7 @@ class TeachingUnitContainerSubjectController extends Controller
 				$entityTuc->setTeachingUnit($entityTu);
 				$entityTuc->setContainer($entityContainer);				
 				$em->persist($entityTuc);
-				$em->flush();
+				$em->flush();											
 			}
 			$entitySubject=$entity->getSubject();
 			$entityTeacher=$entity->getTeacher();
@@ -289,6 +292,21 @@ class TeachingUnitContainerSubjectController extends Controller
 			}
 			$em->persist($entity);
 			$em->flush();
+			
+			/*
+			$myTucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findOneBy(array('teachingUnitContainer' => $entityTuc->getId()));			
+			$oldTucId = $myTucs->getTeachingUnitContainer()->getId();
+			var_dump($oldTucId);
+			exit;
+			*/
+			
+			$entitiesTucs=$em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findBy(array("teachingUnitContainer" => $oldTucId));	
+			if($entitiesTucs==null)
+			{
+				$tucToDelete=$em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->find($oldTucId);
+				$em->remove($tucToDelete);
+				$em->flush();
+			}
 
             return $this->redirect($this->generateUrl('teachingunitcontainersubject_edit', array('id' => $id)));
         }

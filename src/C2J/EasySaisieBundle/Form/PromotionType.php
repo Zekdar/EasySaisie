@@ -15,7 +15,9 @@ class PromotionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('formation' , null, array('label' => 'Formation'))
+            ->add('formation' , null, array(
+				'label' => 'Formation',
+				'required' => true))
 			->add('name', 'text', array('label' => 'Nom de la promotion'))
 			->add('year', 'text', array('label' => 'Année'))
 			->add('minAverageToValidate', 'text', array('label' => 'Moyenne pour valider l\'année'))
