@@ -244,9 +244,32 @@ class FormationController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+			$gsmode=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+			}
             $em->flush();
-
-            return $this->redirect($this->generateUrl('formation_edit', array('id' => $id)));
+			
+			$em->persist($entity);
+			$em->flush();
+			$this->get('session')->getFlashBag()->add(
+				'success',
+				'La formation a été mise à jour avec succès !'
+			);
+			
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('formation_new').'?gsmode=true');
+			}
+			else
+			{
+				return $this->redirect($this->generateUrl('formation_edit', array('id' => $id)));
+			}    
         }
 
         return array(
