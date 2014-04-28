@@ -261,6 +261,22 @@ class TeachingUnitContainerSubjectController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
+			$countFlush=0;
 			$teachingUnitId=$entity->getTeachingUnit()->getId();
 			$containerId=$entity->getContainer()->getId();
 				
@@ -271,7 +287,6 @@ class TeachingUnitContainerSubjectController extends Controller
 
 			if($entityTuc == null)
 			{
-				$id;
 				$entityContainer = $em->getRepository('C2JEasySaisieBundle:Container')->find($containerId);
 				$entityTu = $em->getRepository('C2JEasySaisieBundle:TeachingUnit')->find($teachingUnitId);
 				
@@ -279,7 +294,8 @@ class TeachingUnitContainerSubjectController extends Controller
 				$entityTuc->setTeachingUnit($entityTu);
 				$entityTuc->setContainer($entityContainer);				
 				$em->persist($entityTuc);
-				$em->flush();											
+				$em->flush();		
+				$count++;
 			}
 			$entitySubject=$entity->getSubject();
 			$entityTeacher=$entity->getTeacher();
@@ -292,23 +308,31 @@ class TeachingUnitContainerSubjectController extends Controller
 			}
 			$em->persist($entity);
 			$em->flush();
-			
-			/*
-			$myTucs = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findOneBy(array('teachingUnitContainer' => $entityTuc->getId()));			
-			$oldTucId = $myTucs->getTeachingUnitContainer()->getId();
-			var_dump($oldTucId);
-			exit;
-			*/
-			
+			$countFlush;
+						
 			$entitiesTucs=$em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findBy(array("teachingUnitContainer" => $oldTucId));	
 			if($entitiesTucs==null)
 			{
 				$tucToDelete=$em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->find($oldTucId);
 				$em->remove($tucToDelete);
 				$em->flush();
+				$countFlush;
 			}
-
-            return $this->redirect($this->generateUrl('teachingunitcontainersubject_edit', array('id' => $id)));
+			if($countFlush >=0)
+			{
+				$this->get('session')->getFlashBag()->add(
+						'success',
+						'La mise à jour a été effectuée avec succès !'
+				);
+			}
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('teachingunitcontainersubject_new').'?gsmode=true&promotionId='.$promotionId);
+			}			
+			else
+			{
+				return $this->redirect($this->generateUrl('teachingunitcontainersubject_edit', array('id' => $id)));
+			}        
         }
 
         return array(

@@ -252,9 +252,36 @@ class PromotionController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+			$gsmode=null;
+			$formationId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['formationId']!=null)
+				{
+					$formationId=$queries['formationId'];
+				}
+			}
             $em->flush();
-
-            return $this->redirect($this->generateUrl('promotion_edit', array('id' => $id)));
+			
+			$this->get('session')->getFlashBag()->add(
+				'success',
+				'La promotion a été mise à jour avec succès !'
+			);
+			
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('promotion_new').'?gsmode=true&formationId='.$formationId);
+			}			
+			else
+			{
+				return $this->redirect($this->generateUrl('promotion_show', array('id' => $entity->getId())));
+			}
         }
 
         return array(

@@ -249,9 +249,34 @@ class TeachingUnitController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
             $em->flush();
-
-            return $this->redirect($this->generateUrl('teachingunit_edit', array('id' => $id)));
+			$this->get('session')->getFlashBag()->add(
+					'success',
+					'L\'UE a été mise à jour avec succès !'
+			);
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('teachingunit_new').'?gsmode=true&promotionId='.$promotionId);
+			}			
+			else
+			{
+				return $this->redirect($this->generateUrl('teachingunit_edit', array('id' => $id)));
+			}  
         }
 
         return array(
