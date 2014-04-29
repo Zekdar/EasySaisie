@@ -35,7 +35,7 @@ class MarkController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllPromotionsByYearDistinct();        
-        var_dump(count($promotions));
+        
         return array(
             'promotions' => $promotions,
         );

@@ -63,7 +63,7 @@ class UserController extends Controller
 
 			$userManager->updateUser($entity);
 			
-            return $this->redirect($this->generateUrl('user_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('user'));
         }
 
         return array(
