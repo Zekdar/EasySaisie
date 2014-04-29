@@ -304,7 +304,7 @@ class StudentPromotionController extends Controller
 				}
 				else
 				{
-					return $this->redirect($this->generateUrl('studentPromotion'));
+					return $this->redirect($this->generateUrl('studentpromotion'));
 				}
 			}
 			else
