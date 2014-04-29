@@ -117,3 +117,7 @@ h1, h2 {
 .clear {
 	clear: both;
 }
+
+thead th {
+	background: #eee;
+}

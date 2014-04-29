@@ -50,7 +50,7 @@
         <!-- DISPLAY MARKS -->        
         <div id="displayMarks">
             <!-- MARKS TABLE -->
-            <table class="table table-bordered table-bordered exportable" id="marksTable">
+            <table class="table table-bordered table-bordered table-striped table-hover exportable" id="marksTable">
                 <thead>
                     <tr>
                         <th data-sorter="false"></th>
@@ -102,7 +102,7 @@
                             {% for tuc in container.teachingUnitContainers %}
                                 <th></th>
                                 {% for tucs in tuc.teachingUnitContainerSubjects %}
-                                    <th data-sorter="false">
+                                    <th data-sorter="false">                                        
                                         <a 
                                             href="{{ path('mark_add_by_subject', {
                                                 'tucId': tuc.id,
@@ -110,8 +110,7 @@
                                                 'subjectId': tucs.subject.id, 
                                                 'year': year, 'promotion_id': promotion_id, 
                                                 'session' : 1 
-                                            })}}">
-                                            <span class="glyphicon glyphicon-plus purple"></span>
+                                            })}}"><div style="width:100%;height:100%;"><span class="glyphicon glyphicon-plus purple"></span></div>                                            
                                         </a>
                                     </th>
                                 {% endfor %}
@@ -206,16 +205,12 @@
             <hr />
 
             <!-- AVG TABLE -->
-            <table class="table table-bordered table-bordered table-striped" id="avgTable">
-                <tbody>
-
-                </tbody>
-            </table>                   
+            <table class="table table-bordered table-bordered table-striped table-hover" id="avgTable"></table>                   
         </div>
 
         <!-- DISPLAY CONTAINERS AVG -->
         <div id="displayContainersAvg" style="display: hidden;">
-            <table class="table table-bordered table-bordered exportable" id="containersAvgTable">
+            <table class="table table-bordered table-bordered table-striped table-hover exportable" id="containersAvgTable">
                 <thead>
                     <tr>
                         <th>Num. Etudiant</th>
@@ -243,13 +238,13 @@
             <hr />
             
             <!-- STUDENTS AVG TABLE -->
-            <table class="table table-bordered table-bordered table-striped" id="studentsAvgTable">
+            <table class="table table-bordered table-bordered table-striped table-hover" id="studentsAvgTable">
                 <thead>
-                    <th></th>
+                    <th data-sorter="false"></th>
                     {% for container in containers %}
-                        <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> {{ container.name }}</th>
+                        <th data-sorter="false"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> {{ container.name }}</th>
                     {% endfor %}
-                    <th><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> Générale</th>
+                    <th data-sorter="false"><img src="{{ asset('bundles/c2jeasysaisie/img/xbar.png') }}" /> Générale</th>
                 </thead>
                 <tbody>
                 <tr>

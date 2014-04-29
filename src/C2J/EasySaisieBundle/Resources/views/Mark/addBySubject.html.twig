@@ -8,7 +8,7 @@
 
     <form method="post" action="#">
 
-	    <table class="table table-bordered table-bordered">
+	    <table class="table table-bordered table-bordered table-striped table-hover">
 		    <thead>
 		    	<th>Num. Etudiant</th>
 		    	<th>Etudiant</th>
@@ -20,11 +20,9 @@
 		                <td>{{ sp.student.number }}</td>
 		                <td class="studentName"><b>{{ sp.student.lastName }}</b> {{ sp.student.firstName }}</td>
 		                
-		                {% if sp.marks|length > 0 %}{{dump(sp.marks|length)}}
+		                {% if sp.marks|length > 0 %}
 		                	{% for mark in sp.marks %}
 		                		{# {% if session %} #}
-
-		                		
 			                		<td><input type="text" name="mark-{{ i }}" value="{{ mark.valueS1 }}" /></td>
 			                		<td><input type="hidden" name="markid-{{ i }}" value="{{ mark.id }}" /></td>
 		                	{% endfor %}
@@ -41,7 +39,7 @@
 
 		<hr />
 
-		<div clas="center">
+		<div class="center">
 			<input type="submit" name="submit" class="btn btn-purple" value="Enregistrer les notes" />	
 		</div>
 

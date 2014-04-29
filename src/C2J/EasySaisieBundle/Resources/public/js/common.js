@@ -33,11 +33,12 @@ $(document).ready(function() {
 			hover      : '', // use custom css here - bootstrap class may not override it
 			filterRow  : '', // filter row class
 			even       : '', // odd row zebra striping
-			odd        : ''  // even row zebra striping
+			odd        : '',  // even row zebra striping
+			placeholder : {search : 'Chercher...'}
 		});
 
 		// call the tablesorter plugin and apply the uitheme widget
-		$("table").tablesorter({
+		$(".table:not('#studentsAvgTable')").tablesorter({
 			// this will apply the bootstrap theme if "uitheme" widget is included
 			// the widgetOptions.uitheme is no longer required to be set
 			theme : "bootstrap",
