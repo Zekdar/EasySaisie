@@ -59,9 +59,9 @@ class ContainerController extends Controller
 					$gsmode=$queries['gsmode'];
 				}
 				
-				if($queries['formationId']!=null)
+				if($queries['promotionId']!=null)
 				{
-					$formationId=$queries['formationId'];
+					$formationId=$queries['promotionId'];
 				}
 			}
 			$em = $this->getDoctrine()->getManager();
