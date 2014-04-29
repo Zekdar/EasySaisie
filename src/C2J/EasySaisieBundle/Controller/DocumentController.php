@@ -56,8 +56,6 @@ class DocumentController extends Controller
 				}
 			}
 			
-			$promotionId=null;
-			
 			if($entity->getPromotion()!=null)
 			{
 				$promotionId=$entity->getPromotion()->getId();
