@@ -353,6 +353,21 @@ class TeachingUnitContainerSubjectController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->find($id);
 
@@ -362,9 +377,19 @@ class TeachingUnitContainerSubjectController extends Controller
 
             $em->remove($entity);
             $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('teachingunitcontainersubject'));
+			$this->get('session')->getFlashBag()->add(
+					'success',
+					'L\'affectation a été supprimée avec succès !'
+			);
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
+			}			
+			else
+			{
+				return $this->redirect($this->generateUrl('teachingunitcontainersubject'));
+			}
+        }     
     }
 
     /**

@@ -32,12 +32,14 @@
                     Retour
                 </a>
             {% endif %}
-            <div style="float:right">
-                {{ form_start(delete_form) }}
-                    
-                    {{ form_widget(delete_form.submit, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
-                {{ form_end(delete_form) }}
-            </div>
+			{% if app.request.query.get('gsmode') is null%}		
+				<div style="float:right">
+					{{ form_start(delete_form) }}
+						
+						{{ form_widget(delete_form.submit, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+					{{ form_end(delete_form) }}
+				</div>
+			{% endif %}
         </div>
     </div>
 {% endblock %}

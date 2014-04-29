@@ -302,18 +302,64 @@ class PromotionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+			$gsmode=null;
+			$formationId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['formationId']!=null)
+				{
+					$formationId=$queries['formationId'];
+				}
+			}
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('C2JEasySaisieBundle:Promotion')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Promotion entity.');
             }
-
-            $em->remove($entity);
-            $em->flush();
+			
+			$studentPromotions = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('promotion'=>$id));
+			$containers = $em->getRepository('C2JEasySaisieBundle:Container')->findBy(array('promotion'=>$id));
+			if($studentPromotions==null && $containers==null)
+			{
+				$em->remove($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'La promotion a été supprimée avec succès !'
+				);
+				
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('promotion_new').'?gsmode=true&formationId='.$formationId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('promotion'));
+				}
+			}
+			else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'Cette promotion est utilisée actuellement !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('promotion_edit', array('id' => $id)).'?gsmode=true');
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('promotion_edit', array('id' => $id)));
+				} 
+			}
         }
-
-        return $this->redirect($this->generateUrl('promotion'));
     }
 
     /**

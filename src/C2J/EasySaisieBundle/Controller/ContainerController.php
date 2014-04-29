@@ -300,6 +300,21 @@ class ContainerController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('C2JEasySaisieBundle:Container')->find($id);
 
@@ -309,9 +324,20 @@ class ContainerController extends Controller
 
             $em->remove($entity);
             $em->flush();
+			$this->get('session')->getFlashBag()->add(
+				'success',
+				'Le conteneur a été supprimé avec succès !'
+			);
+			
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('container_new').'?gsmode=true&promotionId='.$promotionId);
+			}			
+			else
+			{
+				return $this->redirect($this->generateUrl('container'));
+			}
         }
-
-        return $this->redirect($this->generateUrl('container'));
     }
 
     /**

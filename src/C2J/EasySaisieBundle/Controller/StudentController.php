@@ -234,9 +234,8 @@ class StudentController extends Controller
      * @Template()
      */
     public function editAction($id)
-    {
+    {	
         $em = $this->getDoctrine()->getManager();
-
         $entity = $em->getRepository('C2JEasySaisieBundle:Student')->find($id);
 
         if (!$entity) {
@@ -245,11 +244,13 @@ class StudentController extends Controller
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
+		$deleteFormSp = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+			'delete_formSp' => $deleteFormSp->createView(),
         );
     }
 
@@ -336,10 +337,10 @@ class StudentController extends Controller
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
+    {   
+		$form = $this->createDeleteFormStudentPromotion($spId);
+		$form->handleRequest($request);	
+			
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('C2JEasySaisieBundle:Student')->find($id);
@@ -364,11 +365,21 @@ class StudentController extends Controller
      */
     private function createDeleteForm($id)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('student_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+		return $this->createFormBuilder()
+			->setAction($this->generateUrl('student_delete', array('id' => $id)))
+			->setMethod('DELETE')
+			->add('submit', 'submit', array('label' => 'Delete'))
+			->getForm()
+		;
+    }
+	
+	private function createDeleteFormSp($id)
+    {
+		return $this->createFormBuilder()
+			->setAction($this->generateUrl('studentpromotion_delete', array('id' => $id)))
+			->setMethod('DELETE')
+			->add('submit', 'submit', array('label' => 'Delete'))
+			->getForm()
+		;
     }
 }

@@ -292,10 +292,23 @@ class SubjectController extends Controller
     {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
-		var_dump($request);
-		exit;
 
         if ($form->isValid()) {
+			$gsmode=null;
+			$promotionId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['promotionId']!=null)
+				{
+					$promotionId=$queries['promotionId'];
+				}
+			}
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('C2JEasySaisieBundle:Subject')->find($id);
 
@@ -305,9 +318,19 @@ class SubjectController extends Controller
 
             $em->remove($entity);
             $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('subject'));
+			$this->get('session')->getFlashBag()->add(
+					'success',
+					'La matière a été supprimée avec succès !'
+			);
+			if($gsmode)
+			{
+				return $this->redirect($this->generateUrl('subject_new').'?gsmode=true&promotionId='.$promotionId);
+			}			
+			else
+			{
+				return $this->redirect($this->generateUrl('subject'));
+			}
+        } 
     }
 
     /**
