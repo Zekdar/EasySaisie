@@ -159,7 +159,7 @@ function refreshAvg(toggleLoader) {
 			sum = 0;
 			avg = {};
 
-			$('#marksTable tbody tr:contains("' + students[i] + '") td').find('[data-tucode="' + tuCodes[j] + '"]').each(function() {
+			$('#marksTable tbody tr td:nth-child(1):contains("' + students[i] + '")').parent().find('[data-tucode="' + tuCodes[j] + '"]').each(function() {
 				content = $(this).text().trim();
 				coeff = $(this).data('coeff');
 
@@ -409,48 +409,53 @@ function getStudentsGoingToSession2() {
 				});			
 			}
 			
-			if(containersFullyFilled) {
-				for(var j in containersInfo) {
-					// foreach container marks
-					var containerMarks = $(currentStudent).find('td.tdMark a[data-containername="' + j + '"]').each(function() {
-						content = $(this).text().trim();
-			
-						if(content != 'Empty' && content < containersInfo[$(this).data('containername')].minMark && goToSession2.indexOf(studentsNumbers[i]) == -1) {
-							goToSession2.push(studentsNumbers[i]);
-							stop = true;
-							return false; // stop looping because this student has already an eliminatory mark 
-						}
-					});
-				}
-			
-			
-				// !stop means that this student doesn't have any eliminatory mark
-				if(!stop) {
-					var generalAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.generalAvg')[0]).text().trim();
-					if(generalAvg != '' && generalAvg != 'Toutes les notes n\'ont pas encore été remplies.') {
-						for(var j in containersInfo) {
-							var containerAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.avg[data-containername="' + j + '"]')[0]).text().trim();
-
-							if(!containersInfo[j].isCompensable && containerAvg != '' && containerAvg < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+			var generalAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.generalAvg')[0]).text().trim();
+			if(containersFullyFilled) { 
+				if(generalAvg >= promotion.minAvgToValidate) {
+					for(var j in containersInfo) {
+						// foreach container marks
+						var containerMarks = $(currentStudent).find('td.tdMark a[data-containername="' + j + '"]').each(function() {
+							content = $(this).text().trim();
+				
+							if(content != 'Empty' && content < containersInfo[$(this).data('containername')].minMark && goToSession2.indexOf(studentsNumbers[i]) == -1) {
 								goToSession2.push(studentsNumbers[i]);
 								stop = true;
-							}
-						}
-					}
-				}
-
-				if(!stop) {
-					var containername;
-					for(var j in containersInfo) {
-						$(currentStudent).find('td.tuAvg[data-containername="' + j + '"]').each(function() {
-							content = $(this).text().trim();
-							isCompensable = $(this).data('iscompensable');
-
-							if(content != '' && containername != '' && !isCompensable && content < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
-								goToSession2.push(studentsNumbers[i]);
+								return false; // stop looping because this student has already an eliminatory mark 
 							}
 						});
 					}
+				
+				
+					// !stop means that this student doesn't have any eliminatory mark
+					if(!stop) {
+						if(generalAvg != '' && generalAvg != 'Toutes les notes n\'ont pas encore été remplies.') {
+							for(var j in containersInfo) {
+								var containerAvg = $($('#containersAvgTable tbody tr:contains(' + studentsNumbers[i] + ')').find('td.avg[data-containername="' + j + '"]')[0]).text().trim();
+
+								if(!containersInfo[j].isCompensable && containerAvg != '' && containerAvg < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+									goToSession2.push(studentsNumbers[i]);
+									stop = true;
+								}
+							}
+						}
+					}
+
+					if(!stop) {
+						var containername;
+						for(var j in containersInfo) {
+							$(currentStudent).find('td.tuAvg[data-containername="' + j + '"]').each(function() {
+								content = $(this).text().trim();
+								isCompensable = $(this).data('iscompensable');
+
+								if(content != '' && containername != '' && !isCompensable && content < containersInfo[j].minAvg && goToSession2.indexOf(studentsNumbers[i]) == -1) {
+									goToSession2.push(studentsNumbers[i]);
+								}
+							});
+						}
+					}
+				}
+				else if(goToSession2.indexOf(studentsNumbers[i]) == -1) {
+					goToSession2.push(studentsNumbers[i]);
 				}
 			}
 		}
