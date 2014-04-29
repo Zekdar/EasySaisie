@@ -49,6 +49,21 @@ class ContainerController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {		
+			$gsmode=null;
+			$formationId=null;
+			parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+			if($queries != null)
+			{
+				if($queries['gsmode']!=null)
+				{
+					$gsmode=$queries['gsmode'];
+				}
+				
+				if($queries['formationId']!=null)
+				{
+					$formationId=$queries['formationId'];
+				}
+			}
 			$em = $this->getDoctrine()->getManager();
 			
 			$name=$entity->getName();
@@ -321,21 +336,55 @@ class ContainerController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Container entity.');
             }
-
-            $em->remove($entity);
-            $em->flush();
-			$this->get('session')->getFlashBag()->add(
-				'success',
-				'Le conteneur a été supprimé avec succès !'
-			);
 			
-			if($gsmode)
+			$myEntities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findBy(array('container'=>$id));
+			if($myEntities == null)
 			{
-				return $this->redirect($this->generateUrl('container_new').'?gsmode=true&promotionId='.$promotionId);
-			}			
+				$gsmode=null;
+				$formationId=null;
+				parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+				if($queries != null)
+				{
+					if($queries['gsmode']!=null)
+					{
+						$gsmode=$queries['gsmode'];
+					}
+					
+					if($queries['promotionId']!=null)
+					{
+						$promotionId=$queries['promotionId'];
+					}
+				}
+				$em->remove($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'Le conteneur a été supprimé avec succès !'
+				);
+				
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('container_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('container'));
+				}
+			}
 			else
 			{
-				return $this->redirect($this->generateUrl('container'));
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'Ce conteneur est utilisé actuellement !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('container_edit', array('id' => $id)).'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('container_edit', array('id' => $id)));
+				} 
 			}
         }
     }

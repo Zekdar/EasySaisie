@@ -374,20 +374,55 @@ class TeachingUnitContainerSubjectController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find TeachingUnitContainerSubject entity.');
             }
-
-            $em->remove($entity);
-            $em->flush();
-			$this->get('session')->getFlashBag()->add(
-					'success',
-					'L\'affectation a été supprimée avec succès !'
-			);
-			if($gsmode)
+			
+			$myEntities = $em->getRepository('C2JEasySaisieBundle:Mark')->findBy(array('teachingUnitContainerSubject'=>$id));
+			if($myEntities == null)
 			{
-				return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
-			}			
+				$gsmode=null;
+				$formationId=null;
+				parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+				if($queries != null)
+				{
+					if($queries['gsmode']!=null)
+					{
+						$gsmode=$queries['gsmode'];
+					}
+					
+					if($queries['promotionId']!=null)
+					{
+						$promotionId=$queries['promotionId'];
+					}
+				}
+				$em->remove($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'Cette matière a été supprimée avec succès !'
+				);
+				
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teachingunitcontainersubject_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teachingunitcontainersubject'));
+				}
+			}
 			else
 			{
-				return $this->redirect($this->generateUrl('teachingunitcontainersubject'));
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'Cette matière est affectée à une ou plusieurs notes !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teachingunitcontainersubject_edit', array('id' => $id)).'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teachingunitcontainersubject_edit', array('id' => $id)));
+				} 
 			}
         }     
     }

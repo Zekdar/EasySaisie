@@ -64,7 +64,7 @@
 								<td>{{ entity.coeff }}</td>
 								<td>{{ entity.ects }}</td>
 								<td>{{ entity.teachingUnitContainer.teachingunit.name }}</td>
-								<td>{% if entity.teacher is not null %}{{ entity.id }}{% endif%}</td>
+								<td>{% if entity.teacher is not null %}{{ entity.teacher.lastName }} {{ entity.teacher.firstName }}{% endif%}</td>
 								<td>{{ entity.teachingUnitContainer.container.name }}</td>
 								<td>
 									{% if(app.request.query.get('gsmode')) %}

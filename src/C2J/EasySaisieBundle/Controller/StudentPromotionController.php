@@ -247,8 +247,6 @@ class StudentPromotionController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-		var_dump($id);
-		exit;
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -274,20 +272,55 @@ class StudentPromotionController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find StudentPromotion entity.');
             }
-
-            $em->remove($entity);
-            $em->flush();
-			$this->get('session')->getFlashBag()->add(
+			
+			$myEntities = $em->getRepository('C2JEasySaisieBundle:Mark')->findBy(array('studentPromotion'=>$id));
+			if($myEntities == null)
+			{
+				$gsmode=null;
+				$formationId=null;
+				parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+				if($queries != null)
+				{
+					if($queries['gsmode']!=null)
+					{
+						$gsmode=$queries['gsmode'];
+					}
+					
+					if($queries['promotionId']!=null)
+					{
+						$promotionId=$queries['promotionId'];
+					}
+				}
+				$em->remove($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
 					'success',
 					'L\'étudiant a été supprimée de la promotion avec succès !'
-			);
-			if($gsmode)
-			{
-				return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
-			}			
+				);
+				
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('studentPromotion'));
+				}
+			}
 			else
 			{
-				return $this->redirect($this->generateUrl('studentpromotion'));
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'Cet étudiant possède une ou plusieurs notes !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('studentpromotion_edit', array('id' => $id)).'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('studentpromotion_edit', array('id' => $id)));
+				} 
 			}
         } 
     }

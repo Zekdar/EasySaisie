@@ -352,7 +352,7 @@ class PromotionController extends Controller
 				);
 				if($gsmode)
 				{
-					return $this->redirect($this->generateUrl('promotion_edit', array('id' => $id)).'?gsmode=true');
+					return $this->redirect($this->generateUrl('promotion_edit', array('id' => $id)).'?gsmode=true&formationId='.$formationId);
 				}
 				else
 				{

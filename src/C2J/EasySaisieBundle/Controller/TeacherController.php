@@ -314,20 +314,55 @@ class TeacherController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Teacher entity.');
             }
-
-            $em->remove($entity);
-            $em->flush();
-			$this->get('session')->getFlashBag()->add(
+			
+			$myEntities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainerSubject')->findBy(array('teacher'=>$id));
+			if($myEntities == null)
+			{
+				$gsmode=null;
+				$formationId=null;
+				parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+				if($queries != null)
+				{
+					if($queries['gsmode']!=null)
+					{
+						$gsmode=$queries['gsmode'];
+					}
+					
+					if($queries['promotionId']!=null)
+					{
+						$promotionId=$queries['promotionId'];
+					}
+				}
+				$em->remove($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
 					'success',
 					'Le professeur a été supprimé avec succès !'
-			);
-			if($gsmode)
-			{
-				return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
-			}			
+				);
+				
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teacher_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teacher'));
+				}
+			}
 			else
 			{
-				return $this->redirect($this->generateUrl('teacher'));
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'Ce professeur est utilisé actuellement !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teacher_edit', array('id' => $id)).'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teacher_edit', array('id' => $id)));
+				} 
 			}
         }
     }

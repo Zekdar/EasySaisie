@@ -318,20 +318,55 @@ class TeachingUnitController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find TeachingUnit entity.');
             }
-
-            $em->remove($entity);
-            $em->flush();
-			$this->get('session')->getFlashBag()->add(
-					'success',
-					'La matière a été supprimée avec succès !'
-			);
-			if($gsmode)
+			
+			$myEntities = $em->getRepository('C2JEasySaisieBundle:TeachingUnitContainer')->findBy(array('teachingUnit'=>$id));
+			if($myEntities == null)
 			{
-				return $this->redirect($this->generateUrl('teachingunit_new').'?gsmode=true&promotionId='.$promotionId);
-			}			
+				$gsmode=null;
+				$formationId=null;
+				parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+				if($queries != null)
+				{
+					if($queries['gsmode']!=null)
+					{
+						$gsmode=$queries['gsmode'];
+					}
+					
+					if($queries['promotionId']!=null)
+					{
+						$promotionId=$queries['promotionId'];
+					}
+				}
+				$em->remove($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'L\'UE a été supprimée avec succès !'
+				);
+				
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teachingunit_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teachingunit'));
+				}
+			}
 			else
 			{
-				return $this->redirect($this->generateUrl('teachingunit'));
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'Cette UE est utilisée actuellement !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('teachingunit_edit', array('id' => $id)).'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('teachingunit_edit', array('id' => $id)));
+				} 
 			}
         }
     }

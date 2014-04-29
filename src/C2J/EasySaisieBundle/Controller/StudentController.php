@@ -338,7 +338,7 @@ class StudentController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {   
-		$form = $this->createDeleteFormStudentPromotion($spId);
+		$form = $this->createDeleteForm($id);
 		$form->handleRequest($request);	
 			
         if ($form->isValid()) {
@@ -348,12 +348,56 @@ class StudentController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Student entity.');
             }
-
-            $em->remove($entity);
-            $em->flush();
+			$myEntities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findBy(array('student'=>$id));
+			if($myEntities == null)
+			{
+				$gsmode=null;
+				$formationId=null;
+				parse_str(parse_url($this->get('request')->server->get('HTTP_REFERER'), PHP_URL_QUERY), $queries);
+				if($queries != null)
+				{
+					if($queries['gsmode']!=null)
+					{
+						$gsmode=$queries['gsmode'];
+					}
+					
+					if($queries['promotionId']!=null)
+					{
+						$promotionId=$queries['promotionId'];
+					}
+				}
+				$em->remove($entity);
+				$em->flush();
+				$this->get('session')->getFlashBag()->add(
+					'success',
+					'L\'étudiant a été supprimé avec succès !'
+				);
+				
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('student_new').'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('student'));
+				}
+			}
+			else
+			{
+				$this->get('session')->getFlashBag()->add(
+					'failure',
+					'L\'étudiant est utilisée actuellement !'
+				);
+				if($gsmode)
+				{
+					return $this->redirect($this->generateUrl('student_edit', array('id' => $id)).'?gsmode=true&promotionId='.$promotionId);
+				}
+				else
+				{
+					return $this->redirect($this->generateUrl('student_edit', array('id' => $id)));
+				} 
+			}
         }
-
-        return $this->redirect($this->generateUrl('student'));
     }
 
     /**

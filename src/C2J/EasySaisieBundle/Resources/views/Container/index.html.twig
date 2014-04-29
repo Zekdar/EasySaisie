@@ -2,6 +2,16 @@
 
 
 {% block body %}
+	{% for flashMessage in app.session.flashbag.get('success') %}
+		<div class="flash-notice">
+			<font color="green">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
+	{% for flashMessage in app.session.flashbag.get('failure') %}
+		<div class="flash-notice">
+			<font color="red">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
     {{ parent() }}
     
     <h1 class="page-header">Liste des conteneurs d'UEs</h1>
