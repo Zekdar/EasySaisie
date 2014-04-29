@@ -12,6 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class PromotionRepository extends EntityRepository
 {
+	public function findAllPromotionsByYearDistinct() 
+	{
+		$qb = $this ->createQueryBuilder('p')
+					->groupBy('p.name')
+					->orderBy('p.year', 'DESC')
+					->addOrderBy('p.name', 'ASC');
+
+		return $qb 	->getQuery()
+					->getResult();
+	}
+
 	public function findAllSubjectsByTucsByContainerByPromotionByYear($promotion_id, $year) 
 	{
 		return $this->createQueryBuilder('p')

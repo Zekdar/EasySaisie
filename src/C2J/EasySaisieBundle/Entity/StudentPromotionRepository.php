@@ -12,19 +12,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class StudentPromotionRepository extends EntityRepository
 {
-	public function findAllPromotionsByYearDistinct() 
-	{
-		$qb = $this ->createQueryBuilder('sp')
-					->join('sp.promotion', 'p')
-						->addSelect('p')
-					->groupBy('p.name')
-					->orderBy('p.year', 'DESC')
-					->addOrderBy('p.name', 'ASC');
-
-		return $qb 	->getQuery()
-					->getResult();
-	}
-
 	public function findAllStudentsInPromotionByYear($promotion_id, $year) 
 	{
 		$qb = $this ->createQueryBuilder('sp')

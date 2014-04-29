@@ -3,22 +3,27 @@
 {% block body %}
 
     {{ parent() }}
-        
-    <h1 class="page-header">Sélectionnez une promotion</h1>
     
-    <table class="table table-striped table-bordered table-hover sortable">
-    	<thead>
-    		<th data-placeholder="Chercher ...">Année</th>
-    		<th data-placeholder="Chercher ...">Promotion</th>
-    	</thead>
-    	<tbody>
-			{% for entity in entities %}
-				<tr class="clickableRow" href="{{ path('mark_list', { 'year': entity.promotion.year, 'promotion_id': entity.promotion.id, 'session' : 1 }) }}">
-					<td>{{ entity.promotion.year }}</td>
-					<td>{{ entity.promotion }}</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-    </table>
+    {% if promotions is not empty %}
+        <h1 class="page-header">Sélectionnez une promotion</h1>
+        
+        <table class="table table-striped table-bordered table-hover sortable">
+        	<thead>
+        		<th data-placeholder="Chercher ...">Année</th>
+        		<th data-placeholder="Chercher ...">Promotion</th>
+        	</thead>
+        	<tbody>
+    			{% for promotion in promotions %}
+    				<tr class="clickableRow" href="{{ path('mark_list', { 'year': promotion.year, 'promotion_id': promotion.id, 'session' : 1 }) }}">
+    					<td>{{ promotion.year }}</td>
+    					<td>{{ promotion }}</td>
+    				</tr>
+    			{% endfor %}
+    		</tbody>
+        </table>
+    {% else %}
+        <hr />
+        <p class="center no-reccords-to-display">Il n'y a rien à afficher dans cette section actuellement.</p>
+    {% endif %}
 {% endblock %}
     

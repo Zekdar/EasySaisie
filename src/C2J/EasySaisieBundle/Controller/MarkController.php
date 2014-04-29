@@ -34,10 +34,10 @@ class MarkController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('C2JEasySaisieBundle:StudentPromotion')->findAllPromotionsByYearDistinct();        
-
+        $promotions = $em->getRepository('C2JEasySaisieBundle:Promotion')->findAllPromotionsByYearDistinct();        
+        var_dump(count($promotions));
         return array(
-            'entities' => $entities,
+            'promotions' => $promotions,
         );
     }
 
