@@ -3,6 +3,16 @@
 
 {% block body %}
     {{ parent() }}
+	{% for flashMessage in app.session.flashbag.get('success') %}
+		<div class="flash-notice">
+			<font color="green">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
+	{% for flashMessage in app.session.flashbag.get('failure') %}
+		<div class="flash-notice">
+			<font color="red">{{ flashMessage }}</font>
+		</div>
+	{% endfor %}
     <div class="form-edit">
         <h1>Editer une matière</h1>
         <hr />
